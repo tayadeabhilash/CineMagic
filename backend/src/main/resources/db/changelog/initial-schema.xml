@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="1699427308_create-users-table" author="atayade">
+        <createTable tableName="users">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="firstName" type="VARCHAR(255)"/>
+            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="memberType" type="ENUM('REGULAR', 'PREMIUM') NOT NULL DEFAULT 'REGULAR'"/> <!-- Define ENUM type with values -->
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="lastUpdatedAt" type="TIMESTAMP"/>
+        </createTable>
+        <createTable tableName="sessions">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="expireAt" type="TIMESTAMP"/>
+            <column name="lastUpdatedAt" type="TIMESTAMP"/>
+            <column name="user_id" type="INT">
+                <constraints references="users(id)" foreignKeyName="fk_session_user"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
