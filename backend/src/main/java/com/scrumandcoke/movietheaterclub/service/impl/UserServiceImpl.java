@@ -2,7 +2,7 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.User;
+import com.scrumandcoke.movietheaterclub.model.UserEntity;
 import com.scrumandcoke.movietheaterclub.repository.UserRepository;
 import com.scrumandcoke.movietheaterclub.service.UserService;
 import org.slf4j.Logger;
@@ -26,15 +26,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUser(UserDto userDto) throws GlobalException {
         try {
-            User user = new User();
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setEmail(userDto.getEmail());
-            user.setCreatedAt(Date.from(Instant.now()));
-            user.setLastUpdatedAt(Date.from(Instant.now()));
-            user.setPassword(userDto.getPassword());
-            user.setMemberType(userDto.getMemberType());
-            userRepository.save(user);
+            UserEntity userEntity = new UserEntity();
+            userEntity.setFirstName(userDto.getFirstName());
+            userEntity.setLastName(userDto.getLastName());
+            userEntity.setEmail(userDto.getEmail());
+            userEntity.setCreatedAt(Date.from(Instant.now()));
+            userEntity.setLastUpdatedAt(Date.from(Instant.now()));
+            userEntity.setPassword(userDto.getPassword());
+            userEntity.setMemberType(userDto.getMemberType());
+            userRepository.save(userEntity);
         } catch (Exception exception) {
             logger.error("Error saving user: {}", userDto.getEmail());
             throw new GlobalException(exception.getMessage(), exception);
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByEmail(String email) throws GlobalException {
         try {
-            User user = userRepository.findByEmail(email);
-            return new UserDto(user.getFirstName(), user.getLastName(), user.getEmail(), null, user.getMemberType());
+            UserEntity userEntity = userRepository.findByEmail(email);
+            return new UserDto(userEntity.getFirstName(), userEntity.getLastName(), userEntity.getEmail(), null, userEntity.getMemberType());
         } catch (Exception exception) {
             logger.error("Error getting user: {}", email);
             throw new GlobalException(exception.getMessage(), exception);
@@ -55,10 +55,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUsers() throws GlobalException {
         try {
-            List<User> users = userRepository.findAll();
+            List<UserEntity> userEntities = userRepository.findAll();
             List<UserDto> response =new ArrayList<>();
-            for(User user: users) {
-                response.add(new UserDto(user.getFirstName(), user.getLastName(), user.getEmail(), null, user.getMemberType()));
+            for(UserEntity userEntity : userEntities) {
+                response.add(new UserDto(userEntity.getFirstName(), userEntity.getLastName(), userEntity.getEmail(), null, userEntity.getMemberType()));
             }
             return response;
         } catch (Exception exception) {
@@ -70,14 +70,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(UserDto userDto) throws GlobalException {
         try {
-            User user = userRepository.findByEmail(userDto.getEmail());
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setEmail(userDto.getEmail());
-            user.setLastUpdatedAt(Date.from(Instant.now()));
-            user.setPassword(userDto.getPassword());
-            user.setMemberType(userDto.getMemberType());
-            userRepository.save(user);
+            UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
+            userEntity.setFirstName(userDto.getFirstName());
+            userEntity.setLastName(userDto.getLastName());
+            userEntity.setEmail(userDto.getEmail());
+            userEntity.setLastUpdatedAt(Date.from(Instant.now()));
+            userEntity.setPassword(userDto.getPassword());
+            userEntity.setMemberType(userDto.getMemberType());
+            userRepository.save(userEntity);
         } catch (Exception exception) {
             logger.error("Error updating user: {}", userDto.getEmail());
             throw new GlobalException(exception.getMessage(), exception);

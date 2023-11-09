@@ -2,7 +2,6 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.model.Session;
-import com.scrumandcoke.movietheaterclub.model.User;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import org.slf4j.Logger;

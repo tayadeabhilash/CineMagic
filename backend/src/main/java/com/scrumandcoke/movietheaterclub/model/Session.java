@@ -14,16 +14,16 @@ public class Session {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "expireAt")
+    @Column(name = "expire_at")
     private Date expireAt;
 
-    @Column(name = "lastUpdatedAt")
+    @Column(name = "last_updated_at")
     private Date lastUpdatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity userEntity;
 }
