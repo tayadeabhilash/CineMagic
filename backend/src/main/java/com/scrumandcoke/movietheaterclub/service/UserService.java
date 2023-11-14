@@ -2,7 +2,6 @@ package com.scrumandcoke.movietheaterclub.service;
 
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.User;
 
 import java.util.List;
 
