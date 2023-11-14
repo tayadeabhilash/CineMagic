@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Register from "./pages/Register";
+import Home from "./pages/Home";
+import Sorry from "./pages/Sorry";
 
 const App = () => {
   const Menu = () => {
@@ -12,6 +14,8 @@ const App = () => {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="*" element={<Sorry />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     );
   };
