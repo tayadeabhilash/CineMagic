@@ -22,7 +22,7 @@ public class MultiplexServiceImpl implements MultiplexService {
 	@Autowired
 	MultiplexRepository multiplexRepository;
 	
-    Logger logger = LoggerFactory.getLogger(MultiplexServiceImpl.class);
+      Logger logger = LoggerFactory.getLogger(MultiplexServiceImpl.class);
 
 
 	@Override
@@ -31,7 +31,7 @@ public class MultiplexServiceImpl implements MultiplexService {
 			Multiplex multiplex = new Multiplex();
 			multiplex.setName(multiplexDto.getName());
 			multiplex.setLocation(multiplexDto.getLocation());
-			multiplex.setTheaterscreencount(multiplexDto.getTheaterscreencount());
+			multiplex.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
 			multiplexRepository.save(multiplex);
 		}
 		catch(Exception exception){
@@ -46,7 +46,7 @@ public class MultiplexServiceImpl implements MultiplexService {
 	        List<Multiplex> multiplexes = multiplexRepository.findAll();
 	        List<MultiplexDto> allMultiplex = new ArrayList<>();
 	        for (Multiplex multiplex : multiplexes) {
-	            MultiplexDto dto = new MultiplexDto(multiplex.getId(), multiplex.getName(), multiplex.getLocation(), multiplex.getTheaterscreencount());
+	            MultiplexDto dto = new MultiplexDto(multiplex.getId(), multiplex.getName(), multiplex.getLocation(), multiplex.getTheaterScreenCount());
 	            allMultiplex.add(dto);
 	        }
 	        return allMultiplex; 
@@ -64,7 +64,7 @@ public class MultiplexServiceImpl implements MultiplexService {
 	                                  .orElseThrow(() -> new EntityNotFoundException("Multiplex not found with id: " + multiplexId));
 	        multiplex.setName(multiplexDto.getName());
 	        multiplex.setLocation(multiplexDto.getLocation());
-	        multiplex.setTheaterscreencount(multiplexDto.getTheaterscreencount());
+	        multiplex.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
 	        multiplexRepository.save(multiplex);
 	    } catch (Exception e) {
 	        logger.error("Error updating multiplex with id: " + multiplexDto.getId(), e);

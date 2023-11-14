@@ -15,5 +15,5 @@ public class MultiplexDto {
 	private int id;
 	private String name;
 	private Location location;
-	private int theaterscreencount;
+	private int theaterScreenCount;
 }
