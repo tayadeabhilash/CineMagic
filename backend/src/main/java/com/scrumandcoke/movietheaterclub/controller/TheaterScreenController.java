@@ -25,7 +25,7 @@ public class TheaterScreenController {
 	@Autowired
 	TheaterScreenService theaterScreenService;
 
-	@PostMapping("/add")
+	@PostMapping
 	public ResponseEntity<String> createTheaterScreen(@RequestBody TheaterScreenDto theaterScreenDto) throws GlobalException {
         try {
             theaterScreenService.createTheaterScreen(theaterScreenDto);
@@ -36,7 +36,7 @@ public class TheaterScreenController {
         }
     }
 	
-	@GetMapping("/all")
+	@GetMapping
     public ResponseEntity<List<TheaterScreenDto>> getAllTheaterScreens() {
         try {
             List<TheaterScreenDto> theaterScreens = theaterScreenService.getAllTheaterScreens();

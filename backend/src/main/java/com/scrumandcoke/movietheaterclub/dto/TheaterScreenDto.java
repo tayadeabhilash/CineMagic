@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TheaterScreenDto {
-	  private int id;
-	    private String name;
-	    private MultiplexDto multiplex;
-	    private int seatingCapacity;
+    private int id;
+    private String name;
+    private MultiplexDto multiplex;
+    private int seatingCapacity;
 }

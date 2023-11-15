@@ -10,25 +10,21 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.Date;
+
 @Entity
-@Table(name = "theater_screens")
+@Table(name = "showtimes")
 @Data
-public class TheaterScreen {
-	
-	@Id
+public class ShowTimeEntity {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-	
-    @Column(name = "name")
-	private String name;
-    
+    private Integer id;
+    private Date time;
     @ManyToOne
-    @JoinColumn(name = "multiplex_id")
-    private Multiplex multiplex;
-		
-    @Column(name = "seatingCapacity")
-	private int seatingCapacity;
-    
-   
+    @JoinColumn(name = "movie_id")
+    private MovieEntity movie;
+    @ManyToOne
+    @JoinColumn(name = "theater_screen_id")
+    private TheaterScreenEntity theaterScreen;
 }
