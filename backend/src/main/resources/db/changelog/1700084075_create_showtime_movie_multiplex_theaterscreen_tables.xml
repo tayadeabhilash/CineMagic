@@ -34,6 +34,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="time" type="TIMESTAMP"/>
+            <column name="price" type="DOUBLE(10, 2)"/>
             <column name="movie_id" type="INT">
                 <constraints references="movies(movie_id)" foreignKeyName="fk_movie_id"/>
             </column>
