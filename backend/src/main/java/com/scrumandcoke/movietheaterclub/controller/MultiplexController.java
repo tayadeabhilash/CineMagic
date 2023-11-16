@@ -27,6 +27,10 @@ public class MultiplexController {
 	public List<MultiplexDto> getAllMultiplex() throws GlobalException {
         return multiplexService.getAllMultiplex();
     }
+	@GetMapping("/{id}")
+	public MultiplexDto getMultiplex(@PathVariable Integer id) throws GlobalException {
+        return multiplexService.getMultiplex(id);
+    }
 	
 	@PostMapping
 	public void addMultiplex(@RequestBody MultiplexDto multiplexDto) throws GlobalException {
@@ -38,7 +42,7 @@ public class MultiplexController {
 		multiplexService.updateMultiplex(multiplexDto);
 	}
 	
-	@DeleteMapping("/{multiplexId}")
+	@DeleteMapping("/{id}")
 	public void deleteMultiplex(@PathVariable Integer id) throws GlobalException {
 		multiplexService.deleteMultiplex(id);
 	}

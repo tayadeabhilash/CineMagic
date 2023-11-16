@@ -12,6 +12,6 @@ import lombok.Setter;
 public class TheaterScreenDto {
     private int id;
     private String name;
-    private MultiplexDto multiplex;
+    private Integer multiplexId;
     private int seatingCapacity;
 }

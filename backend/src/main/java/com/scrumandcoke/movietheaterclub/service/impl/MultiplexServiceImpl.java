@@ -81,4 +81,16 @@ public class MultiplexServiceImpl implements MultiplexService {
         }
     }
 
+    @Override
+    public MultiplexDto getMultiplex(Integer id) throws GlobalException {
+        try {
+            MultiplexEntity multiplexEntity =  multiplexRepository.findById(id).get();
+            MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(), multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
+            return dto;
+        } catch (Exception exception) {
+            logger.error("Error retrieving multiplex {}", id);
+            throw new GlobalException("Error retrieving multiplex data: " + exception.getMessage(), exception);
+        }
+    }
+
 }

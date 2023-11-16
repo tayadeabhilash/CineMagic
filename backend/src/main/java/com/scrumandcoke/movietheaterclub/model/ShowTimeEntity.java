@@ -27,4 +27,5 @@ public class ShowTimeEntity {
     @ManyToOne
     @JoinColumn(name = "theater_screen_id")
     private TheaterScreenEntity theaterScreen;
+    private Double price;
 }

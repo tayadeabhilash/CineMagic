@@ -24,11 +24,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void addMovie(MovieDto movieDto) throws GlobalException {
         try {
-            MovieEntity movieEntity = new MovieEntity();
-            movieEntity.setMovieName(movieDto.getMovieName());
-            movieEntity.setSynopsis(movieDto.getSynopsis());
-            movieEntity.setRunningTime(movieDto.getRunningTime());
-            movieRepository.save(movieEntity);
+            movieRepository.save(MovieDto.toEntity(movieDto));
         } catch (Exception exception) {
             logger.error("Error saving movie: {}", movieDto.getMovieName());
             throw new GlobalException(exception.getMessage(), exception);
@@ -39,8 +35,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieDto getMovie(Integer movieId) throws GlobalException {
         try {
             MovieEntity movieEntity = movieRepository.findById(movieId).get();
-            return new MovieDto(movieEntity.getMovieId(), movieEntity.getMovieName(), movieEntity.getSynopsis(),
-                    movieEntity.getRunningTime());
+            return MovieDto.fromEntity(movieEntity);
         } catch (Exception exception) {
             logger.error("Error getting movie: {}", movieId);
             throw new GlobalException(exception.getMessage(), exception);
@@ -51,12 +46,7 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieDto> getMovies() throws GlobalException {
         try {
             List<MovieEntity> movieEntities = movieRepository.findAll();
-            List<MovieDto> response = new ArrayList<>();
-            for (MovieEntity movieEntity : movieEntities) {
-                response.add(new MovieDto(movieEntity.getMovieId(), movieEntity.getMovieName(),
-                        movieEntity.getSynopsis(), movieEntity.getRunningTime()));
-            }
-            return response;
+            return MovieDto.fromEntityList(movieEntities);
         } catch (Exception exception) {
             logger.error("Error getting movies");
             throw new GlobalException(exception.getMessage(), exception);

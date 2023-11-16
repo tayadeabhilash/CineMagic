@@ -18,14 +18,16 @@ import java.util.List;
 @AllArgsConstructor
 public class ShowTimeDto {
     private Integer id;
-    private Date showTime;
+    private Date time;
     private Integer movieId;
     private Integer theaterScreenId;
+    private Double price;
 
     public static ShowTimeDto fromEntity(ShowTimeEntity showTimeEntity) {
         ShowTimeDto showTimeDto = new ShowTimeDto();
         showTimeDto.setId(showTimeEntity.getId());
-        showTimeDto.setShowTime(showTimeEntity.getTime());
+        showTimeDto.setTime(showTimeEntity.getTime());
+        showTimeDto.setPrice(showTimeEntity.getPrice());
         showTimeDto.setMovieId(showTimeEntity.getMovie().getMovieId());
         showTimeDto.setTheaterScreenId(showTimeEntity.getTheaterScreen().getId());
         return showTimeDto;
@@ -42,12 +44,13 @@ public class ShowTimeDto {
     public static ShowTimeEntity toEntity(ShowTimeDto showTimeDto) {
         ShowTimeEntity showTimeEntity = new ShowTimeEntity();
         showTimeEntity.setId(showTimeDto.getId());
-        showTimeEntity.setTime(showTimeDto.getShowTime());
+        showTimeEntity.setTime(showTimeDto.getTime());
+        showTimeEntity.setPrice(showTimeDto.getPrice());
         MovieEntity movieEntity = new MovieEntity();
         movieEntity.setMovieId(showTimeDto.getMovieId());
         showTimeEntity.setMovie(movieEntity);
         TheaterScreenEntity theaterScreen = new TheaterScreenEntity();
-        theaterScreen.setId(showTimeDto.getId());
+        theaterScreen.setId(showTimeDto.getTheaterScreenId());
         showTimeEntity.setTheaterScreen(theaterScreen);
         return showTimeEntity;
     }

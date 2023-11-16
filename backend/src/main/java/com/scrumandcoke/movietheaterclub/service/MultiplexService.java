@@ -10,4 +10,5 @@ public interface MultiplexService {
 	List<MultiplexDto> getAllMultiplex() throws GlobalException;
 	void updateMultiplex(MultiplexDto multiplexDto) throws GlobalException;
 	void deleteMultiplex(Integer id) throws GlobalException;
+    MultiplexDto getMultiplex(Integer id) throws GlobalException;
 }
