@@ -25,3 +25,38 @@
   justify-content: end;
   gap: 10px;
 }
+
+.theatre-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.underline {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.shows-heading {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.shows-subheading {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.shows-subheading h1 {
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.shows-button {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
