@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Sorry from "./pages/Sorry";
+import Admin from "./pages/Admin-Home";
 
 const App = () => {
   const Menu = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="register" element={<Register />} />
         <Route path="*" element={<Sorry />} />
         <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     );
   };

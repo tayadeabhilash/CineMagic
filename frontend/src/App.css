@@ -57,17 +57,16 @@
 
 @media only screen and (max-width: 767px) {
   .main-app {
-    padding-bottom: 560px; 
+    padding-bottom: 560px;
   }
 }
 
-.container-admin{
+.container-admin {
   display: flex;
   margin-top: 10px;
 }
 
-
-.link{
+.link {
   text-decoration: none;
   color: inherit;
 }

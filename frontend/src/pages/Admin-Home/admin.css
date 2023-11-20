@@ -1,0 +1,27 @@
+.admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-home {
+  width: 75%;
+  margin: 5rem 0;
+}
+
+.admin-home h1 {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.admin-movies-list {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
+}
+
+.admin-movie-form {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
