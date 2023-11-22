@@ -23,22 +23,26 @@ public class MultiplexController {
 	@Autowired
 	MultiplexService multiplexService;
 	
-	@GetMapping("/all")
+	@GetMapping
 	public List<MultiplexDto> getAllMultiplex() throws GlobalException {
         return multiplexService.getAllMultiplex();
     }
+	@GetMapping("/{id}")
+	public MultiplexDto getMultiplex(@PathVariable Integer id) throws GlobalException {
+        return multiplexService.getMultiplex(id);
+    }
 	
-	@PostMapping("/add")
+	@PostMapping
 	public void addMultiplex(@RequestBody MultiplexDto multiplexDto) throws GlobalException {
 		multiplexService.addMultiplex(multiplexDto);
 	}
 	
-	@PutMapping("/update") 
+	@PutMapping
 	public void updateMultiplex(@RequestBody MultiplexDto multiplexDto) throws GlobalException {
 		multiplexService.updateMultiplex(multiplexDto);
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteMultiplex(@PathVariable Integer id) throws GlobalException {
 		multiplexService.deleteMultiplex(id);
 	}

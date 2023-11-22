@@ -13,22 +13,22 @@ import lombok.Data;
 @Entity
 @Table(name = "theater_screens")
 @Data
-public class TheaterScreen {
-	
-	@Id
+public class TheaterScreenEntity {
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-	
+
     @Column(name = "name")
-	private String name;
-    
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "multiplex_id")
-    private Multiplex multiplex;
-		
-    @Column(name = "seatingCapacity")
-	private int seatingCapacity;
-    
-   
+    private MultiplexEntity multiplexEntity;
+
+    @Column(name = "seating_capacity")
+    private int seatingCapacity;
+
+
 }

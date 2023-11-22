@@ -14,23 +14,23 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table
+@Table(name = "multiplex")
 @Data
-public class Multiplex {
-	
-	@Id
+public class MultiplexEntity {
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-	
-	@Column(name="name")
-	private String name;
-	
-	 @Enumerated(EnumType.STRING)
-	 @Column(name = "location")
-	 private Location location;
 
-	 @Column(name="theater_screen_count")
-	 private int theaterScreenCount;
-	 
+    @Column(name = "name")
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "location")
+    private Location location;
+
+    @Column(name = "theater_screen_count")
+    private int theaterScreenCount;
+
 }
