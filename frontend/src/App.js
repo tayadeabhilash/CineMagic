@@ -11,6 +11,8 @@ import Admin from "./pages/Admin-Home";
 import Movie from "./pages/Movie";
 import Booking from "./pages/Booking";
 import Checkout from "./pages/Checkout";
+import MembershipPage from "./pages/Membership";
+import Tickets from "./pages/Tickets";
 
 const App = () => {
   const Menu = () => {
@@ -24,6 +26,8 @@ const App = () => {
         <Route path="/movie/:id" element={<Movie />} />
         <Route path="/booking/:id" element={<Booking />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/buy-membership" element={<MembershipPage />} />
+        <Route path="/tickets" element={<Tickets />} />
       </Routes>
     );
   };
