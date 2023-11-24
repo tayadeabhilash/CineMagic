@@ -1,9 +1,29 @@
-.main-homepage {
-  padding: 20px 50px 60px 50px;
+.custom-next-arrow,
+.custom-prev-arrow {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  z-index: 100;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media only screen and (max-width: 980px) {
-  .page-title {
-    font-size: 33px;
-  }
+.custom-next-arrow {
+  right: 10px;
+}
+
+.custom-prev-arrow {
+  left: 10px;
+}
+
+.homepage-container {
 }

@@ -10,6 +10,7 @@ import Sorry from "./pages/Sorry";
 import Admin from "./pages/Admin-Home";
 import Movie from "./pages/Movie";
 import Booking from "./pages/Booking";
+import Checkout from "./pages/Checkout";
 
 const App = () => {
   const Menu = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/movie/:id" element={<Movie />} />
         <Route path="/booking/:id" element={<Booking />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     );
   };

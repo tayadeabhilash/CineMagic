@@ -1,36 +1,15 @@
 import React from "react";
-import Card from "../Card";
+import { Card as AntCard } from "antd";
 
-const movie = {
-  id: "1",
-  title: "Title",
-  genres: "Genre",
-  imgUrl: "#",
-  key: "123",
-};
-
-const CardGrid = () => {
+const CardGrid = ({ title, description, image }) => {
   return (
-    <div className="container-fluid card-grid">
-      <div className="rows cards">
-        <div className="col card-items">
-          <div className="card-grid-container">
-            <a to="#" className="movie-links">
-              {/*NavLink*/}
-              <div className="card-grid-item">
-                <Card
-                  id={movie.id}
-                  title={movie.title}
-                  genres={movie.genres}
-                  imgUrl={movie.image}
-                  key={movie.id}
-                />
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <AntCard
+      hoverable
+      style={{ width: "240px", margin: "10px" }}
+      cover={<img alt={title} src={image} />}
+    >
+      <AntCard.Meta title={title} description={description} />
+    </AntCard>
   );
 };
 
