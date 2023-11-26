@@ -2,6 +2,7 @@ package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
+import com.scrumandcoke.movietheaterclub.model.enums.Location;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,17 @@ public class ShowTimeController {
     public ResponseEntity<?> getshowTimesByScreenId(@PathVariable int screenId) {
         try {
             List<ShowTimeDto> showTimes = showTimeService.getShowTimesByTheaterScreenId(screenId);
+            return ResponseEntity.ok(showTimes);
+        } catch (GlobalException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting showTimes: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("location/{locationName}")
+    public ResponseEntity<?> getshowTimesByLocation(@PathVariable Location locationName) {
+        try {
+            List<ShowTimeDto> showTimes = showTimeService.getShowTimesByLocation(locationName);
             return ResponseEntity.ok(showTimes);
         } catch (GlobalException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

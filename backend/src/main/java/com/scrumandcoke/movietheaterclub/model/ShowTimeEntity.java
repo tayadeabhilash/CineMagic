@@ -28,4 +28,6 @@ public class ShowTimeEntity {
     @JoinColumn(name = "theater_screen_id")
     private TheaterScreenEntity theaterScreen;
     private Double price;
+    @Column(name = "available_seats")
+    private Integer availableSeats;
 }

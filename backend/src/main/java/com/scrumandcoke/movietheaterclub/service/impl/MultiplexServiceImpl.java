@@ -3,6 +3,7 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.scrumandcoke.movietheaterclub.model.enums.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,23 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
+    public List<MultiplexDto> getAllMultiplexByLocation(Location location) throws GlobalException {
+        try {
+            List<MultiplexEntity> multiplexEntities = multiplexRepository.findByLocation(location);
+            List<MultiplexDto> allMultiplex = new ArrayList<>();
+            for (MultiplexEntity multiplexEntity : multiplexEntities) {
+                MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(),
+                        multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
+                allMultiplex.add(dto);
+            }
+            return allMultiplex;
+        } catch (Exception exception) {
+            logger.error("Error retrieving all multiplexes", exception);
+            throw new GlobalException("Error retrieving multiplex data: " + exception.getMessage(), exception);
+        }
+    }
+
+    @Override
     public void updateMultiplex(MultiplexDto multiplexDto) throws GlobalException {
         try {
             Integer multiplexId = multiplexDto.getId();
@@ -84,7 +102,7 @@ public class MultiplexServiceImpl implements MultiplexService {
     @Override
     public MultiplexDto getMultiplex(Integer id) throws GlobalException {
         try {
-            MultiplexEntity multiplexEntity =  multiplexRepository.findById(id).get();
+            MultiplexEntity multiplexEntity = multiplexRepository.findById(id).get();
             MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(), multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
             return dto;
         } catch (Exception exception) {
