@@ -109,9 +109,10 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException {
         try {
-            showTimeRepository.findById(showTimeDto.getId())
+            ShowTimeEntity entity = showTimeRepository.findById(showTimeDto.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Showtime not found with id: " + showTimeDto.getId()));
-            showTimeRepository.save(showTimeMapper.toEntity(showTimeDto));
+            showTimeMapper.updateCustomerFromDto(showTimeDto, entity);
+            showTimeRepository.save(entity);
         } catch (Exception exception) {
             logger.error("Error updating showtime: {}", showTimeDto.getId());
             throw new GlobalException(exception.getMessage(), exception);

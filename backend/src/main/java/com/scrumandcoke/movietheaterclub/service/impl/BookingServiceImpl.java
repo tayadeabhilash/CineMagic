@@ -70,11 +70,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public void cancelBooking(Integer id) throws GlobalException {
         BookingEntity bookingEntity = bookingRepository.findById(id).get();
         checkCancelEligibility(bookingEntity.getShowtime(), bookingEntity.getBookingStatus());
         bookingEntity.setBookingStatus(BookingStatus.CANCELLED);
-        processRefund(bookingEntity.getTotalAmount(), bookingEntity.getOnlineServiceFee(), bookingEntity.getPaymentMethod());
+        processRefund(bookingEntity.getTotalAmount(), bookingEntity.getOnlineServiceFee(),
+                bookingEntity.getPaymentMethod());
+        unblockSeats(bookingEntity.getShowtime().getId(), bookingEntity.getSeatsBooked());
         bookingRepository.save(bookingEntity);
     }
 
@@ -146,5 +149,15 @@ public class BookingServiceImpl implements BookingService {
         if (paymentMethod.equals(PaymentMethod.POINTS)) {
             // TODO: Add points back to user's account
         }
+    }
+
+    private void unblockSeats(Integer id, Integer seatsBooked) throws GlobalException {
+        ShowTimeDto showtime = showTimeService.getShowTime(id);
+
+        // Unblock available seats
+        showtime.setAvailableSeats(showtime.getAvailableSeats() + seatsBooked);
+
+        // Save the updated Showtime entity
+        showTimeService.updateShowTime(showtime);
     }
 }
