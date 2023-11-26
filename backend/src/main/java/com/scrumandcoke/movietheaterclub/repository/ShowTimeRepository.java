@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.repository;
 
 import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.model.enums.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ public interface ShowTimeRepository extends JpaRepository<ShowTimeEntity, Intege
     List<ShowTimeEntity> findByMovie_MovieId(Integer id);
     List<ShowTimeEntity> findByTheaterScreen_Id(Integer id);
     List<ShowTimeEntity> findByTheaterScreen_IdAndTheaterScreen_MultiplexEntity_Id(int theaterScreen_id, int multiplex_id);
+    List<ShowTimeEntity> findByTheaterScreen_MultiplexEntity_Location(Location location);
 }

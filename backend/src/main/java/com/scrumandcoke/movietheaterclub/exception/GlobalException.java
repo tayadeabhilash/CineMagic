@@ -5,7 +5,7 @@ public class GlobalException extends Exception {
         super(errorMessage, e);
     }
 
-	public GlobalException(String string) {
-
+	public GlobalException(String errorMessage) {
+        super(errorMessage);
 	}
 }
