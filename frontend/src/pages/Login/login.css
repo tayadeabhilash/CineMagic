@@ -1,5 +1,4 @@
 .login {
-  /* background-color: #fff; */
   background-image: url("../../assets/abstract-2.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -14,7 +13,6 @@
   background-color: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   border-radius: 20px;
-  /* height: 430px; */
   width: 88%;
 }
 
@@ -30,6 +28,9 @@
   width: 100%;
 }
 .login-form {
-  /* border-right: 1px solid #ddd; */
   padding: 80px;
+}
+
+.login-button {
+  margin-top: 1.5rem;
 }

@@ -7,6 +7,10 @@ function MoviesList() {
 
   const columns = [
     {
+      title: "Poster",
+      dataIndex: "poster",
+    },
+    {
       title: "Name",
       dataIndex: "title",
     },

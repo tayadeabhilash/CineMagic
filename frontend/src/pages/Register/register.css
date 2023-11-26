@@ -14,7 +14,6 @@
   background-color: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   border-radius: 20px;
-  /* height: 430px; */
   width: 88%;
 }
 
@@ -25,6 +24,8 @@
   padding-right: 3rem;
 }
 .register-form {
-  /* border-right: 1px solid #ddd; */
   padding: 80px;
+}
+.register-button {
+  margin-top: 1.5rem;
 }

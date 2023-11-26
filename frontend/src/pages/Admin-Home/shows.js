@@ -1,11 +1,11 @@
 import { Col, Form, Modal, Row, Table } from "antd";
-import React from "react";
-import Button from "../../../components/Button";
-import "../admin.css";
+import React, { useState } from "react";
+import Button from "../../components/Button";
+import "./admin.css";
 
-function Shows({ openShowsModal, setOpenShowsModal, screen }) {
-  const [view, setView] = React.useState("table");
-  const [shows, setShows] = React.useState([
+function Shows({ openShowsModal, setOpenShowsModal, theater }) {
+  const [view, setView] = useState("table");
+  const [shows, setShows] = useState([
     {
       name: "3D",
       date: "19-05-2000",
@@ -16,7 +16,14 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
       availableSeats: 30,
     },
   ]);
-  const [movies, setMovies] = React.useState([]);
+  const [movies, setMovies] = useState([]);
+  const [editingShow, setEditingShow] = useState(null);
+  const [isDiscounted, setIsDiscounted] = useState(false);
+  const [ticketPrice, setTicketPrice] = useState(20);
+  const [priceOptions, setPriceOptions] = useState({
+    originalPrice: 10,
+    discountedPrice: 7.5,
+  });
 
   const columns = [
     {
@@ -50,11 +57,43 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
     {
       title: "Action",
       dataIndex: "action",
-      render: (text, record) => {
-        return <i className="ri-delete-bin-line"></i>;
-      },
+      render: (text, record) => (
+        <div className="theatre-icons">
+          <i className="ri-delete-bin-line"></i>
+          <i className="ri-pencil-line" onClick={() => editShow(record)}></i>
+        </div>
+      ),
     },
   ];
+
+  const editShow = (record) => {
+    setEditingShow(record);
+    setView("form");
+  };
+
+  const handlePriceSet = (isDiscounted) => {
+    const price = isDiscounted
+      ? priceOptions.discountedPrice
+      : priceOptions.originalPrice;
+    setTicketPrice(price);
+    setIsDiscounted(isDiscounted);
+  };
+
+  const handleSave = (formValues) => {
+    if (editingShow) {
+      setShows(
+        shows.map((show) =>
+          show.name === editingShow.name
+            ? { ...editingShow, ...formValues }
+            : show
+        )
+      );
+    } else {
+      setShows([...shows, formValues]);
+    }
+    setView("table");
+    setEditingShow(null);
+  };
 
   return (
     <Modal
@@ -64,7 +103,7 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
       width={1400}
       footer={null}
     >
-      <h1 className="shows-heading">Screen : {screen?.name}</h1>
+      <h1 className="shows-heading">Theater : {theater?.name}</h1>
       <hr />
 
       <div className="shows-subheading">
@@ -83,7 +122,11 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
       {view === "table" && <Table columns={columns} dataSource={shows} />}
 
       {view === "form" && (
-        <Form layout="vertical">
+        <Form
+          layout="vertical"
+          onFinish={handleSave}
+          initialValues={editingShow ? { ...editingShow } : {}}
+        >
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <Form.Item
@@ -125,21 +168,33 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
                   <option value="">Select Movie</option>
                   {movies.map((movie) => (
                     <option value={movie._id}>{movie.title}</option>
-                  ))}{" "}
+                  ))}
                 </select>
               </Form.Item>
             </Col>
 
             <Col span={8}>
-              <Form.Item
-                label="Ticket Price"
-                name="ticketPrice"
-                rules={[
-                  { required: true, message: "Please input ticket price!" },
-                ]}
-              >
-                <input type="number" />
-              </Form.Item>
+              <div className="ticket-price-buttons">
+                <label>Ticket Price</label>
+                <button
+                  type="button"
+                  className={`price-button original-price ${
+                    !isDiscounted ? "selected-price" : ""
+                  }`}
+                  onClick={() => handlePriceSet(false)}
+                >
+                  Original Price (${priceOptions.originalPrice})
+                </button>
+                <button
+                  type="button"
+                  className={`price-button discounted-price ${
+                    isDiscounted ? "selected-price" : ""
+                  }`}
+                  onClick={() => handlePriceSet(true)}
+                >
+                  Discounted Price (${priceOptions.discountedPrice})
+                </button>
+              </div>
             </Col>
 
             <Col span={8}>
@@ -160,9 +215,9 @@ function Shows({ openShowsModal, setOpenShowsModal, screen }) {
               title="Cancel"
               onClick={() => {
                 setView("table");
+                setEditingShow(null);
               }}
             />
-
             <Button variant="contained" title="SAVE" type="submit" />
           </div>
         </Form>

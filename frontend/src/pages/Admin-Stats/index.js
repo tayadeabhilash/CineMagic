@@ -24,6 +24,7 @@ ChartJS.register(
 
 const AnalyticsDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(30);
+  const totalSeats = 100;
 
   const occupancyData = [
     { location: "Theater 1", occupancy: 75, movie: "Movie A" },
@@ -35,24 +36,34 @@ const AnalyticsDashboard = () => {
     labels: occupancyData.map((item) => item.location),
     datasets: [
       {
-        label: "Occupancy by Location",
+        label: "Occupancy",
         data: occupancyData.map((item) => item.occupancy),
         backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+      {
+        label: "Total Seats",
+        data: occupancyData.map(() => totalSeats),
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
     ],
   };
 
+  const uniqueMovies = [...new Set(occupancyData.map((item) => item.movie))];
   const dataByMovie = {
-    labels: [...new Set(occupancyData.map((item) => item.movie))],
+    labels: uniqueMovies,
     datasets: [
       {
-        label: "Occupancy by Movie",
-        data: [...new Set(occupancyData.map((item) => item.movie))].map(
-          (movie) =>
-            occupancyData
-              .filter((item) => item.movie === movie)
-              .reduce((acc, cur) => acc + cur.occupancy, 0)
+        label: "Occupancy",
+        data: uniqueMovies.map((movie) =>
+          occupancyData
+            .filter((item) => item.movie === movie)
+            .reduce((acc, cur) => acc + cur.occupancy, 0)
         ),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+      {
+        label: "Total Seats",
+        data: uniqueMovies.map(() => totalSeats),
         backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
     ],

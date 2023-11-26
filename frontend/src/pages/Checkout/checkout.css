@@ -1,0 +1,152 @@
+.checkout-page-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.checkout-container {
+  width: 75%;
+  margin-bottom: 5rem;
+}
+
+.checkout-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+.checkout-container .row {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.checkout-container .col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.checkout-container .img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.checkout-container .card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.checkout-container .card .ant-card-head {
+  background-color: #f7f7f7;
+  border-bottom: none;
+}
+
+.checkout-container .card .ant-card-body {
+  padding: 15px;
+}
+
+.checkout-container .card p {
+  line-height: 1.6;
+  color: #666;
+}
+
+.checkout-container .card strong {
+  color: #333;
+}
+
+.checkout-container .card button {
+  margin-top: 1rem;
+  background-color: #ffcc00;
+  color: #333;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout-container .card button:hover {
+  background-color: #ffcc00 !important;
+}
+
+/* The following styles are for the order summary specifically */
+.checkout-container .order-summary {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.checkout-container .order-summary h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.checkout-container .order-summary .summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.checkout-container .order-summary .summary-item p {
+  margin: 0;
+}
+
+.checkout-container .order-summary .summary-item p:last-child {
+  font-weight: bold;
+}
+
+.checkout-container .order-summary .summary-total {
+  font-size: 22px;
+  margin-top: 10px;
+}
+
+.checkout-container .order-summary .summary-total p:last-child {
+  color: #d9534f;
+}
+
+.checkout-container .order-summary button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Additional styling for security & privacy section */
+.checkout-container .security-privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.checkout-container .security-privacy .icon {
+  font-size: 24px;
+  color: #333;
+  margin-right: 10px;
+}
+
+.checkout-container .security-privacy p {
+  margin: 0;
+}
+
+.checkout-container .reward-points {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .checkout-container .row {
+    flex-direction: column;
+  }
+
+  .checkout-container .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .checkout-container .card {
+    width: auto;
+  }
+}

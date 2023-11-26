@@ -3,11 +3,9 @@ import { Table } from "antd";
 import "./admin.css";
 import Button from "../../components/Button";
 import TheatreForm from "./theatre-form";
-import { useNavigate } from "react-router-dom";
+import Shows from "./shows";
 
 function TheatresList() {
-  const navigate = useNavigate();
-
   const [showTheatreFormModal, setShowTheatreFormModal] = useState(false);
   const [selectedTheatre, setSelectedTheatre] = useState(null);
   const [formType, setFormType] = useState("add");
@@ -21,10 +19,7 @@ function TheatresList() {
       isActive: true,
     },
   ]);
-
-  const handleRowClick = (record) => {
-    navigate(`/theater/${record.key}`, { state: { theater: record } });
-  };
+  const [openShowsModal, setOpenShowsModal] = useState(false);
 
   const columns = [
     {
@@ -75,6 +70,15 @@ function TheatresList() {
                 setShowTheatreFormModal(true);
               }}
             ></i>
+            <span
+              className="underline"
+              onClick={() => {
+                setSelectedTheatre(record);
+                setOpenShowsModal(true);
+              }}
+            >
+              Shows
+            </span>
           </div>
         );
       },
@@ -93,17 +97,8 @@ function TheatresList() {
           }}
         />
       </div>
-      <Table
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event) => {
-              handleRowClick(record);
-            },
-          };
-        }}
-        columns={columns}
-        dataSource={theatres}
-      />
+      <Table columns={columns} dataSource={theatres} />
+
       {showTheatreFormModal && (
         <TheatreForm
           showTheatreFormModal={showTheatreFormModal}
@@ -111,6 +106,14 @@ function TheatresList() {
           formType={formType}
           selectedTheatre={selectedTheatre}
           setSelectedTheatre={setSelectedTheatre}
+        />
+      )}
+
+      {openShowsModal && (
+        <Shows
+          openShowsModal={openShowsModal}
+          setOpenShowsModal={setOpenShowsModal}
+          theater={selectedTheatre}
         />
       )}
     </div>

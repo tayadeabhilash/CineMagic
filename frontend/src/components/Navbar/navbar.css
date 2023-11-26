@@ -1,48 +1,48 @@
 .navbar {
-    background-color: #110f2d;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
-    color: #fff;
+  background-color: #0a0a0a;
+  border-bottom: 2px solid #131313;
+}
+
+.navbar-brand {
+  color: #ffffff;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-toggler {
+  border-color: #353535;
+}
+
+.main-nav .nav-link {
+  color: #b3b3b3;
+  font-family: "Heebo", sans-serif;
+  font-weight: medium;
+}
+
+.main-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-item .btn-outline-success {
+  color: #19d3da;
+  border-color: #19d3da;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-item .btn-outline-success:hover {
+  color: #0a0a0a;
+  background-color: #19d3da;
+}
+
+.navbar-nav {
+  width: 12rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 992px) {
+  .navbar-expand-lg .navbar-collapse {
+    background-color: #0a0a0a;
   }
-  .navbar-brand {
-    color: #fff !important  ;
-    font-weight: 700;
-    border-bottom: 1px solid #fff;
-    border-radius: 60px;
-  }
-  /* .navbar-dark .navbar-toggler-icon {
-    background-image: url('data:image/svg+xml;..') !important;
-  } */
-  .main-nav {
-    font-weight: 600;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: relative;
-    /* border-bottom: 1px solid #fff; */
-  }
-  .nav-item {
-    float: left;
-  }
-  
-  .nav-item a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  
-  .active {
-    text-decoration: underline solid #04aa6d 20% !important;
-    text-decoration-color: #04aa6d !important;
-  }
-  .nav-user-btn {
-    float: right;
-  }
-  
-  .userName
-  {
-    padding: 14px 16px; 
-    text-align: center;
-  }
+}

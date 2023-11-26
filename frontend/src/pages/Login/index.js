@@ -22,9 +22,6 @@ const Login = () => {
             <Form.Group className="mb-3" controlId="userEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control required type="email" placeholder="Enter email" />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="userPassword">
@@ -37,7 +34,7 @@ const Login = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" className="login-button">
               Submit
             </Button>
           </Form>

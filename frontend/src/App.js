@@ -13,7 +13,6 @@ import Booking from "./pages/Booking";
 import Checkout from "./pages/Checkout";
 import MembershipPage from "./pages/Membership";
 import Tickets from "./pages/Tickets";
-import Screens from "./pages/Admin-Home/Admin-Screens";
 import AnalyticsDashboard from "./pages/Admin-Stats";
 
 const App = () => {
@@ -31,7 +30,6 @@ const App = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/buy-membership" element={<MembershipPage />} />
         <Route path="/tickets" element={<Tickets />} />
-        <Route path="/theater/:id" element={<Screens />} />
       </Routes>
     );
   };

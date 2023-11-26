@@ -28,9 +28,6 @@ const Register = () => {
                 id="userEmail"
                 placeholder="Enter email"
               />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="userPassword">
@@ -52,7 +49,7 @@ const Register = () => {
                 placeholder="Enter Phone Number"
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" className="register-button">
               Submit
             </Button>
           </Form>
