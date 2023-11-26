@@ -13,6 +13,8 @@ import Booking from "./pages/Booking";
 import Checkout from "./pages/Checkout";
 import MembershipPage from "./pages/Membership";
 import Tickets from "./pages/Tickets";
+import Screens from "./pages/Admin-Home/Admin-Screens";
+import AnalyticsDashboard from "./pages/Admin-Stats";
 
 const App = () => {
   const Menu = () => {
@@ -23,11 +25,13 @@ const App = () => {
         <Route path="*" element={<Sorry />} />
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/analytics" element={<AnalyticsDashboard />} />
         <Route path="/movie/:id" element={<Movie />} />
         <Route path="/booking/:id" element={<Booking />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/buy-membership" element={<MembershipPage />} />
         <Route path="/tickets" element={<Tickets />} />
+        <Route path="/theater/:id" element={<Screens />} />
       </Routes>
     );
   };

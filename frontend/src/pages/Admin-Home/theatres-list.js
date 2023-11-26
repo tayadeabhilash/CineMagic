@@ -3,22 +3,28 @@ import { Table } from "antd";
 import "./admin.css";
 import Button from "../../components/Button";
 import TheatreForm from "./theatre-form";
-import Shows from "./shows";
+import { useNavigate } from "react-router-dom";
 
 function TheatresList() {
+  const navigate = useNavigate();
+
   const [showTheatreFormModal, setShowTheatreFormModal] = useState(false);
   const [selectedTheatre, setSelectedTheatre] = useState(null);
   const [formType, setFormType] = useState("add");
   const [theatres, setTheatres] = useState([
     {
-      name: "Screen 2",
+      key: 1,
+      name: "XYZ Theater",
       address: "#342",
       phone: 123456,
       email: "asdafdsf",
       isActive: true,
     },
   ]);
-  const [openShowsModal, setOpenShowsModal] = useState(false);
+
+  const handleRowClick = (record) => {
+    navigate(`/theater/${record.key}`, { state: { theater: record } });
+  };
 
   const columns = [
     {
@@ -54,24 +60,21 @@ function TheatresList() {
       render: (text, record) => {
         return (
           <div className="theatre-icons">
-            <i className="ri-delete-bin-line"></i>
+            <i
+              className="ri-delete-bin-line"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            ></i>
             <i
               className="ri-pencil-line"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setFormType("edit");
                 setSelectedTheatre(record);
                 setShowTheatreFormModal(true);
               }}
             ></i>
-            <span
-              className="underline"
-              onClick={() => {
-                setSelectedTheatre(record);
-                setOpenShowsModal(true);
-              }}
-            >
-              Shows
-            </span>
           </div>
         );
       },
@@ -90,9 +93,17 @@ function TheatresList() {
           }}
         />
       </div>
-
-      <Table columns={columns} dataSource={theatres} />
-
+      <Table
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              handleRowClick(record);
+            },
+          };
+        }}
+        columns={columns}
+        dataSource={theatres}
+      />
       {showTheatreFormModal && (
         <TheatreForm
           showTheatreFormModal={showTheatreFormModal}
@@ -100,14 +111,6 @@ function TheatresList() {
           formType={formType}
           selectedTheatre={selectedTheatre}
           setSelectedTheatre={setSelectedTheatre}
-        />
-      )}
-
-      {openShowsModal && (
-        <Shows
-          openShowsModal={openShowsModal}
-          setOpenShowsModal={setOpenShowsModal}
-          theatre={selectedTheatre}
         />
       )}
     </div>

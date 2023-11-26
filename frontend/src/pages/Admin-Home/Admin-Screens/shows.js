@@ -1,9 +1,9 @@
 import { Col, Form, Modal, Row, Table } from "antd";
 import React from "react";
-import Button from "../../components/Button";
-import "./admin.css";
+import Button from "../../../components/Button";
+import "../admin.css";
 
-function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
+function Shows({ openShowsModal, setOpenShowsModal, screen }) {
   const [view, setView] = React.useState("table");
   const [shows, setShows] = React.useState([
     {
@@ -64,7 +64,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
       width={1400}
       footer={null}
     >
-      <h1 className="shows-heading">Theatre : {theatre.name}</h1>
+      <h1 className="shows-heading">Screen : {screen?.name}</h1>
       <hr />
 
       <div className="shows-subheading">
