@@ -14,6 +14,8 @@ import Checkout from "./pages/Checkout";
 import MembershipPage from "./pages/Membership";
 import Tickets from "./pages/Tickets";
 import AnalyticsDashboard from "./pages/Admin-Stats";
+import MoviesForTheater from "./pages/Movies-For-Theater";
+import TheatersForLocation from "./pages/Theaters-For-Location";
 
 const App = () => {
   const Menu = () => {
@@ -26,10 +28,12 @@ const App = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} />
         <Route path="/movie/:id" element={<Movie />} />
-        <Route path="/booking/:id" element={<Booking />} />
+        <Route path="/booking" element={<Booking />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/buy-membership" element={<MembershipPage />} />
         <Route path="/tickets" element={<Tickets />} />
+        <Route path="/theater/:id" element={<MoviesForTheater />} />
+        <Route path="/location/:id" element={<TheatersForLocation />} />
       </Routes>
     );
   };

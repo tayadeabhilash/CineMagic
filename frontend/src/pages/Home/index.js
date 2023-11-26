@@ -197,13 +197,15 @@ const HomePage = () => {
         prevArrow={<CustomPrevArrow />}
       >
         {data.map((item, index) => (
-          <CardGrid
-            key={index}
-            title={item.title}
-            description={item.description}
-            image={item.image}
-            onClick={() => handleCardClick(type, item.id)}
-          />
+          <div className="card-container">
+            <CardGrid
+              key={index}
+              title={item.title}
+              description={item.description}
+              image={item.image}
+              onClick={() => handleCardClick(type, item.id)}
+            />
+          </div>
         ))}
       </Carousel>
     );

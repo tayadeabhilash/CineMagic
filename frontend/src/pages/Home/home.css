@@ -25,5 +25,8 @@
   left: 10px;
 }
 
-.homepage-container {
+.card-container {
+  width: 100%;
+  display: flex !important;
+  justify-content: center;
 }
