@@ -14,6 +14,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "external_id")
+    String externalId;
+
     @Column(name = "first_name")
     private String firstName;
 

@@ -2,7 +2,6 @@ package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -33,12 +32,12 @@ public class UserController {
     }
 
     @PutMapping
-    public void updateUser(@RequestBody UserDto userDto) throws GlobalException {
+    public void updateUser(@RequestBody UserDto userDto) {
         userService.updateUser(userDto);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Integer userId) throws GlobalException {
+    public void deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
     }
 }
