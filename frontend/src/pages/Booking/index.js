@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Select, Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
 import "./booking.css";
 
 // Dummy Data
@@ -51,6 +52,7 @@ const showtimes = [
 const TICKET_PRICE = 10;
 
 const MovieSelectionPage = () => {
+  const navigate = useNavigate();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedTheater, setSelectedTheater] = useState(null);
   const [filteredShowtimes, setFilteredShowtimes] = useState([]);
@@ -94,7 +96,14 @@ const MovieSelectionPage = () => {
   };
 
   const handleCheckout = () => {
-    // Checkout logic here
+    const query = new URLSearchParams();
+    query.set("theatre", encodeURIComponent(selectedShow?.name || ""));
+    query.set("address", encodeURIComponent(selectedShow?.address || ""));
+    query.set("time", encodeURIComponent(selectedShow?.selectedTime || ""));
+    query.set("seats", selectedSeats);
+    query.set("total", calculateTotal());
+
+    navigate(`/checkout?${query.toString()}`);
     handleModalClose();
   };
 

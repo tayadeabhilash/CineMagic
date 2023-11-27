@@ -7,9 +7,9 @@ const Checkout = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  const theatre = params.get("theatre");
-  const address = params.get("address");
-  const time = params.get("time");
+  const theatre = decodeURIComponent(params.get("theatre") || "");
+  const address = decodeURIComponent(params.get("address") || "");
+  const time = decodeURIComponent(params.get("time") || "");
   const seats = parseInt(params.get("seats"), 10);
   const price = parseFloat(params.get("total"));
   const taxPerTicket = 1.5;
