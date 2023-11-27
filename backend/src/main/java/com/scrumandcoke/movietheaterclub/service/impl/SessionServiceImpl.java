@@ -1,5 +1,6 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
+import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
 import com.scrumandcoke.movietheaterclub.model.Session;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
@@ -16,18 +17,18 @@ public class SessionServiceImpl implements SessionService {
     private SessionRepository sessionRepository;
 
     @Override
-    public void addSession(Session session) {
-        sessionRepository.save(session);
+    public void createSession(CreateSessionRequest createSessionRequest) {
+        sessionRepository.save(new Session());
     }
 
     @Override
-    public Session getSession(Integer id) {
+    public Session validateSession(Integer id) {
         return sessionRepository.findById(id).get();
     }
 
     @Override
     public void invalidateSession(Integer id) {
-        Session session = getSession(id);
+        Session session = validateSession(id);
         session.setExpireAt(Date.from(Instant.now()));
         session.setLastUpdatedAt(Date.from(Instant.now()));
         sessionRepository.save(session);

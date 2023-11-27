@@ -23,7 +23,6 @@ public class Session {
     @Column(name = "last_updated_at")
     private Date lastUpdatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    @Column(name = "user_id")
+    String userId;
 }

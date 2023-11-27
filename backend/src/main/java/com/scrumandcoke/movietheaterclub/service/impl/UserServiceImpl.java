@@ -42,6 +42,13 @@ public class UserServiceImpl implements UserService {
         return new UserDto();
     }
 
+    @Override
+    public UserDto validateLoginCredentials(@NonNull String email, @NonNull String password) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        return new UserDto();
+    }
+
     private boolean userExistsByEmail(@NonNull String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         return Objects.nonNull(userEntity);
@@ -62,7 +69,7 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> userEntities = userRepository.findAll();
         List<UserDto> response = new ArrayList<>();
         for (UserEntity userEntity : userEntities) {
-            response.add(new UserDto(userEntity.getFirstName(), userEntity.getLastName(), userEntity.getEmail(), null, userEntity.getMemberType()));
+            response.add(new UserDto(String.valueOf(userEntity.getId()), userEntity.getFirstName(), userEntity.getLastName(), userEntity.getEmail(), null, userEntity.getMemberType()));
         }
         return response;
     }
