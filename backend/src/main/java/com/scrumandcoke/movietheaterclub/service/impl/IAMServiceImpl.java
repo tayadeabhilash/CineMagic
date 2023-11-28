@@ -15,6 +15,7 @@ import java.time.Duration;
 @Service
 public class IAMServiceImpl implements IAMService {
 
+    private static final Duration DEFAULT_SESSION_DURATION = Duration.ofDays(7);
 
     @Autowired
     UserService userService;
@@ -27,20 +28,20 @@ public class IAMServiceImpl implements IAMService {
 
         sessionService.createSession(CreateSessionRequest.builder()
                 .userId(userDto.getUserId())
-                .sessionDuration(Duration.ofDays(7))
+                .sessionDuration(DEFAULT_SESSION_DURATION)
                 .build());
 
         return userDto;
     }
 
 
-    public UserDto signIn() {
+    public UserDto signIn(@NonNull String email, @NonNull String password) {
 
-        UserDto userDto = userService.validateLoginCredentials(null, null);
+        UserDto userDto = userService.validateLoginCredentials(email, password);
 
         sessionService.createSession(CreateSessionRequest.builder()
                 .userId(userDto.getUserId())
-                .sessionDuration(Duration.ofDays(7))
+                .sessionDuration(DEFAULT_SESSION_DURATION)
                 .build());
 
         return userDto;

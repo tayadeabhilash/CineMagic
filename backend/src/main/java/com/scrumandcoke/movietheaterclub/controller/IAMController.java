@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
+import com.scrumandcoke.movietheaterclub.dto.LoginRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.service.IAMService;
 import jakarta.validation.Valid;
@@ -23,8 +24,8 @@ public class IAMController {
     }
 
     @PostMapping("/login")
-    public UserDto signIn() {
-        return iamService.signIn();
+    public UserDto signIn(@Valid @RequestBody LoginRequest loginRequest) {
+        return iamService.signIn(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
 
