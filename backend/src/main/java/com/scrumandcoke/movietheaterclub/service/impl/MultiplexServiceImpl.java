@@ -28,6 +28,22 @@ public class MultiplexServiceImpl implements MultiplexService {
 
     @Override
     public void addMultiplex(MultiplexDto multiplexDto) throws GlobalException {
+        if (multiplexDto == null) {
+            throw new GlobalException("Multiplex data cannot be null");
+        }
+        if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
+            throw new GlobalException("Multiplex name cannot be null or empty");
+        }
+        if (multiplexDto.getLocation() == null) {
+            throw new GlobalException("Location cannot be null");
+        }
+        if (multiplexDto.getTheaterScreenCount() < 1) {
+            throw new GlobalException("Theater screen count must be at least 1");
+        }
+        if (multiplexRepository.existsByName(multiplexDto.getName())) {
+            throw new GlobalException("A multiplex with the same name already exists");
+        }
+
         try {
             MultiplexEntity multiplexEntity = new MultiplexEntity();
             multiplexEntity.setName(multiplexDto.getName());
@@ -75,6 +91,28 @@ public class MultiplexServiceImpl implements MultiplexService {
 
     @Override
     public void updateMultiplex(MultiplexDto multiplexDto) throws GlobalException {
+
+        if (multiplexDto == null) {
+            throw new GlobalException("Multiplex data cannot be null");
+        }
+        if (multiplexDto.getId() == 0) {
+            throw new GlobalException("Invalid multiplex ID");
+        }
+        if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
+            throw new GlobalException("Multiplex name cannot be null or empty");
+        }
+        if (multiplexDto.getLocation() == null) {
+            throw new GlobalException("Location cannot be null");
+        }
+        if (multiplexDto.getTheaterScreenCount() < 1) {
+            throw new GlobalException("Theater screen count must be at least 1");
+        }
+        // Check for duplicate name, excluding the current multiplex
+        boolean nameExists = multiplexRepository.existsByNameAndIdNot(multiplexDto.getName(), multiplexDto.getId());
+        if (nameExists) {
+            throw new GlobalException("Another multiplex with this name already exists");
+        }
+
         try {
             Integer multiplexId = multiplexDto.getId();
             MultiplexEntity multiplexEntity = multiplexRepository.findById(multiplexId)
