@@ -2,7 +2,9 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
+import com.scrumandcoke.movietheaterclub.mapper.UserMapper;
 import com.scrumandcoke.movietheaterclub.model.UserEntity;
+import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
 import com.scrumandcoke.movietheaterclub.repository.UserRepository;
 import com.scrumandcoke.movietheaterclub.service.UserService;
 import lombok.NonNull;
@@ -10,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -31,22 +31,23 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity userEntity = new UserEntity();
+
+        userEntity.setFirstName(createUserRequest.getFirstName());
+        userEntity.setLastName(createUserRequest.getLastName());
+        userEntity.setExternalId(UUID.randomUUID().toString());
         userEntity.setEmail(createUserRequest.getEmail());
-        userEntity.setCreatedAt(Date.from(Instant.now()));
-        userEntity.setLastUpdatedAt(Date.from(Instant.now()));
         userEntity.setPassword(createUserRequest.getPassword());
-        userEntity.setMemberType(createUserRequest.getMemberType());
+        userEntity.setMemberType(MemberType.REGULAR);
 
         userRepository.save(userEntity);
 
-        return new UserDto();
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     @Override
     public UserDto validateLoginCredentials(@NonNull String email, @NonNull String password) {
         UserEntity userEntity = userRepository.findByEmail(email);
-
-        return new UserDto();
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     private boolean userExistsByEmail(@NonNull String email) {
@@ -61,28 +62,22 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException("No user exists with the email " + email);
         }
 
-        return new UserDto();
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     @Override
     public List<UserDto> getUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
-        List<UserDto> response = new ArrayList<>();
-        for (UserEntity userEntity : userEntities) {
-            response.add(new UserDto(String.valueOf(userEntity.getId()), userEntity.getFirstName(), userEntity.getLastName(), userEntity.getEmail(), null, userEntity.getMemberType()));
-        }
-        return response;
+        return UserMapper.INSTANCE.userEntitiesToDtos(userEntities);
     }
 
     @Override
     public void updateUser(UserDto userDto) {
         UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
+
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
-        userEntity.setEmail(userDto.getEmail());
-        userEntity.setLastUpdatedAt(Date.from(Instant.now()));
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setMemberType(userDto.getMemberType());
+
         userRepository.save(userEntity);
     }
 

@@ -3,6 +3,8 @@ package com.scrumandcoke.movietheaterclub.model;
 import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -34,8 +36,10 @@ public class UserEntity {
     private MemberType memberType;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(name = "last_updated_at")
+    @UpdateTimestamp
     private Date lastUpdatedAt;
 }
