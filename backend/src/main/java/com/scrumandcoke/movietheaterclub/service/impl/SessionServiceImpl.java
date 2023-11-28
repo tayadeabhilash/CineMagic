@@ -1,6 +1,8 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
+import com.scrumandcoke.movietheaterclub.dto.SessionDto;
+import com.scrumandcoke.movietheaterclub.mapper.SessionMapper;
 import com.scrumandcoke.movietheaterclub.model.SessionEntity;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
@@ -19,7 +21,7 @@ public class SessionServiceImpl implements SessionService {
     private SessionRepository sessionRepository;
 
     @Override
-    public void createSession(@NonNull CreateSessionRequest createSessionRequest) {
+    public SessionDto createSession(@NonNull CreateSessionRequest createSessionRequest) {
         SessionEntity sessionEntity = new SessionEntity();
 
         sessionEntity.setSessionId(UUID.randomUUID().toString());
@@ -27,6 +29,8 @@ public class SessionServiceImpl implements SessionService {
         sessionEntity.setExpireAt(Date.from(Instant.now().plus(createSessionRequest.getSessionDuration())));
 
         sessionRepository.save(sessionEntity);
+
+        return SessionMapper.INSTANCE.entityToDto(sessionEntity);
     }
 
     @Override

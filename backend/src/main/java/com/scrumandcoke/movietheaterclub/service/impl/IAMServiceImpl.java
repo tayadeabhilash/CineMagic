@@ -1,8 +1,7 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
-import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
-import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
-import com.scrumandcoke.movietheaterclub.dto.UserDto;
+import com.scrumandcoke.movietheaterclub.dto.*;
+import com.scrumandcoke.movietheaterclub.mapper.UserSessionDetailMapper;
 import com.scrumandcoke.movietheaterclub.service.IAMService;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import com.scrumandcoke.movietheaterclub.service.UserService;
@@ -23,28 +22,28 @@ public class IAMServiceImpl implements IAMService {
     @Autowired
     SessionService sessionService;
 
-    public UserDto signUp(@NonNull CreateUserRequest createUserRequest) {
+    public UserSessionDetail signUp(@NonNull CreateUserRequest createUserRequest) {
         UserDto userDto = userService.createUser(createUserRequest);
 
-        sessionService.createSession(CreateSessionRequest.builder()
+        SessionDto sessionDto = sessionService.createSession(CreateSessionRequest.builder()
                 .userId(userDto.getUserId())
                 .sessionDuration(DEFAULT_SESSION_DURATION)
                 .build());
 
-        return userDto;
+        return UserSessionDetailMapper.INSTANCE.toUserSessionDetail(userDto, sessionDto);
     }
 
 
-    public UserDto signIn(@NonNull String email, @NonNull String password) {
+    public UserSessionDetail signIn(@NonNull String email, @NonNull String password) {
 
         UserDto userDto = userService.validateLoginCredentials(email, password);
 
-        sessionService.createSession(CreateSessionRequest.builder()
+        SessionDto sessionDto = sessionService.createSession(CreateSessionRequest.builder()
                 .userId(userDto.getUserId())
                 .sessionDuration(DEFAULT_SESSION_DURATION)
                 .build());
 
-        return userDto;
+        return UserSessionDetailMapper.INSTANCE.toUserSessionDetail(userDto, sessionDto);
     }
 
     @Override
