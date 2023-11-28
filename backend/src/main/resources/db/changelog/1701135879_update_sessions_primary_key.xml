@@ -8,7 +8,7 @@
         <dropColumn tableName="sessions" columnName="id"/>
 
         <addColumn tableName="sessions">
-            <column name="session_ID" type="VARCHAR(255)">
+            <column name="session_id" type="VARCHAR(255)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
         </addColumn>

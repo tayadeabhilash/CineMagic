@@ -6,5 +6,6 @@
     <include file="classpath:db/changelog/1699508629_create_sessions_and_users_tables.xml" relativeToChangelogFile="false" />
     <include file="classpath:db/changelog/1701132985_add_field_to_users_table.xml" relativeToChangelogFile="false" />
     <include file="classpath:db/changelog/1701135879_update_sessions_primary_key.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701136572_update_user_id_field_type_in_sessions.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

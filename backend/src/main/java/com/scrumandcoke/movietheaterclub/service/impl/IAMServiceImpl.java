@@ -7,11 +7,19 @@ import com.scrumandcoke.movietheaterclub.service.IAMService;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import com.scrumandcoke.movietheaterclub.service.UserService;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+@Service
 public class IAMServiceImpl implements IAMService {
+
+
+    @Autowired
     UserService userService;
+
+    @Autowired
     SessionService sessionService;
 
     public UserDto signUp(@NonNull CreateUserRequest createUserRequest) {
