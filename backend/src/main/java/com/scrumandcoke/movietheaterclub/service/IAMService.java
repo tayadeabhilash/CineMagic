@@ -11,7 +11,7 @@ public interface IAMService {
 
     UserSessionDetail signIn(@NonNull String email, @NonNull String password);
 
-    UserDto isAuthenticated(String sessionId);
+    UserSessionDetail isAuthenticated(@NonNull String sessionId);
 
     void logout();
 }

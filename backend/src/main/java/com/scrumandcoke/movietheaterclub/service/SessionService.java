@@ -2,10 +2,10 @@ package com.scrumandcoke.movietheaterclub.service;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
 import com.scrumandcoke.movietheaterclub.dto.SessionDto;
-import com.scrumandcoke.movietheaterclub.model.SessionEntity;
+import lombok.NonNull;
 
 public interface SessionService {
     SessionDto createSession(CreateSessionRequest createSessionRequest);
-    SessionEntity validateSession(Integer id);
-    void invalidateSession(Integer id);
+    SessionDto validateSession(@NonNull String sessionId);
+    void invalidateSession(@NonNull String sessionId);
 }

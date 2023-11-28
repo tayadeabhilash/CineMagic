@@ -34,15 +34,17 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public SessionEntity validateSession(Integer id) {
-        return sessionRepository.findById(id).get();
+    public SessionDto validateSession(@NonNull String sessionId) {
+        SessionEntity sessionEntity = sessionRepository.findById(sessionId).get();
+        return SessionMapper.INSTANCE.entityToDto(sessionEntity);
     }
 
     @Override
-    public void invalidateSession(Integer id) {
-        SessionEntity sessionEntity = validateSession(id);
-        sessionEntity.setExpireAt(Date.from(Instant.now()));
-        sessionEntity.setLastUpdatedAt(Date.from(Instant.now()));
-        sessionRepository.save(sessionEntity);
+    public void invalidateSession(@NonNull String sessionId) {
+        return;
+//        SessionEntity sessionEntity = validateSession(sessionId);
+//        sessionEntity.setExpireAt(Date.from(Instant.now()));
+//        sessionEntity.setLastUpdatedAt(Date.from(Instant.now()));
+//        sessionRepository.save(sessionEntity);
     }
 }

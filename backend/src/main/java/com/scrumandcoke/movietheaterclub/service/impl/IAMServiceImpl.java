@@ -47,12 +47,15 @@ public class IAMServiceImpl implements IAMService {
     }
 
     @Override
-    public UserDto isAuthenticated(@NonNull String sessionId) {
-        return null;
+    public UserSessionDetail isAuthenticated(@NonNull String sessionId) {
+        SessionDto sessionDto = sessionService.validateSession(sessionId);
+        UserDto userDto = userService.getUserByEmail(sessionDto.getUserId());
+
+        return UserSessionDetailMapper.INSTANCE.toUserSessionDetail(userDto, sessionDto);
     }
 
     @Override
     public void logout() {
-        sessionService.invalidateSession(1);
+        sessionService.invalidateSession(String.valueOf(1));
     }
 }
