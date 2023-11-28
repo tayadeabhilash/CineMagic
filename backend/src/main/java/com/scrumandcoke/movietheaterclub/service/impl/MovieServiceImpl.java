@@ -24,6 +24,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void addMovie(MovieDto movieDto) throws GlobalException {
         try {
+            validateMovieDto(movieDto); //new validation call
+            ensureUniqueMovieTitle(movieDto.getMovieName()); //new validation call
             movieRepository.save(MovieDto.toEntity(movieDto));
         } catch (Exception exception) {
             logger.error("Error saving movie: {}", movieDto.getMovieName());
@@ -56,6 +58,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void updateMovie(MovieDto movieDto) throws GlobalException {
         try {
+            validateMovieDto(movieDto); //new call
+            MovieEntity movie = getValidatedMovieEntity(movieDto.getMovieId()); //new call
             MovieEntity movieEntity = movieRepository.findById(movieDto.getMovieId()).get();
             movieEntity.setMovieName(movieDto.getMovieName());
             movieEntity.setSynopsis(movieDto.getSynopsis());
@@ -70,10 +74,32 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void deleteMovie(Integer id) throws GlobalException {
         try {
+            getValidatedMovieEntity(id); // Check if movie exists + new call
             movieRepository.deleteById(id);
         } catch (Exception exception) {
             logger.error("Error deleting movie: {}", id);
             throw new GlobalException(exception.getMessage(), exception);
         }
     }
+
+//edge cases + validations
+    private void validateMovieDto(MovieDto movieDto) throws GlobalException {
+        if (movieDto == null) {
+            throw new GlobalException("Movie details cannot be null");
+        }
+    }
+
+    private void ensureUniqueMovieTitle(String movieTitle) throws GlobalException {
+        if (movieRepository.findByMovieName(movieTitle).isPresent()) {
+            throw new GlobalException("Movie title already exists");
+        }
+    }
+
+    private MovieEntity getValidatedMovieEntity(Integer movieId) throws GlobalException {
+        return movieRepository.findById(movieId).orElseThrow(() ->
+                new GlobalException("Movie with the specified ID does not exist"));
+    }
+
+
 }
+
