@@ -75,8 +75,15 @@ public class TheaterScreenImpl implements TheaterScreenService {
     public TheaterScreenDto updateTheaterScreen(int id, TheaterScreenDto theaterScreenDto) throws GlobalException {
         try {
             Optional<TheaterScreenEntity> theaterScreenOptional = theaterScreenRepository.findById(id);
+            if (!theaterScreenOptional.isPresent()) {
+                throw new GlobalException("Theater screen not found for ID: " + id);
+            }
 
             TheaterScreenEntity theaterScreenEntity = theaterScreenOptional.get();
+
+            //new valid code
+            configureSeatingCapacity(id, theaterScreenDto.getSeatingCapacity());
+
             theaterScreenEntity.setName(theaterScreenDto.getName());
             theaterScreenEntity.setSeatingCapacity(theaterScreenDto.getSeatingCapacity());
 
@@ -142,6 +149,33 @@ public class TheaterScreenImpl implements TheaterScreenService {
             theaterScreenDtos.add(dto);
         }
         return theaterScreenDtos;
+    }
+
+    //validations
+    public void configureSeatingCapacity(int theaterScreenId, int newSeatingCapacity) throws GlobalException {
+        validateSeatingCapacity(theaterScreenId, newSeatingCapacity);
+
+        TheaterScreenEntity theaterScreenEntity = theaterScreenRepository.findById(theaterScreenId)
+                .orElseThrow(() -> new GlobalException("Theater screen not found for ID: " + theaterScreenId));
+        theaterScreenEntity.setSeatingCapacity(newSeatingCapacity);
+        theaterScreenRepository.save(theaterScreenEntity);
+    }
+
+    private void validateSeatingCapacity(int theaterScreenId, int newSeatingCapacity) throws GlobalException {
+        if (newSeatingCapacity <= 0) {
+            throw new GlobalException("Invalid Seating Capacity: Seating capacity cannot be zero or negative.");
+        }
+
+        int physicalCapacity = getPhysicalTheaterCapacity(theaterScreenId);
+        if (newSeatingCapacity > physicalCapacity) {
+            throw new GlobalException("Exceeding Physical Capacity: Configured capacity exceeds the theater's physical limits.");
+        }
+    }
+
+    private int getPhysicalTheaterCapacity(int theaterScreenId) throws GlobalException {
+        TheaterScreenEntity theater = theaterScreenRepository.findById(theaterScreenId)
+                .orElseThrow(() -> new GlobalException("Theater with the specified ID does not exist"));
+        return theater.getSeatingCapacity();
     }
 
 }
