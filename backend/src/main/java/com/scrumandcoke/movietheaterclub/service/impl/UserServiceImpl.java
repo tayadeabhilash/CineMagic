@@ -25,6 +25,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(UserDto userDto) throws GlobalException {
+        if (userDto == null) {
+            throw new GlobalException("User data cannot be null");
+        }
+        if (userDto.getEmail() == null || userDto.getEmail().trim().isEmpty()) {
+            throw new GlobalException("Email cannot be null or empty");
+        }
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new GlobalException("User with this email already exists");
+        }
+
         try {
             User user = new User();
             user.setFirstName(userDto.getFirstName());
@@ -43,6 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByEmail(String email) throws GlobalException {
+        if (email == null || email.isEmpty()) {
+            throw new GlobalException("Email cannot be null or empty");
+        }
         try {
             User user = userRepository.findByEmail(email);
             return new UserDto(user.getFirstName(), user.getLastName(), user.getEmail(), null, user.getMemberType());
@@ -69,6 +82,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDto userDto) throws GlobalException {
+        if (userDto == null) {
+            throw new GlobalException("User data cannot be null");
+        }
+        if (userDto.getEmail() == null || userDto.getEmail().trim().isEmpty()) {
+            throw new GlobalException("Email cannot be null or empty");
+        }
+
         try {
             User user = userRepository.findByEmail(userDto.getEmail());
             user.setFirstName(userDto.getFirstName());
@@ -86,6 +106,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) throws GlobalException {
+        if (id == null) {
+            throw new GlobalException("User ID cannot be null");
+        }
+
+        if (!userRepository.existsById(id)) {
+            throw new GlobalException("User not found with ID: " + id);
+        }
         try {
             userRepository.deleteById(id);
         } catch (Exception exception) {
