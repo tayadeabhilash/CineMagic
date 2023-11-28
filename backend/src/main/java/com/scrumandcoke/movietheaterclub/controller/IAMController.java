@@ -2,18 +2,13 @@ package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.LoginRequest;
-import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.dto.UserSessionDetail;
 import com.scrumandcoke.movietheaterclub.service.IAMService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,7 +21,7 @@ public class IAMController {
     @PostMapping("/signup")
     public UserSessionDetail registerUser(@Valid @RequestBody CreateUserRequest createUserRequest, HttpServletResponse response) {
 
-         UserSessionDetail userSessionDetail = iamService.signUp(createUserRequest);
+        UserSessionDetail userSessionDetail = iamService.signUp(createUserRequest);
 
         Cookie cookie = new Cookie("sid", userSessionDetail.getSessionId());
         cookie.setHttpOnly(true);
@@ -48,6 +43,12 @@ public class IAMController {
 
         return userSessionDetail;
 
+    }
+
+
+    @GetMapping("/isAuthenticated")
+    public UserSessionDetail isAuthenticated(@CookieValue("sid") String sessionId) {
+        return iamService.isAuthenticated(sessionId);
     }
 
 

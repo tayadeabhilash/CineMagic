@@ -66,13 +66,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUserByUserId(@NonNull String userId) {
+        UserEntity userEntity = userRepository.findByExternalId(userId);
+        if (Objects.isNull(userEntity)) {
+            throw new NoSuchElementException("No user exists with the userId " + userId);
+        }
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
+    }
+
+    @Override
     public List<UserDto> getUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
         return UserMapper.INSTANCE.userEntitiesToDtos(userEntities);
     }
 
     @Override
-    public void updateUser(UserDto userDto) {
+    public void updateUser(@NonNull UserDto userDto) {
         UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
 
         userEntity.setFirstName(userDto.getFirstName());
@@ -82,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Integer id) {
+    public void deleteUser(@NonNull Integer id) {
         userRepository.deleteById(id);
     }
 }

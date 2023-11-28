@@ -8,10 +8,12 @@ import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,8 +37,12 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionDto validateSession(@NonNull String sessionId) {
-        SessionEntity sessionEntity = sessionRepository.findById(sessionId).get();
-        return SessionMapper.INSTANCE.entityToDto(sessionEntity);
+        Optional<SessionEntity> sessionEntity = sessionRepository.findById(sessionId);
+        if (sessionEntity.isEmpty() || Date.from(Instant.now()).after(sessionEntity.get().getExpireAt())) {
+            throw new AuthorizationServiceException("Invalid or no session found with the session ID");
+        }
+
+        return SessionMapper.INSTANCE.entityToDto(sessionEntity.get());
     }
 
     @Override

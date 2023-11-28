@@ -7,15 +7,17 @@ import lombok.NonNull;
 import java.util.List;
 
 public interface UserService {
-    UserDto createUser(CreateUserRequest userDto);
+    UserDto createUser(@NonNull CreateUserRequest userDto);
 
     UserDto validateLoginCredentials(@NonNull String email, @NonNull String password);
 
-    UserDto getUserByEmail(String email);
+    UserDto getUserByEmail(@NonNull String email);
+
+    UserDto getUserByUserId(@NonNull String userId);
 
     List<UserDto> getUsers();
 
-    void updateUser(UserDto userDto);
+    void updateUser(@NonNull UserDto userDto);
 
-    void deleteUser(Integer id);
+    void deleteUser(@NonNull Integer id);
 }

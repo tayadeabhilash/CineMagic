@@ -8,8 +8,10 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,18 +21,16 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 
 @Component
+@Configuration
+@AllArgsConstructor
 public class CustomAuthenticationFilter extends GenericFilterBean {
 
-    @Autowired
-    IAMService iamService;
+    private IAMService iamService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         Cookie[] cookies = httpRequest.getCookies();
         String sessionId = null;
