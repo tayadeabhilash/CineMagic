@@ -1,5 +1,6 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
+import com.scrumandcoke.movietheaterclub.annotation.LoginRequired;
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.LoginRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserSessionDetail;
@@ -31,7 +32,6 @@ public class IAMController {
         return userSessionDetail;
     }
 
-
     @PostMapping("/login")
     public UserSessionDetail signIn(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         UserSessionDetail userSessionDetail = iamService.signIn(loginRequest.getEmail(), loginRequest.getPassword());
@@ -42,7 +42,6 @@ public class IAMController {
         response.addCookie(cookie);
 
         return userSessionDetail;
-
     }
 
 
@@ -52,9 +51,9 @@ public class IAMController {
     }
 
 
+    @LoginRequired
     @PostMapping("/logout")
     public void logout() {
         iamService.logout();
     }
-
 }
