@@ -23,6 +23,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void addSession(Session session) throws GlobalException {
+        if (session == null) {
+            throw new GlobalException("Session cannot be null");
+        }
         try {
             sessionRepository.save(session);
         } catch (Exception exception) {
@@ -33,6 +36,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session getSession(Integer id) throws GlobalException {
+        if (id == null) {
+            throw new GlobalException("Session ID cannot be null");
+        }
         try {
             return sessionRepository.findById(id).get();
         } catch (Exception exception) {
@@ -43,6 +49,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void invalidateSession(Integer id) throws GlobalException {
+        if (id == null) {
+            throw new GlobalException("Session ID cannot be null");
+        }
         try {
             Session session = getSession(id);
             session.setExpireAt(Date.from(Instant.now()));
