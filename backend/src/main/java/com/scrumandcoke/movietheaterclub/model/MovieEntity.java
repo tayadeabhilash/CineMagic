@@ -17,9 +17,24 @@ public class MovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "movie_id")
     private Integer movieId;
+
     @Column(name = "movie_name")
     private String movieName;
+
     private String synopsis;
+
     @Column(name = "running_time")
     private Integer runningTime;
+
+    @Column(name="poster")
+    private String poster;
+
+    @Column(name="genre")
+    private String genre;
+
+    @Column(name="language")
+    private String language;
+
+    @Column(name="release_date")
+    private String release_date;
 }

@@ -19,13 +19,22 @@ public class MovieDto {
     private String movieName;
     private String synopsis;
     private Integer runningTime;
-
+    private String poster;
+    private String genre;
+    private String language;
+    private String release_date;
     public static MovieDto fromEntity(MovieEntity movieEntity) {
         MovieDto movieDto = new MovieDto();
         movieDto.setMovieId(movieEntity.getMovieId());
         movieDto.setMovieName(movieEntity.getMovieName());
         movieDto.setSynopsis(movieEntity.getSynopsis());
         movieDto.setRunningTime(movieEntity.getRunningTime());
+
+        movieDto.setPoster(movieEntity.getPoster());
+        movieDto.setGenre(movieEntity.getGenre());
+        movieDto.setLanguage(movieEntity.getLanguage());
+        movieDto.setRelease_date(movieDto.getRelease_date());
+
         return movieDto;
     }
 
@@ -43,6 +52,12 @@ public class MovieDto {
         movieEntity.setMovieName(movieDto.getMovieName());
         movieEntity.setSynopsis(movieDto.getSynopsis());
         movieEntity.setRunningTime(movieDto.getRunningTime());
+
+        movieEntity.setPoster(movieDto.getPoster());
+        movieEntity.setGenre(movieDto.getGenre());
+        movieEntity.setLanguage(movieDto.getLanguage());
+        movieEntity.setRelease_date(movieDto.getRelease_date());
+
         return movieEntity;
     }
 }

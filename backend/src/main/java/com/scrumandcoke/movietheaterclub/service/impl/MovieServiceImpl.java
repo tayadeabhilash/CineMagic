@@ -60,7 +60,14 @@ public class MovieServiceImpl implements MovieService {
             movieEntity.setMovieName(movieDto.getMovieName());
             movieEntity.setSynopsis(movieDto.getSynopsis());
             movieEntity.setRunningTime(movieDto.getRunningTime());
+
+            movieEntity.setGenre(movieDto.getGenre());
+            movieEntity.setLanguage(movieDto.getLanguage());
+            movieEntity.setRelease_date(movieDto.getRelease_date());
+            movieEntity.setPoster(movieDto.getPoster());
+
             movieRepository.save(movieEntity);
+
         } catch (Exception exception) {
             logger.error("Error updating movie: {}", movieDto.getMovieName());
             throw new GlobalException(exception.getMessage(), exception);
