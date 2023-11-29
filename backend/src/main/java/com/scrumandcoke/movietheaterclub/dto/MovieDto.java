@@ -1,7 +1,6 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.MovieEntity;
-import com.scrumandcoke.movietheaterclub.model.MovieEntity;
+import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

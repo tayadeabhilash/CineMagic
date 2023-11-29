@@ -1,7 +1,7 @@
 package com.scrumandcoke.movietheaterclub.mapper;
 
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
-import com.scrumandcoke.movietheaterclub.model.UserEntity;
+import com.scrumandcoke.movietheaterclub.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

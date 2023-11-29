@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -53,7 +54,7 @@ public class IAMController {
 
     @LoginRequired
     @PostMapping("/logout")
-    public void logout() {
-        iamService.logout();
+    public void logout(@AuthenticationPrincipal UserSessionDetail userSessionDetail) {
+        iamService.logoutCurrentSession(userSessionDetail.getSessionId());
     }
 }

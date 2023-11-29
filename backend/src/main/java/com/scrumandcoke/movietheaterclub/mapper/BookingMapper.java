@@ -1,8 +1,8 @@
 package com.scrumandcoke.movietheaterclub.mapper;
 
 import com.scrumandcoke.movietheaterclub.dto.BookingDto;
-import com.scrumandcoke.movietheaterclub.model.BookingEntity;
-import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.entity.BookingEntity;
+import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

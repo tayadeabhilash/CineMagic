@@ -22,7 +22,8 @@ public interface UserSessionDetailMapper {
             @Mapping(source = "userDto.createdAt", target = "createdAt"),
             @Mapping(source = "userDto.lastUpdatedAt", target = "lastUpdatedAt"),
             @Mapping(source = "sessionDto.sessionId", target = "sessionId"),
-            @Mapping(source = "sessionDto.expireAt", target = "sessionExpireAt")
+            @Mapping(source = "sessionDto.expireAt", target = "sessionExpireAt"),
+            @Mapping(source = "userDto.userType", target = "userType")
     })
     UserSessionDetail toUserSessionDetail(UserDto userDto, SessionDto sessionDto);
 }

@@ -2,8 +2,8 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
 import com.scrumandcoke.movietheaterclub.dto.SessionDto;
+import com.scrumandcoke.movietheaterclub.entity.SessionEntity;
 import com.scrumandcoke.movietheaterclub.mapper.SessionMapper;
-import com.scrumandcoke.movietheaterclub.model.SessionEntity;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import lombok.NonNull;
@@ -47,10 +47,12 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void invalidateSession(@NonNull String sessionId) {
-        return;
-//        SessionEntity sessionEntity = validateSession(sessionId);
-//        sessionEntity.setExpireAt(Date.from(Instant.now()));
-//        sessionEntity.setLastUpdatedAt(Date.from(Instant.now()));
-//        sessionRepository.save(sessionEntity);
+        Optional<SessionEntity> sessionEntity = sessionRepository.findById(sessionId);
+        if (sessionEntity.isEmpty() || Date.from(Instant.now()).after(sessionEntity.get().getExpireAt())) {
+            throw new AuthorizationServiceException("Invalid or no session found with the session ID");
+        }
+        sessionEntity.get().setExpireAt(Date.from(Instant.now()));
+
+        sessionRepository.save(sessionEntity.get());
     }
 }
