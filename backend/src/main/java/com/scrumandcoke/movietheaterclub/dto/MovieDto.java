@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -22,7 +24,7 @@ public class MovieDto {
     private String poster;
     private String genre;
     private String language;
-    private String release_date;
+    private LocalDate releaseDate;
     public static MovieDto fromEntity(MovieEntity movieEntity) {
         MovieDto movieDto = new MovieDto();
         movieDto.setMovieId(movieEntity.getMovieId());
@@ -33,7 +35,7 @@ public class MovieDto {
         movieDto.setPoster(movieEntity.getPoster());
         movieDto.setGenre(movieEntity.getGenre());
         movieDto.setLanguage(movieEntity.getLanguage());
-        movieDto.setRelease_date(movieDto.getRelease_date());
+        movieDto.setReleaseDate(movieEntity.getReleaseDate());
 
         return movieDto;
     }
@@ -56,7 +58,7 @@ public class MovieDto {
         movieEntity.setPoster(movieDto.getPoster());
         movieEntity.setGenre(movieDto.getGenre());
         movieEntity.setLanguage(movieDto.getLanguage());
-        movieEntity.setRelease_date(movieDto.getRelease_date());
+        movieEntity.setReleaseDate(movieDto.getReleaseDate());
 
         return movieEntity;
     }

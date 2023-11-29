@@ -70,4 +70,23 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting movie: " + e.getMessage());
         }
     }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<?> getUpcomingMovies() {
+        try {
+            return ResponseEntity.ok(movieService.getUpcomingMovies());
+        } catch (GlobalException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrentMovies() {
+        try {
+            return ResponseEntity.ok(movieService.getCurrentMovies());
+        } catch (GlobalException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
