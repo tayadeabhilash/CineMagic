@@ -1,0 +1,16 @@
+.button {
+  padding: 10px;
+  color: #fff;
+}
+.bg-primary {
+  background-color: #002e2a;
+}
+.w-full {
+  width: 100%;
+}
+.button-outlined {
+  border-width: 1px;
+  border-color: #002e2a;
+  color: #002e2a;
+  background-color: #fff;
+}

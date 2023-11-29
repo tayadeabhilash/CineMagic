@@ -1,0 +1,39 @@
+/* HomePage.css */
+
+.homepage-container {
+  padding: 20px;
+}
+
+.theater-info {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.theater-info h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.theater-info p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.card-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.card-grid-container > div {
+  flex: 0 0 calc(25% - 20px);
+  max-width: calc(25% - 20px);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.ant-card:hover {
+  transform: translateY(-5px);
+}

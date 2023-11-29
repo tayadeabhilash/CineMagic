@@ -1,0 +1,72 @@
+.movie-details {
+  text-align: center;
+  background: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.theater {
+  background: #fff;
+  border-radius: 8px;
+}
+.time-button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.movie-details,
+.theater-details {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.movie-details h1,
+.theater-details h1 {
+  margin: 0 0 10px 0;
+}
+
+.showtime-card {
+  background-color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.showtime-card:hover {
+  background-color: #e6e6e6;
+}
+
+.ant-modal-body {
+  font-size: 16px;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.total-price {
+  color: #ff4d4f;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.select-seats {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.ant-select {
+  width: 120px;
+}
