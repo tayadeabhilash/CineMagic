@@ -57,6 +57,23 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());
     }
 
+    @Override
+    public UserDto updateMemberType(@NonNull String userId, @NonNull MemberType newMemberType) {
+        Optional<UserEntity> userEntity = userRepository.findByExternalId(userId);
+        if (userEntity.isEmpty()) {
+            throw new NoSuchElementException("No user found with the userId " + userId);
+        }
+
+        if (UserType.THEATER_EMPLOYEE.equals(userEntity.get().getUserType())) {
+            throw new IllegalArgumentException("User of the type THEATER_EMPLOYEE cannot update membership type");
+        }
+
+        userEntity.get().setMemberType(newMemberType);
+        userRepository.save(userEntity.get());
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());
+    }
+
     private boolean userExistsByEmail(@NonNull String email) {
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         return userEntity.isPresent();
@@ -74,12 +91,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByUserId(@NonNull String userId) {
-        UserEntity userEntity = userRepository.findByExternalId(userId);
-        if (Objects.isNull(userEntity)) {
+        Optional<UserEntity> userEntity = userRepository.findByExternalId(userId);
+        if (userEntity.isEmpty()) {
             throw new NoSuchElementException("No user exists with the userId " + userId);
         }
 
-        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());
     }
 
     @Override
