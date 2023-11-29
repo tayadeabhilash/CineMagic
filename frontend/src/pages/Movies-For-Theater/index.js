@@ -1,15 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CardGrid from "../../components/CardGrid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./movies.css";
+import { GetTheaterById } from "../../apicalls/theaters";
+import { message } from "antd";
 
 const MoviesForTheater = () => {
   const navigate = useNavigate();
-
-  const theaterInfo = {
+  const { id } = useParams();
+  const [theater, setTheater] = useState({
     name: "Cinema Central",
     location: "Downtown",
-    // Add other relevant theater information here
+  });
+
+  const fetchTheaterData = async () => {
+    try {
+      const response = await GetTheaterById(id);
+
+      if (response.status == 200) {
+        setTheater(response.data);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
   };
 
   const movies = [
@@ -82,13 +97,14 @@ const MoviesForTheater = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    fetchTheaterData();
   }, []);
 
   return (
     <div className="homepage-container">
       <div className="theater-info">
-        <h1>{theaterInfo.name}</h1>
-        <p>{theaterInfo.location}</p>
+        <h1>{theater?.name}</h1>
+        <p>{theater?.location}</p>
         {/* Other theater information */}
       </div>
       <h2>Now Showing</h2>

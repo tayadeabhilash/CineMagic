@@ -1,53 +1,92 @@
-import React from "react";
-import { Carousel } from "antd";
+import React, { useState, useEffect } from "react";
+import { Carousel, message } from "antd";
 import CardGrid from "../../components/CardGrid";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
+import { GetAllMovies } from "../../apicalls/movies";
+import { GetAllTheaters } from "../../apicalls/theaters";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  // Sample data for theaters
-  const theaters = [
+  const [movies, setMovies] = useState([
     {
       id: 1,
-      title: "Grand Cinema",
-      description: "The best movie experience in town",
+      title: "Space Adventure",
+      description: "A journey to the stars",
       image: "https://via.placeholder.com/150",
     },
     {
       id: 1,
-      title: "Starlight Theater",
-      description: "Enjoy movies under the stars",
+      title: "The Mystery House",
+      description: "A thrilling mystery",
       image: "https://via.placeholder.com/150",
     },
     {
       id: 1,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
+      title: "Romance in Rome",
+      description: "A romantic tale",
       image: "https://via.placeholder.com/150",
     },
     {
       id: 1,
-      title: "Grand Cinema",
-      description: "The best movie experience in town",
+      title: "Space Adventure",
+      description: "A journey to the stars",
       image: "https://via.placeholder.com/150",
     },
     {
       id: 1,
-      title: "Starlight Theater",
-      description: "Enjoy movies under the stars",
+      title: "The Mystery House",
+      description: "A thrilling mystery",
       image: "https://via.placeholder.com/150",
     },
     {
       id: 1,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
+      title: "Romance in Rome",
+      description: "A romantic tale",
       image: "https://via.placeholder.com/150",
     },
-  ];
+  ]);
 
-  // Sample data for locations
+  const [theaters, setTheaters] = useState([
+    {
+      id: 1,
+      title: "Grand Cinema",
+      description: "The best movie experience in town",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Starlight Theater",
+      description: "Enjoy movies under the stars",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Downtown Cineplex",
+      description: "The heart of the city's movie scene",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Grand Cinema",
+      description: "The best movie experience in town",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Starlight Theater",
+      description: "Enjoy movies under the stars",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Downtown Cineplex",
+      description: "The heart of the city's movie scene",
+      image: "https://via.placeholder.com/150",
+    },
+  ]);
+
   const locations = [
     {
       id: 1,
@@ -88,47 +127,6 @@ const HomePage = () => {
     },
   ];
 
-  // Sample data for current movies
-  const currentMovies = [
-    {
-      id: 1,
-      title: "Space Adventure",
-      description: "A journey to the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "The Mystery House",
-      description: "A thrilling mystery",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Space Adventure",
-      description: "A journey to the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "The Mystery House",
-      description: "A thrilling mystery",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-  ];
-
-  // Sample data for upcoming movies
   const upcomingMovies = [
     {
       id: 1,
@@ -168,6 +166,44 @@ const HomePage = () => {
     },
   ];
 
+  const getMoviesData = async () => {
+    try {
+      const response = await GetAllMovies();
+
+      if (response.status == 200) {
+        const formattedMovies = response.data.map((movie) => ({
+          ...movie,
+          id: movie.movieId,
+          title: movie.movieName,
+          description: movie.synopsis,
+        }));
+        setMovies(formattedMovies);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  };
+
+  const getTheatersData = async () => {
+    try {
+      const response = await GetAllTheaters();
+
+      if (response.status == 200) {
+        const formattedTheaters = response.data.map((theater) => ({
+          ...theater,
+          title: theater.name,
+        }));
+        setTheaters(formattedTheaters);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
   const CustomNextArrow = ({ onClick }) => (
     <div className="custom-next-arrow" onClick={onClick}>
       →
@@ -196,10 +232,11 @@ const HomePage = () => {
         nextArrow={<CustomNextArrow />}
         prevArrow={<CustomPrevArrow />}
       >
-        {data.map((item, index) => (
+        {data.map((item) => (
           <div className="card-container">
             <CardGrid
-              key={index}
+              key={item.id}
+              de
               title={item.title}
               description={item.description}
               image={item.image}
@@ -211,6 +248,11 @@ const HomePage = () => {
     );
   };
 
+  useEffect(() => {
+    getMoviesData();
+    getTheatersData();
+  }, []);
+
   return (
     <div className="homepage-container">
       <h2>Theaters</h2>
@@ -220,7 +262,7 @@ const HomePage = () => {
       {renderCarousel(locations, "location")}
 
       <h2>Current Movies</h2>
-      {renderCarousel(currentMovies, "movie")}
+      {renderCarousel(movies, "movie")}
 
       <h2>Upcoming Movies</h2>
       {renderCarousel(upcomingMovies, "movie")}

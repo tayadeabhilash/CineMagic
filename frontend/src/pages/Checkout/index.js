@@ -7,7 +7,7 @@ const Checkout = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  const theatre = decodeURIComponent(params.get("theatre") || "");
+  const theater = decodeURIComponent(params.get("theater") || "");
   const address = decodeURIComponent(params.get("address") || "");
   const time = decodeURIComponent(params.get("time") || "");
   const seats = parseInt(params.get("seats"), 10);
@@ -55,9 +55,9 @@ const Checkout = () => {
               <div className="order-summary">
                 <div className="summary-item">
                   <p>
-                    <strong>Theatre:</strong>
+                    <strong>Theater:</strong>
                   </p>
-                  <p>{theatre}</p>
+                  <p>{theater}</p>
                 </div>
                 <div className="summary-item">
                   <p>

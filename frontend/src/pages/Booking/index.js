@@ -97,7 +97,7 @@ const MovieSelectionPage = () => {
 
   const handleCheckout = () => {
     const query = new URLSearchParams();
-    query.set("theatre", encodeURIComponent(selectedShow?.name || ""));
+    query.set("theater", encodeURIComponent(selectedShow?.name || ""));
     query.set("address", encodeURIComponent(selectedShow?.address || ""));
     query.set("time", encodeURIComponent(selectedShow?.selectedTime || ""));
     query.set("seats", selectedSeats);
@@ -191,7 +191,7 @@ const MovieSelectionPage = () => {
         if (theaterShowtimes.length === 0) return null;
 
         return (
-          <div key={index} className="theatre mb-3 p-3 shadow-sm rounded">
+          <div key={index} className="theater mb-3 p-3 shadow-sm rounded">
             <h3>{theater.name}</h3>
             <p>{theater.address}</p>
             <Row gutter={8}>

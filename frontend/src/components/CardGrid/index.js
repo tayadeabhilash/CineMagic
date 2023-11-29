@@ -2,6 +2,9 @@ import React from "react";
 import { Card as AntCard } from "antd";
 
 const CardGrid = ({ title, description, image, onClick }) => {
+  const truncatedDescription =
+    description?.length > 50 ? `${description?.slice(0, 50)}...` : description;
+
   return (
     <AntCard
       hoverable
@@ -9,7 +12,7 @@ const CardGrid = ({ title, description, image, onClick }) => {
       cover={<img alt={title} src={image} />}
       onClick={onClick}
     >
-      <AntCard.Meta title={title} description={description} />
+      <AntCard.Meta title={title} description={truncatedDescription} />
     </AntCard>
   );
 };

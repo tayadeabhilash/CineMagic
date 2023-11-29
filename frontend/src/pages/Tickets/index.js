@@ -57,7 +57,7 @@ const Shows = () => {
       movie: "The Godfather",
       date: "2021-11-15",
       tickets: 3,
-      location: "AMC Theatre",
+      location: "AMC Theater",
     },
   ]);
   const [upcomingShows, setUpcomingShows] = useState([
