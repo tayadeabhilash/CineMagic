@@ -76,7 +76,7 @@ public class MovieController {
         try {
             return ResponseEntity.ok(movieService.getUpcomingMovies());
         } catch (GlobalException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error displaying upcoming movie list");
         }
     }
 
@@ -85,7 +85,7 @@ public class MovieController {
         try {
             return ResponseEntity.ok(movieService.getCurrentMovies());
         } catch (GlobalException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error displaying current movie list");
         }
     }
 
