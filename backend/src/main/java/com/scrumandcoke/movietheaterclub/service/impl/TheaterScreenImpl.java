@@ -47,7 +47,6 @@ public class TheaterScreenImpl implements TheaterScreenService {
                     .orElseThrow(() -> new GlobalException("Multiplex not found"));
             theaterScreenEntity.setMultiplexEntity(multiplexEntity);
 
-
             theaterScreenRepository.save(theaterScreenEntity);
         } catch (Exception exception) {
             logger.error("Error adding theater screen", exception);

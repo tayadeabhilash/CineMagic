@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="1700949347_create_bookings_table" author="atayade">
+        <createTable tableName="bookings">
+            <column name="booking_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints references="users(id)" foreignKeyName="fk_user_id"/>
+            </column>
+            <column name="showtime_id" type="INT">
+                <constraints references="showtimes(id)" foreignKeyName="fk_showtime_id"/>
+            </column>
+            <column name="total_amount" type="DOUBLE"/>
+            <column name="online_service_fee" type="DOUBLE"/>
+            <column name="seats_booked" type="INT"/>
+            <column name="payment_method" type="VARCHAR(255)"/>
+            <column name="booking_status" type="VARCHAR(255)"/>
+            <column name="booking_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
