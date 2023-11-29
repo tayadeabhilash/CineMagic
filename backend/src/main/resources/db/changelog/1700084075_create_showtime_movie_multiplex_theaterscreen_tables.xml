@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="1700084075_create_showtime_movie_multiplex_theaterscreen_tables" author="atayade">
+        <createTable tableName="movies">
+            <column name="movie_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="movie_name" type="VARCHAR(255)"/>
+            <column name="synopsis" type="VARCHAR(255)"/>
+            <column name="running_time" type="INT"/>
+        </createTable>
+        <createTable tableName="multiplex">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="theater_screen_count" type="INT"/>
+        </createTable>
+        <createTable tableName="theater_screens">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="seating_capacity" type="INT"/>
+            <column name="multiplex_id" type="INT">
+                <constraints references="multiplex(id)" foreignKeyName="fk_multiplex_id"/>
+            </column>
+        </createTable>
+        <createTable tableName="showtimes">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="time" type="TIMESTAMP"/>
+            <column name="price" type="DOUBLE(10, 2)"/>
+            <column name="movie_id" type="INT">
+                <constraints references="movies(movie_id)" foreignKeyName="fk_movie_id"/>
+            </column>
+            <column name="theater_screen_id" type="INT">
+                <constraints references="theater_screens(id)" foreignKeyName="fk_theater_screen_id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

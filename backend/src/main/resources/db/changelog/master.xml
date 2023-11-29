@@ -4,8 +4,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
     <include file="classpath:db/changelog/1699508629_create_sessions_and_users_tables.xml" relativeToChangelogFile="false" />
+    <include file="classpath:db/changelog/1700084075_create_showtime_movie_multiplex_theaterscreen_tables.xml" relativeToChangelogFile="false" />
+    <include file="classpath:db/changelog/1700949347_create_bookings_table.xml" relativeToChangelogFile="false" />
+    <include file="classpath:db/changelog/1700949347_add_available_seats_to_showtime_table.xml" relativeToChangelogFile="false" />
     <include file="classpath:db/changelog/1701132985_add_field_to_users_table.xml" relativeToChangelogFile="false" />
     <include file="classpath:db/changelog/1701135879_update_sessions_primary_key.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701136572_update_user_id_field_type_in_sessions.xml" relativeToChangelogFile="false"/>
-
 </databaseChangeLog>

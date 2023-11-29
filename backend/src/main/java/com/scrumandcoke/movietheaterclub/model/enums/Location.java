@@ -1,0 +1,19 @@
+package com.scrumandcoke.movietheaterclub.model.enums;
+
+public enum Location {
+	CAMPBELL,
+	CUPERTINO,
+	GILROY,
+	LOS_ALTOS,
+	LOS_ALTOS_HILLS,
+	LOS_GATOS,
+	MILPITAS,
+	MONTE_SERENO,
+	MORGAN_HILL,
+	MOUNTAIN_VIEW,
+	PALO_ALTO,
+	SAN_JOSE,
+	SANTA_CLARA,
+	SARATOGA,
+	SUNNYVALE
+}
