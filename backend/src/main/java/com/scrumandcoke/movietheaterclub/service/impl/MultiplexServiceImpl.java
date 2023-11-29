@@ -3,7 +3,7 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.scrumandcoke.movietheaterclub.dto.MultiplexDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.MultiplexEntity;
+import com.scrumandcoke.movietheaterclub.entity.MultiplexEntity;
 import com.scrumandcoke.movietheaterclub.repository.MultiplexRepository;
 import com.scrumandcoke.movietheaterclub.service.MultiplexService;
 

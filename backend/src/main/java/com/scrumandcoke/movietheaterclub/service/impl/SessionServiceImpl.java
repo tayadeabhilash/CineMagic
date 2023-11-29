@@ -3,7 +3,7 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
 import com.scrumandcoke.movietheaterclub.dto.SessionDto;
 import com.scrumandcoke.movietheaterclub.mapper.SessionMapper;
-import com.scrumandcoke.movietheaterclub.model.SessionEntity;
+import com.scrumandcoke.movietheaterclub.entity.SessionEntity;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
 import lombok.NonNull;

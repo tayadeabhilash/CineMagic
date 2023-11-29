@@ -1,7 +1,7 @@
 package com.scrumandcoke.movietheaterclub.repository;
 
-import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.scrumandcoke.movietheaterclub.model;
+package com.scrumandcoke.movietheaterclub.entity;
 
-import com.scrumandcoke.movietheaterclub.model.enums.BookingStatus;
-import com.scrumandcoke.movietheaterclub.model.enums.PaymentMethod;
+import com.scrumandcoke.movietheaterclub.enums.BookingStatus;
+import com.scrumandcoke.movietheaterclub.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Data;
 

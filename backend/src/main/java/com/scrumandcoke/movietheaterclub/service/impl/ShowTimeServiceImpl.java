@@ -3,11 +3,9 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.mapper.ShowTimeMapper;
-import com.scrumandcoke.movietheaterclub.model.MultiplexEntity;
-import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 import com.scrumandcoke.movietheaterclub.repository.ShowTimeRepository;
-import com.scrumandcoke.movietheaterclub.service.MovieService;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import com.scrumandcoke.movietheaterclub.service.TheaterScreenService;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ShowTimeServiceImpl implements ShowTimeService {
