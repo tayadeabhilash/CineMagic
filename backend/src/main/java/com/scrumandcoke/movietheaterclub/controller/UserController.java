@@ -1,43 +1,65 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
+import com.scrumandcoke.movietheaterclub.annotation.LoginRequired;
+import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
+import com.scrumandcoke.movietheaterclub.dto.UserSessionDetail;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
 import com.scrumandcoke.movietheaterclub.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/v0/users")
 public class UserController {
     @Autowired
     UserService userService;
 
+    @PostMapping()
+    public UserDto registerUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        return userService.createUser(createUserRequest);
+    }
+
+    @LoginRequired
+    @PostMapping("me/upgradeMembership")
+    public UserDto upgradeMembership(@AuthenticationPrincipal UserSessionDetail userSessionDetail) {
+        return userService.updateMemberType(userSessionDetail.getUserId(), MemberType.PREMIUM);
+    }
+
+    @PostMapping("me/downgradeMembership")
+    @LoginRequired
+    public UserDto downgradeMembership(@AuthenticationPrincipal UserSessionDetail userSessionDetail) {
+        return userService.updateMemberType(userSessionDetail.getUserId(), MemberType.REGULAR);
+    }
+
+    @PostMapping("{userId}/downgradeMembership")
+    public UserDto downgradeMembership(@PathVariable("userId") String userId) {
+        return null;
+    }
+
     @GetMapping("/{email}")
-    public UserDto getUser(@PathVariable String email) throws GlobalException {
+    public UserDto getUser(@PathVariable @NotNull String email) {
         return userService.getUserByEmail(email);
     }
 
     @GetMapping("/allUsers")
-    public List<UserDto> getUsers() throws GlobalException {
+    public List<UserDto> getUsers() {
         return userService.getUsers();
     }
 
-    @PostMapping
-    public void addUser(@RequestBody UserDto user) throws GlobalException {
-        userService.addUser(user);
-    }
-
     @PutMapping
-    public void updateUser(@RequestBody UserDto userDto) throws GlobalException {
+    public void updateUser(@RequestBody UserDto userDto) {
         userService.updateUser(userDto);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Integer userId) throws GlobalException {
+    public void deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
     }
 }

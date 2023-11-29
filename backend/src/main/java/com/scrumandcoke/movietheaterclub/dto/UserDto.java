@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+
+    String userId;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
-    private String password;
+
     private MemberType memberType;
+
+    private Date createdAt;
+
+    private Date lastUpdatedAt;
+
+    private UserType userType;
 }
