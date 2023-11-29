@@ -111,7 +111,7 @@ public class TheaterScreenImpl implements TheaterScreenService {
 
             updatedDto.setEmail(updatedTheaterScreenEntity.getEmail());
             updatedDto.setAddress(updatedTheaterScreenEntity.getAddress());
-            updatedDto.setPhone(updatedDto.getPhone());
+            updatedDto.setPhone(updatedTheaterScreenEntity.getPhone());
 
             updatedDto.setSeatingCapacity(updatedTheaterScreenEntity.getSeatingCapacity());
             updatedDto.setMultiplexId(updatedTheaterScreenEntity.getMultiplexEntity().getId());

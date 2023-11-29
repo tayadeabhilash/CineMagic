@@ -22,4 +22,5 @@ public class MovieEntity {
     private String synopsis;
     @Column(name = "running_time")
     private Integer runningTime;
+
 }
