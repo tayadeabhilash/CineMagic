@@ -1,9 +1,9 @@
 package com.scrumandcoke.movietheaterclub.mapper;
 
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
-import com.scrumandcoke.movietheaterclub.model.MovieEntity;
-import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
-import com.scrumandcoke.movietheaterclub.model.TheaterScreenEntity;
+import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
+import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.entity.TheaterScreenEntity;
 import org.mapstruct.*;
 
 import java.util.List;

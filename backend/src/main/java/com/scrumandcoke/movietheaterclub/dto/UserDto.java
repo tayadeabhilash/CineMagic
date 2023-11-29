@@ -1,12 +1,12 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -28,4 +28,6 @@ public class UserDto {
     private Date createdAt;
 
     private Date lastUpdatedAt;
+
+    private UserType userType;
 }

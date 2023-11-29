@@ -2,7 +2,7 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.MovieDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.MovieEntity;
+import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
 import com.scrumandcoke.movietheaterclub.repository.MovieRepository;
 import com.scrumandcoke.movietheaterclub.service.MovieService;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

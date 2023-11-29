@@ -1,6 +1,7 @@
-package com.scrumandcoke.movietheaterclub.model;
+package com.scrumandcoke.movietheaterclub.entity;
 
-import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,6 +39,11 @@ public class UserEntity {
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createdAt;
+
+    @Column(name = "user_type")
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
 
     @Column(name = "last_updated_at")
     @UpdateTimestamp

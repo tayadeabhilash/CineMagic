@@ -1,7 +1,7 @@
 package com.scrumandcoke.movietheaterclub.mapper;
 
 import com.scrumandcoke.movietheaterclub.dto.SessionDto;
-import com.scrumandcoke.movietheaterclub.model.SessionEntity;
+import com.scrumandcoke.movietheaterclub.entity.SessionEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

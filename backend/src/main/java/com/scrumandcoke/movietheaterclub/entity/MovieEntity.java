@@ -1,4 +1,4 @@
-package com.scrumandcoke.movietheaterclub.model;
+package com.scrumandcoke.movietheaterclub.entity;
 
 
 import jakarta.persistence.Column;

@@ -1,7 +1,8 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,6 @@ public class UserSessionDetail {
     private String sessionId;
 
     private Date sessionExpireAt;
+
+    private UserType userType;
 }

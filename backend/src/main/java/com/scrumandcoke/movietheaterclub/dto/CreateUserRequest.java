@@ -1,6 +1,6 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

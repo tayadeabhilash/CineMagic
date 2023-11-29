@@ -1,7 +1,7 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
-import com.scrumandcoke.movietheaterclub.model.enums.BookingStatus;
-import com.scrumandcoke.movietheaterclub.model.enums.PaymentMethod;
+import com.scrumandcoke.movietheaterclub.enums.BookingStatus;
+import com.scrumandcoke.movietheaterclub.enums.PaymentMethod;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
