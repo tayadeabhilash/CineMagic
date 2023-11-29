@@ -55,7 +55,7 @@ public class IAMServiceImpl implements IAMService {
     }
 
     @Override
-    public void logout() {
-        sessionService.invalidateSession(String.valueOf(1));
+    public void logoutCurrentSession(@NonNull String sessionId) {
+        sessionService.invalidateSession(sessionId);
     }
 }
