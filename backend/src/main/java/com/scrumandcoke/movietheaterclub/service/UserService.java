@@ -1,14 +1,23 @@
 package com.scrumandcoke.movietheaterclub.service;
 
+import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
+import lombok.NonNull;
 
 import java.util.List;
 
 public interface UserService {
-    void addUser(UserDto userDto) throws GlobalException;
-    UserDto getUserByEmail(String email) throws GlobalException;
-    List<UserDto> getUsers() throws GlobalException;
-    void updateUser(UserDto userDto) throws GlobalException;
-    void deleteUser(Integer id) throws GlobalException;
+    UserDto createUser(@NonNull CreateUserRequest userDto);
+
+    UserDto validateLoginCredentials(@NonNull String email, @NonNull String password);
+
+    UserDto getUserByEmail(@NonNull String email);
+
+    UserDto getUserByUserId(@NonNull String userId);
+
+    List<UserDto> getUsers();
+
+    void updateUser(@NonNull UserDto userDto);
+
+    void deleteUser(@NonNull Integer id);
 }

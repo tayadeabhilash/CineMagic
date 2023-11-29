@@ -82,8 +82,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByUserId(Integer userId) {
-        return bookingMapper.toDto(bookingRepository.findByUser_Id(userId));
+    public List<BookingDto> getAllBookingsByUserId(String userId) {
+        return bookingMapper.toDto(bookingRepository.findByUserId(userId));
     }
 
     private void validateShowtime(Integer showTimeId) throws GlobalException {
@@ -115,7 +115,7 @@ public class BookingServiceImpl implements BookingService {
         showTimeService.updateShowTime(showtime);
     }
 
-    private Double calculateServiceFee(Integer userId) {
+    private Double calculateServiceFee(String userId) {
         if (userId == null)
             return serviceCharge;
 

@@ -2,19 +2,11 @@ package com.scrumandcoke.movietheaterclub.model;
 
 import com.scrumandcoke.movietheaterclub.model.enums.BookingStatus;
 import com.scrumandcoke.movietheaterclub.model.enums.PaymentMethod;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+
 @Entity
 @Table(name = "bookings")
 @Data
@@ -24,9 +16,8 @@ public class BookingEntity {
     @Column(name = "booking_id")
     private Integer bookingId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "showtime_id")

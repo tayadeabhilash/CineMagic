@@ -1,19 +1,10 @@
 package com.scrumandcoke.movietheaterclub.mapper;
 
-import com.scrumandcoke.movietheaterclub.dto.BookingDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
-import com.scrumandcoke.movietheaterclub.model.BookingEntity;
 import com.scrumandcoke.movietheaterclub.model.MovieEntity;
 import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
 import com.scrumandcoke.movietheaterclub.model.TheaterScreenEntity;
-import com.scrumandcoke.movietheaterclub.model.User;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.springframework.util.StringUtils;
+import org.mapstruct.*;
 
 import java.util.List;
 

@@ -1,17 +1,20 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.Session;
-import com.scrumandcoke.movietheaterclub.model.User;
+import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
+import com.scrumandcoke.movietheaterclub.dto.SessionDto;
+import com.scrumandcoke.movietheaterclub.mapper.SessionMapper;
+import com.scrumandcoke.movietheaterclub.model.SessionEntity;
 import com.scrumandcoke.movietheaterclub.repository.SessionRepository;
 import com.scrumandcoke.movietheaterclub.service.SessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SessionServiceImpl implements SessionService {
@@ -19,38 +22,35 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);
-
     @Override
-    public void addSession(Session session) throws GlobalException {
-        try {
-            sessionRepository.save(session);
-        } catch (Exception exception) {
-            logger.error("Error saving session: {}", session.getId());
-            throw new GlobalException(exception.getMessage(), exception);
-        }
+    public SessionDto createSession(@NonNull CreateSessionRequest createSessionRequest) {
+        SessionEntity sessionEntity = new SessionEntity();
+
+        sessionEntity.setSessionId(UUID.randomUUID().toString());
+        sessionEntity.setUserId(createSessionRequest.getUserId());
+        sessionEntity.setExpireAt(Date.from(Instant.now().plus(createSessionRequest.getSessionDuration())));
+
+        sessionRepository.save(sessionEntity);
+
+        return SessionMapper.INSTANCE.entityToDto(sessionEntity);
     }
 
     @Override
-    public Session getSession(Integer id) throws GlobalException {
-        try {
-            return sessionRepository.findById(id).get();
-        } catch (Exception exception) {
-            logger.error("Error getting session: {}", id);
-            throw new GlobalException(exception.getMessage(), exception);
+    public SessionDto validateSession(@NonNull String sessionId) {
+        Optional<SessionEntity> sessionEntity = sessionRepository.findById(sessionId);
+        if (sessionEntity.isEmpty() || Date.from(Instant.now()).after(sessionEntity.get().getExpireAt())) {
+            throw new AuthorizationServiceException("Invalid or no session found with the session ID");
         }
+
+        return SessionMapper.INSTANCE.entityToDto(sessionEntity.get());
     }
 
     @Override
-    public void invalidateSession(Integer id) throws GlobalException {
-        try {
-            Session session = getSession(id);
-            session.setExpireAt(Date.from(Instant.now()));
-            session.setLastUpdatedAt(Date.from(Instant.now()));
-            sessionRepository.save(session);
-        } catch (Exception exception) {
-            logger.error("Error updating session: {}", id);
-            throw new GlobalException(exception.getMessage(), exception);
-        }
+    public void invalidateSession(@NonNull String sessionId) {
+        return;
+//        SessionEntity sessionEntity = validateSession(sessionId);
+//        sessionEntity.setExpireAt(Date.from(Instant.now()));
+//        sessionEntity.setLastUpdatedAt(Date.from(Instant.now()));
+//        sessionRepository.save(sessionEntity);
     }
 }

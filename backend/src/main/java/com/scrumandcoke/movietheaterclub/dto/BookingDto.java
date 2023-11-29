@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class BookingDto {
     private Integer bookingId;
-    private Integer userId;
+    private String userId;
     @Nonnull
     private Integer showtimeId;
     @Nonnull

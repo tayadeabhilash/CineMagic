@@ -1,96 +1,98 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
+import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.User;
+import com.scrumandcoke.movietheaterclub.mapper.UserMapper;
+import com.scrumandcoke.movietheaterclub.model.UserEntity;
+import com.scrumandcoke.movietheaterclub.model.enums.MemberType;
 import com.scrumandcoke.movietheaterclub.repository.UserRepository;
 import com.scrumandcoke.movietheaterclub.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
 
-    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
     @Override
-    public void addUser(UserDto userDto) throws GlobalException {
-        try {
-            User user = new User();
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setEmail(userDto.getEmail());
-            user.setCreatedAt(Date.from(Instant.now()));
-            user.setLastUpdatedAt(Date.from(Instant.now()));
-            user.setPassword(userDto.getPassword());
-            user.setMemberType(userDto.getMemberType());
-            userRepository.save(user);
-        } catch (Exception exception) {
-            logger.error("Error saving user: {}", userDto.getEmail());
-            throw new GlobalException(exception.getMessage(), exception);
+    public UserDto createUser(@NonNull CreateUserRequest createUserRequest) {
+        if (userExistsByEmail(createUserRequest.getEmail())) {
+            throw new IllegalArgumentException("User with the email " + createUserRequest.getEmail() + " already exists");
         }
+
+        UserEntity userEntity = new UserEntity();
+
+        userEntity.setFirstName(createUserRequest.getFirstName());
+        userEntity.setLastName(createUserRequest.getLastName());
+        userEntity.setExternalId(UUID.randomUUID().toString());
+        userEntity.setEmail(createUserRequest.getEmail());
+        userEntity.setPassword(createUserRequest.getPassword());
+        userEntity.setMemberType(MemberType.REGULAR);
+
+        userRepository.save(userEntity);
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     @Override
-    public UserDto getUserByEmail(String email) throws GlobalException {
-        try {
-            User user = userRepository.findByEmail(email);
-            return new UserDto(user.getFirstName(), user.getLastName(), user.getEmail(), null, user.getMemberType());
-        } catch (Exception exception) {
-            logger.error("Error getting user: {}", email);
-            throw new GlobalException(exception.getMessage(), exception);
-        }
+    public UserDto validateLoginCredentials(@NonNull String email, @NonNull String password) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
+    }
+
+    private boolean userExistsByEmail(@NonNull String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        return Objects.nonNull(userEntity);
     }
 
     @Override
-    public List<UserDto> getUsers() throws GlobalException {
-        try {
-            List<User> users = userRepository.findAll();
-            List<UserDto> response =new ArrayList<>();
-            for(User user: users) {
-                response.add(new UserDto(user.getFirstName(), user.getLastName(), user.getEmail(), null, user.getMemberType()));
-            }
-            return response;
-        } catch (Exception exception) {
-            logger.error("Error getting users");
-            throw new GlobalException(exception.getMessage(), exception);
+    public UserDto getUserByEmail(@NonNull String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (Objects.isNull(userEntity)) {
+            throw new NoSuchElementException("No user exists with the email " + email);
         }
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     @Override
-    public void updateUser(UserDto userDto) throws GlobalException {
-        try {
-            User user = userRepository.findByEmail(userDto.getEmail());
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setEmail(userDto.getEmail());
-            user.setLastUpdatedAt(Date.from(Instant.now()));
-            user.setPassword(userDto.getPassword());
-            user.setMemberType(userDto.getMemberType());
-            userRepository.save(user);
-        } catch (Exception exception) {
-            logger.error("Error updating user: {}", userDto.getEmail());
-            throw new GlobalException(exception.getMessage(), exception);
+    public UserDto getUserByUserId(@NonNull String userId) {
+        UserEntity userEntity = userRepository.findByExternalId(userId);
+        if (Objects.isNull(userEntity)) {
+            throw new NoSuchElementException("No user exists with the userId " + userId);
         }
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
     }
 
     @Override
-    public void deleteUser(Integer id) throws GlobalException {
-        try {
-            userRepository.deleteById(id);
-        } catch (Exception exception) {
-            logger.error("Error deleting user: {}", id);
-            throw new GlobalException(exception.getMessage(), exception);
-        }
+    public List<UserDto> getUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        return UserMapper.INSTANCE.userEntitiesToDtos(userEntities);
+    }
+
+    @Override
+    public void updateUser(@NonNull UserDto userDto) {
+        UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
+
+        userEntity.setFirstName(userDto.getFirstName());
+        userEntity.setLastName(userDto.getLastName());
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void deleteUser(@NonNull Integer id) {
+        userRepository.deleteById(id);
     }
 }

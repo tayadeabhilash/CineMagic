@@ -14,5 +14,5 @@ public interface BookingService {
     BookingDto getBookingById(Integer id);
     void createBooking(BookingDto booking) throws GlobalException;
     void cancelBooking(Integer id) throws GlobalException;
-    List<BookingDto> getAllBookingsByUserId(Integer id);
+    List<BookingDto> getAllBookingsByUserId(String id);
 }

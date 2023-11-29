@@ -2,26 +2,28 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet id="1699427308_create-users-table" author="atayade">
+    <changeSet id="1699508629_create_sessions_and_users_tables.xml" author="siddhant">
         <createTable tableName="users">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
-            <column name="memberType" type="ENUM('REGULAR', 'PREMIUM') NOT NULL DEFAULT 'REGULAR'"/> <!-- Define ENUM type with values -->
-            <column name="createdAt" type="TIMESTAMP"/>
-            <column name="lastUpdatedAt" type="TIMESTAMP"/>
+            <column name="member_type" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="last_updated_at" type="TIMESTAMP"/>
         </createTable>
+
+
         <createTable tableName="sessions">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="createdAt" type="TIMESTAMP"/>
-            <column name="expireAt" type="TIMESTAMP"/>
-            <column name="lastUpdatedAt" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="expire_at" type="TIMESTAMP"/>
+            <column name="last_updated_at" type="TIMESTAMP"/>
             <column name="user_id" type="INT">
                 <constraints references="users(id)" foreignKeyName="fk_session_user"/>
             </column>
