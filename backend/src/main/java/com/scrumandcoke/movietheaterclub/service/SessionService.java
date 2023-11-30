@@ -1,10 +1,11 @@
 package com.scrumandcoke.movietheaterclub.service;
 
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.Session;
+import com.scrumandcoke.movietheaterclub.dto.CreateSessionRequest;
+import com.scrumandcoke.movietheaterclub.dto.SessionDto;
+import lombok.NonNull;
 
 public interface SessionService {
-    void addSession(Session session) throws GlobalException;
-    Session getSession(Integer id) throws GlobalException;
-    void invalidateSession(Integer id) throws GlobalException;
+    SessionDto createSession(CreateSessionRequest createSessionRequest);
+    SessionDto validateSession(@NonNull String sessionId);
+    void invalidateSession(@NonNull String sessionId);
 }

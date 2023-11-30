@@ -4,10 +4,10 @@ import com.scrumandcoke.movietheaterclub.dto.BookingDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.mapper.BookingMapper;
-import com.scrumandcoke.movietheaterclub.model.BookingEntity;
-import com.scrumandcoke.movietheaterclub.model.ShowTimeEntity;
-import com.scrumandcoke.movietheaterclub.model.enums.BookingStatus;
-import com.scrumandcoke.movietheaterclub.model.enums.PaymentMethod;
+import com.scrumandcoke.movietheaterclub.entity.BookingEntity;
+import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
+import com.scrumandcoke.movietheaterclub.enums.BookingStatus;
+import com.scrumandcoke.movietheaterclub.enums.PaymentMethod;
 import com.scrumandcoke.movietheaterclub.repository.BookingRepository;
 import com.scrumandcoke.movietheaterclub.service.BookingService;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
@@ -87,8 +87,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByUserId(Integer userId) {
-        return bookingMapper.toDto(bookingRepository.findByUser_Id(userId));
+    public List<BookingDto> getAllBookingsByUserId(String userId) {
+        return bookingMapper.toDto(bookingRepository.findByUserId(userId));
     }
 
     private void validateShowtime(Integer showTimeId) throws GlobalException {
@@ -120,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
         showTimeService.updateShowTime(showtime);
     }
 
-    private Double calculateServiceFee(Integer userId) {
+    private Double calculateServiceFee(String userId) {
         if (userId == null)
             return serviceCharge;
 

@@ -1,8 +1,8 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.MovieDto;
+import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.MovieEntity;
 import com.scrumandcoke.movietheaterclub.repository.MovieRepository;
 import com.scrumandcoke.movietheaterclub.service.MovieService;
 import org.slf4j.Logger;
@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,7 +66,15 @@ public class MovieServiceImpl implements MovieService {
             movieEntity.setMovieName(movieDto.getMovieName());
             movieEntity.setSynopsis(movieDto.getSynopsis());
             movieEntity.setRunningTime(movieDto.getRunningTime());
+
+            movieEntity.setGenre(movieDto.getGenre());
+            movieEntity.setLanguage(movieDto.getLanguage());
+            movieEntity.setReleaseDate(movieDto.getReleaseDate());
+
+            movieEntity.setPosterUrl(movieDto.getPosterUrl());
+
             movieRepository.save(movieEntity);
+
         } catch (Exception exception) {
             logger.error("Error updating movie: {}", movieDto.getMovieName());
             throw new GlobalException(exception.getMessage(), exception);
@@ -82,7 +92,60 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-//edge cases + validations
+    @Override
+    public List<MovieDto> getUpcomingMovies() throws GlobalException {
+        try {
+            // Get the current date with time set to the start of the day
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.clear(Calendar.MINUTE);
+            calendar.clear(Calendar.SECOND);
+            calendar.clear(Calendar.MILLISECOND);
+
+            Date today = calendar.getTime();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            logger.info("Current date (set to midnight): {}", sdf.format(today));
+
+            List<MovieEntity> upcomingMovies = movieRepository.findByReleaseDateAfter(today);
+            return MovieDto.fromEntityList(upcomingMovies);
+        } catch (Exception exception) {
+            logger.error("Error getting upcoming movies", exception);
+            throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
+    @Override
+    public List<MovieDto> getCurrentMovies() throws GlobalException {
+        try {
+            // Get today's date with time set to the start of the day
+            Calendar calendarToday = Calendar.getInstance();
+            calendarToday.set(Calendar.HOUR_OF_DAY, 0);
+            calendarToday.clear(Calendar.MINUTE);
+            calendarToday.clear(Calendar.SECOND);
+            calendarToday.clear(Calendar.MILLISECOND);
+
+            Date today = calendarToday.getTime();
+
+            // Get date one week ago
+            Calendar calendarWeekAgo = Calendar.getInstance();
+            calendarWeekAgo.add(Calendar.WEEK_OF_YEAR, -1); // Subtract one week
+            calendarWeekAgo.set(Calendar.HOUR_OF_DAY, 0);
+            calendarWeekAgo.clear(Calendar.MINUTE);
+            calendarWeekAgo.clear(Calendar.SECOND);
+            calendarWeekAgo.clear(Calendar.MILLISECOND);
+
+            Date weekAgo = calendarWeekAgo.getTime();
+
+            // Fetch movies released between a week ago and today
+            List<MovieEntity> currentMovies = movieRepository.findByReleaseDateBetween(weekAgo, today);
+            return MovieDto.fromEntityList(currentMovies);
+        } catch (Exception exception) {
+            logger.error("Error getting current movies", exception);
+            throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
     private void validateMovieDto(MovieDto movieDto) throws GlobalException {
         if (movieDto == null) {
             throw new GlobalException("Movie details cannot be null");
@@ -99,8 +162,6 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findById(movieId).orElseThrow(() ->
                 new GlobalException("Movie with the specified ID does not exist"));
     }
-
-
 
 }
 

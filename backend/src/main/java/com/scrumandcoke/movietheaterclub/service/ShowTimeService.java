@@ -1,9 +1,8 @@
 package com.scrumandcoke.movietheaterclub.service;
 
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
-import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 
 import java.util.Date;
 import java.util.List;

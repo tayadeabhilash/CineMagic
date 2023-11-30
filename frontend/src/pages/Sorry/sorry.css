@@ -1,0 +1,15 @@
+.sorry-main {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.sorry-img {
+  height: 100%;
+  background-image: url("../../assets/404-movie.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}

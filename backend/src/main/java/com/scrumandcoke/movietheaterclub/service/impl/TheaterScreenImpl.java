@@ -10,11 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.scrumandcoke.movietheaterclub.dto.MultiplexDto;
 import com.scrumandcoke.movietheaterclub.dto.TheaterScreenDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.MultiplexEntity;
-import com.scrumandcoke.movietheaterclub.model.TheaterScreenEntity;
+import com.scrumandcoke.movietheaterclub.entity.MultiplexEntity;
+import com.scrumandcoke.movietheaterclub.entity.TheaterScreenEntity;
 import com.scrumandcoke.movietheaterclub.repository.MultiplexRepository;
 import com.scrumandcoke.movietheaterclub.repository.TheaterScreenRepository;
 import com.scrumandcoke.movietheaterclub.service.TheaterScreenService;

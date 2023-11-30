@@ -28,7 +28,7 @@ public class BookingController {
     }
 
     @GetMapping("/user/{id}")
-    public List<BookingDto> getAllBookingsByUserId(@PathVariable Integer id) {
+    public List<BookingDto> getAllBookingsByUserId(@PathVariable String id) {
         return bookingService.getAllBookingsByUserId(id);
     }
 

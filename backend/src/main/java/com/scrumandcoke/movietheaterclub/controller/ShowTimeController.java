@@ -2,7 +2,7 @@ package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.scrumandcoke.movietheaterclub.dto.MultiplexDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.model.enums.Location;
+import com.scrumandcoke.movietheaterclub.enums.Location;
 
 public interface MultiplexService {
 	void addMultiplex(MultiplexDto multiplexDto) throws GlobalException;
