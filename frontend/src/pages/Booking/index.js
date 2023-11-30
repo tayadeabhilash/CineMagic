@@ -2,85 +2,150 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Select, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./booking.css";
-
-// Dummy Data
-const movies = [
-  {
-    id: "1",
-    title: "Movie A",
-    duration: "120 mins",
-    releaseDate: "Jan 1st 2023",
-    genre: "Action",
-  },
-  {
-    id: "2",
-    title: "Movie B",
-    duration: "100 mins",
-    releaseDate: "Feb 1st 2023",
-    genre: "Drama",
-  },
-];
-
-const theaters = [
-  { id: "1", name: "Theater One", address: "123 Main St, Anytown" },
-  { id: "2", name: "Theater Two", address: "456 Elm St, Othertown" },
-];
-
-const showtimes = [
-  { movieID: "1", theaterID: "1", time: "12:00 PM" },
-  { movieID: "1", theaterID: "1", time: "03:00 PM" },
-  { movieID: "1", theaterID: "1", time: "06:00 PM" },
-  { movieID: "1", theaterID: "2", time: "12:00 PM" },
-  { movieID: "1", theaterID: "2", time: "03:00 PM" },
-  { movieID: "1", theaterID: "2", time: "06:00 PM" },
-  { movieID: "2", theaterID: "1", time: "12:30 PM" },
-  { movieID: "2", theaterID: "1", time: "03:30 PM" },
-  { movieID: "2", theaterID: "1", time: "06:30 PM" },
-  { movieID: "2", theaterID: "2", time: "12:30 PM" },
-  { movieID: "2", theaterID: "2", time: "03:30 PM" },
-  { movieID: "2", theaterID: "2", time: "06:30 PM" },
-  { movieID: "1", theaterID: "1", time: "09:00 PM" },
-  { movieID: "1", theaterID: "2", time: "09:00 PM" },
-  { movieID: "2", theaterID: "1", time: "09:30 PM" },
-  { movieID: "2", theaterID: "2", time: "09:30 PM" },
-  { movieID: "1", theaterID: "1", time: "10:00 PM" },
-  { movieID: "1", theaterID: "2", time: "10:00 PM" },
-  { movieID: "2", theaterID: "1", time: "10:30 PM" },
-  { movieID: "2", theaterID: "2", time: "10:30 PM" },
-];
+import {
+  GetShowsByMovie,
+  GetShowsByTheaterAndMovie,
+  GetTheaterById,
+} from "../../apicalls/theaters";
+import { message } from "antd";
+import { GetMovieById } from "../../apicalls/movies";
 
 const TICKET_PRICE = 10;
 
 const MovieSelectionPage = () => {
   const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const movieId = params.get("movie");
+  const theaterId = params.get("theater");
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedTheater, setSelectedTheater] = useState(null);
   const [filteredShowtimes, setFilteredShowtimes] = useState([]);
   const [selectedShow, setSelectedShow] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState(1);
+  const [movie, setMovie] = useState([
+    {
+      id: "1",
+      title: "Movie A",
+      duration: "120 mins",
+      releaseDate: "Jan 1st 2023",
+      genre: "Action",
+    },
+  ]);
+  const [theater, setTheater] = useState([
+    { id: "1", name: "Theater One", address: "123 Main St, Anytown" },
+  ]);
+
+  const [showtimes, setShowtimes] = useState([
+    { movieID: "1", theaterID: "1", time: "12:00 PM" },
+    { movieID: "1", theaterID: "1", time: "03:00 PM" },
+    { movieID: "1", theaterID: "1", time: "06:00 PM" },
+    { movieID: "1", theaterID: "3", time: "12:00 PM" },
+    { movieID: "1", theaterID: "3", time: "03:00 PM" },
+    { movieID: "1", theaterID: "3", time: "06:00 PM" },
+    { movieID: "2", theaterID: "1", time: "12:30 PM" },
+    { movieID: "2", theaterID: "1", time: "03:30 PM" },
+    { movieID: "2", theaterID: "1", time: "06:30 PM" },
+    { movieID: "2", theaterID: "2", time: "12:30 PM" },
+    { movieID: "2", theaterID: "2", time: "03:30 PM" },
+    { movieID: "2", theaterID: "2", time: "06:30 PM" },
+    { movieID: "1", theaterID: "1", time: "09:00 PM" },
+    { movieID: "1", theaterID: "2", time: "09:00 PM" },
+    { movieID: "2", theaterID: "1", time: "09:30 PM" },
+    { movieID: "2", theaterID: "2", time: "09:30 PM" },
+    { movieID: "1", theaterID: "1", time: "10:00 PM" },
+    { movieID: "1", theaterID: "2", time: "10:00 PM" },
+    { movieID: "2", theaterID: "1", time: "10:30 PM" },
+    { movieID: "2", theaterID: "2", time: "10:30 PM" },
+  ]);
+
+  const fetchTheaterData = async (id) => {
+    try {
+      const response = await GetTheaterById(id);
+
+      if (response.status == 200) {
+        setTheater(response.data);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  };
+
+  const fetchMovieData = async (id) => {
+    try {
+      const response = await GetMovieById(id);
+
+      if (response.status == 200) {
+        const formattedMovie = {
+          id: response.data.movieId,
+          title: response.data.movieName,
+          description: response.data.synopsis,
+          duration: response.data.runningTime,
+          releaseDate: formatDate(response.data.releaseDate),
+          genre: response.data.genre,
+        };
+        setMovie(formattedMovie);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  };
+
+  const fetchShowtimes = async (theaterId, movieId) => {
+    try {
+      const response = await GetShowsByTheaterAndMovie(theaterId, movieId);
+
+      if (response.status == 200) {
+        const formattedShowTimes = response.data.map((showtime) => ({
+          ...showtime,
+          id: showtime.id,
+          movieID: showtime.movieId,
+          theaterID: showtime.theaterScreenId,
+          time: formatTime(showtime.time)
+        }));
+        setShowtimes(formattedShowTimes);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  };
+
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC", // Adjust the time zone as needed
+    }).format(date);
+  };
+
+  const formatTime = (date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  };
 
   useEffect(() => {
-    // Parse query params (replace with actual query param logic)
-    const params = new URLSearchParams(window.location.search);
-    const movieId = params.get("movie");
-    const theaterId = params.get("theater");
+    fetchMovieData(movieId);
+    fetchTheaterData(theaterId);
+    fetchShowtimes(theaterId, movieId)
 
-    const movie = movies.find((m) => m.id === movieId);
-    const theater = theaters.find((t) => t.id === theaterId);
+    
+  }, []);
 
+  useEffect(() => {
     setSelectedMovie(movie);
     setSelectedTheater(theater);
-
-    const filtered = showtimes.filter((st) => {
-      return (
-        (!movieId || st.movieID === movieId) &&
-        (!theaterId || st.theaterID === theaterId)
-      );
-    });
-
-    setFilteredShowtimes(filtered);
-  }, []);
+    setFilteredShowtimes(showtimes);
+  }, [movie, theater, showtimes]);
 
   const selectShow = (theater, time) => {
     setSelectedShow({ ...theater, selectedTime: time });
@@ -153,7 +218,7 @@ const MovieSelectionPage = () => {
   const renderContent = () => {
     if (selectedTheater && !selectedMovie) {
       // Show movies and their showtimes if only theater is known
-      return movies.map((movie, index) => {
+      return () => {
         const movieShowtimes = filteredShowtimes.filter(
           (showtime) =>
             showtime.movieID === movie.id &&
@@ -162,7 +227,7 @@ const MovieSelectionPage = () => {
         if (movieShowtimes.length === 0) return null;
 
         return (
-          <div key={index} className="movie mb-3 p-3 shadow-sm rounded">
+          <div key={1} className="movie mb-3 p-3 shadow-sm rounded">
             <h3>{movie.title}</h3>
             <Row gutter={8}>
               {movieShowtimes.map((showtime, idx) => (
@@ -179,10 +244,10 @@ const MovieSelectionPage = () => {
             </Row>
           </div>
         );
-      });
+      };
     } else if (!selectedTheater && selectedMovie) {
       // Show theaters and their showtimes if only movie is known
-      return theaters.map((theater, index) => {
+      return () => {
         const theaterShowtimes = filteredShowtimes.filter(
           (showtime) =>
             showtime.theaterID === theater.id &&
@@ -191,7 +256,7 @@ const MovieSelectionPage = () => {
         if (theaterShowtimes.length === 0) return null;
 
         return (
-          <div key={index} className="theater mb-3 p-3 shadow-sm rounded">
+          <div key={1} className="theater mb-3 p-3 shadow-sm rounded">
             <h3>{theater.name}</h3>
             <p>{theater.address}</p>
             <Row gutter={8}>
@@ -209,7 +274,7 @@ const MovieSelectionPage = () => {
             </Row>
           </div>
         );
-      });
+      };
     } else if (selectedTheater && selectedMovie) {
       // Show only showtimes if both movie and theater are known
       return (

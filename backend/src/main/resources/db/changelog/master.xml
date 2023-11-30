@@ -12,5 +12,6 @@
     <include file="classpath:db/changelog/1701136572_update_user_id_field_type_in_sessions.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701217868_add_user_type_column.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701314537_add_fields_for_theater_screen.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701335585_add_fields_for_movies.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
