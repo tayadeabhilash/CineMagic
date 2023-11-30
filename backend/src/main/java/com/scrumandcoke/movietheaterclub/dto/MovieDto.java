@@ -23,7 +23,9 @@ public class MovieDto {
     private String posterUrl;
     private String genre;
     private String language;
-    private LocalDate releaseDate;
+//    private LocalDate releaseDate;
+    private Date releaseDate;
+
     public static MovieDto fromEntity(MovieEntity movieEntity) {
         MovieDto movieDto = new MovieDto();
         movieDto.setMovieId(movieEntity.getMovieId());
@@ -34,7 +36,9 @@ public class MovieDto {
         movieDto.setPosterUrl(movieEntity.getPosterUrl());
         movieDto.setGenre(movieEntity.getGenre());
         movieDto.setLanguage(movieEntity.getLanguage());
+
         movieDto.setReleaseDate(movieEntity.getReleaseDate());
+
 
         return movieDto;
     }

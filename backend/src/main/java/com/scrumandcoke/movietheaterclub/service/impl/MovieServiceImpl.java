@@ -102,14 +102,10 @@ public class MovieServiceImpl implements MovieService {
 
             Date today = calendar.getTime();
 
-            // Convert Date to LocalDate
-            LocalDate localDateToday = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             logger.info("Current date (set to midnight): {}", sdf.format(today));
 
-            // Use LocalDate in findByReleaseDateAfter
-            List<MovieEntity> upcomingMovies = movieRepository.findByReleaseDateAfter(localDateToday);
+            List<MovieEntity> upcomingMovies = movieRepository.findByReleaseDateAfter(today);
             return MovieDto.fromEntityList(upcomingMovies);
         } catch (Exception exception) {
             logger.error("Error getting upcoming movies", exception);
@@ -117,17 +113,53 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
+//    @Override
+//    public List<MovieDto> getCurrentMovies()  {
+//        try {
+//            LocalDate today = LocalDate.now();
+//            LocalDate weekAgo = today.minusWeeks(1); // Example range: last week to today
+//            List<MovieEntity> currentMovies = movieRepository.findByReleaseDateBetween(weekAgo, today);
+//            return MovieDto.fromEntityList(currentMovies);
+//        } catch (Exception exception) {
+//            logger.error("Error getting current movies");
+//            throw new GlobalException(exception.getMessage(), exception);
+//        }
+//        return null;
+//    }
 
     @Override
     public List<MovieDto> getCurrentMovies() throws GlobalException {
         try {
-            LocalDate today = LocalDate.now();
-            LocalDate weekAgo = today.minusWeeks(1); // Example range: last week to today
+            // Get today's date with time set to the start of the day
+            Calendar calendarToday = Calendar.getInstance();
+            calendarToday.set(Calendar.HOUR_OF_DAY, 0);
+            calendarToday.clear(Calendar.MINUTE);
+            calendarToday.clear(Calendar.SECOND);
+            calendarToday.clear(Calendar.MILLISECOND);
+
+            Date today = calendarToday.getTime();
+
+            // Get date one week ago
+            Calendar calendarWeekAgo = Calendar.getInstance();
+            calendarWeekAgo.add(Calendar.WEEK_OF_YEAR, -1); // Subtract one week
+            calendarWeekAgo.set(Calendar.HOUR_OF_DAY, 0);
+            calendarWeekAgo.clear(Calendar.MINUTE);
+            calendarWeekAgo.clear(Calendar.SECOND);
+            calendarWeekAgo.clear(Calendar.MILLISECOND);
+
+            Date weekAgo = calendarWeekAgo.getTime();
+
+            // Fetch movies released between a week ago and today
             List<MovieEntity> currentMovies = movieRepository.findByReleaseDateBetween(weekAgo, today);
             return MovieDto.fromEntityList(currentMovies);
         } catch (Exception exception) {
-            logger.error("Error getting current movies");
+            logger.error("Error getting current movies", exception);
             throw new GlobalException(exception.getMessage(), exception);
         }
     }
+
+
+
+
 }
+

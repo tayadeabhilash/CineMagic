@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
-    List<MovieEntity> findByReleaseDateAfter(LocalDate date);
-    List<MovieEntity> findByReleaseDateBetween(LocalDate startDate, LocalDate endDate);
+    List<MovieEntity> findByReleaseDateAfter(Date date);
+    List<MovieEntity> findByReleaseDateBetween(Date startDate, Date endDate);
 
 }
