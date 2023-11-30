@@ -11,9 +11,13 @@ import com.scrumandcoke.movietheaterclub.service.UserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -21,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDto createUser(@NonNull CreateUserRequest createUserRequest, @NonNull UserType userType) {
@@ -34,7 +41,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setLastName(createUserRequest.getLastName());
         userEntity.setExternalId(UUID.randomUUID().toString());
         userEntity.setEmail(createUserRequest.getEmail());
-        userEntity.setPassword(createUserRequest.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         userEntity.setMemberType(MemberType.REGULAR);
         userEntity.setUserType(userType);
 
@@ -52,8 +59,11 @@ public class UserServiceImpl implements UserService {
     public UserDto validateLoginCredentials(@NonNull String email, @NonNull String password) {
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isEmpty()) {
-            throw new NoSuchElementException("No user found with the email " + email);
+            throw new NoSuchElementException("Invalid Credentials");
         }
+
+        validatePasswordMatches(password, userEntity.get().getPassword());
+
         return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());
     }
 
@@ -122,5 +132,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(@NonNull Integer id) {
         userRepository.deleteById(id);
+    }
+
+
+    private void validatePasswordMatches(@NonNull String inputPassword, @NonNull String storedPassword) {
+        if (!passwordEncoder.matches(inputPassword, storedPassword)) {
+            throw new IllegalArgumentException("Invalid Credentials");
+        }
     }
 }
