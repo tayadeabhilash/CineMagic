@@ -1,19 +1,19 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
+import com.google.common.eventbus.EventBus;
 import com.scrumandcoke.movietheaterclub.dto.BookingDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.mapper.BookingMapper;
 import com.scrumandcoke.movietheaterclub.entity.BookingEntity;
 import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
 import com.scrumandcoke.movietheaterclub.enums.BookingStatus;
 import com.scrumandcoke.movietheaterclub.enums.PaymentMethod;
+import com.scrumandcoke.movietheaterclub.exception.GlobalException;
+import com.scrumandcoke.movietheaterclub.mapper.BookingMapper;
 import com.scrumandcoke.movietheaterclub.repository.BookingRepository;
 import com.scrumandcoke.movietheaterclub.service.BookingService;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class BookingServiceImpl implements BookingService {
 
     @Autowired
@@ -36,10 +37,11 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     ShowTimeService showTimeService;
 
+    @Autowired
+    EventBus eventBus;
+
     @Value("${booking.service.charge:1.5}")
     private Double serviceCharge;
-
-    Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     @Override
     public List<BookingDto> getAllBookings() {
@@ -68,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
             bookingEntity.setBookingStatus(BookingStatus.CONFIRMED);
             bookingRepository.save(bookingEntity);
         } catch (Exception exception) {
-            logger.error("Error saving booking");
+            log.error("Error saving booking");
             throw new GlobalException(exception.getMessage(), exception);
         }
     }
