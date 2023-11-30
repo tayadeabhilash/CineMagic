@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="1701314537" author="siddhant">
+
+        <addColumn tableName="theater_screens">
+            <column name="address" type="TEXT"/>
+        </addColumn>
+
+        <addColumn tableName="theater_screens">
+            <column name="phone" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <addColumn tableName="theater_screens">
+            <column name="email" type="VARCHAR(255)"/>
+        </addColumn>
+
+    </changeSet>
+
+</databaseChangeLog>

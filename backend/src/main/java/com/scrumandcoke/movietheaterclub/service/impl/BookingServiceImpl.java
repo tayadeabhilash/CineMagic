@@ -172,7 +172,7 @@ public class BookingServiceImpl implements BookingService {
             throw new GlobalException("Booking details cannot be null");
         }
 
-        if (booking.getUserId() == null || booking.getUserId() < 1) {
+        if (booking.getUserId() == null) {
             throw new GlobalException("Invalid User ID");
         }
 
