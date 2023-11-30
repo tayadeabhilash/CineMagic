@@ -39,7 +39,7 @@ const Navbar = () => {
         aria-label="Toggle navigation"
       ></button>
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
-        {userInfo.userType === "THEATER_EMPLOYEE" ? (
+        {userInfo?.userType === "THEATER_EMPLOYEE" ? (
           <ul className="navbar-nav main-nav">
             <li className="nav-item">
               <NavLink className="nav-link" to="/admin">
@@ -67,7 +67,7 @@ const Navbar = () => {
           </ul>
         )}
 
-        {userInfo.memberType === "PREMIUM" && (
+        {userInfo?.memberType === "PREMIUM" && (
           <div className="premium">Premium!!</div>
         )}
         {userInfo ? (

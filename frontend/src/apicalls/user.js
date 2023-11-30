@@ -27,11 +27,11 @@ export const Logout = async () => {
   }
 };
 
-// export const UpgradeMembership = async () => {
-//   try {
-//     const response = await axiosInstance.post("v0/users");
-//     return response;
-//   } catch (error) {
-//     return error.response;
-//   }
-// };
+export const UpgradeMembership = async () => {
+  try {
+    const response = await axiosInstance.put("v0/users/me/upgradeMembership");
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
