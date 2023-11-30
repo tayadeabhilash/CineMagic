@@ -17,7 +17,6 @@ public class ShowTimeEntity {
 
     private Date time;
 
-
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private MovieEntity movie;

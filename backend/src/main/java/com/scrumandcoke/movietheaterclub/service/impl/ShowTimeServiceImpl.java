@@ -198,7 +198,6 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                 movieWithShowtimesDto.setMovieTitle(movie.getMovieName());
                 // Set other movie details as needed
             }
-
             moviesWithShowtimes.add(movieWithShowtimesDto);
         }
 
