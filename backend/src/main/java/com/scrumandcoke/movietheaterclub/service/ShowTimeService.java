@@ -1,5 +1,6 @@
 package com.scrumandcoke.movietheaterclub.service;
 
+import com.scrumandcoke.movietheaterclub.dto.MovieWithShowtimesDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.enums.Location;
@@ -24,4 +25,7 @@ public interface ShowTimeService {
     void deleteShowTime(Integer id) throws GlobalException;
 
     Double getDiscountedPrice(Double price, Date time);
+
+    List<MovieWithShowtimesDto> getMoviesWithUpcomingShowtimes(int daysAhead);
+
 }
