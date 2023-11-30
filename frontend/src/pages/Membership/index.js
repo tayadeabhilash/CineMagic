@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Button, Row, Col } from "antd";
 import { Container } from "react-bootstrap";
 import "./membership.css";
 
 const MembershipPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="membership-page">
       <Container className="mt-5">

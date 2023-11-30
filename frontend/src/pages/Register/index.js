@@ -11,42 +11,43 @@ const Register = () => {
           <h2>Register with us</h2>
           <hr />
           <Form>
-            <Form.Group className="mb-3" controlId="name">
-              <Form.Label>Username</Form.Label>
+            <Form.Group className="mb-3" controlId="firstName">
+              <Form.Label>First Name</Form.Label>
               <Form.Control
                 required
                 type="text"
-                id="name"
-                placeholder="Enter Username"
+                id="firstName"
+                placeholder="First Name"
+                autoComplete="true"
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="userEmail">
+            <Form.Group className="mb-3" controlId="lastName">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                id="lasttName"
+                placeholder="Last Name"
+                autoComplete="true"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="email">
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 required
                 type="email"
-                id="userEmail"
-                placeholder="Enter email"
+                id="email"
+                placeholder="Email"
+                autoComplete="true"
               />
             </Form.Group>
-
-            <Form.Group className="mb-3" controlId="userPassword">
+            <Form.Group className="mb-3" controlId="password">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 required
                 type="password"
-                id="userPassword"
+                id="password"
                 placeholder="Password"
-                autoComplete="true"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="phoneNumber">
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                required
-                type="number"
-                id="phoneNumber"
-                placeholder="Enter Phone Number"
               />
             </Form.Group>
             <Button variant="primary" type="submit" className="register-button">

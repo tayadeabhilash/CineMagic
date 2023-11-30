@@ -5,6 +5,7 @@ import "./movie.css";
 import { GetMovieById } from "../../apicalls/movies";
 import { message } from "antd";
 import moment from "moment";
+import Loader from "../../components/Loader/loader";
 
 const Movie = () => {
   var navigate = useNavigate();
@@ -21,9 +22,11 @@ const Movie = () => {
     synopsis:
       "Jack Reacher must uncover the truth behind a major government conspiracy in order to clear his name. On the run as a fugitive from the law, Reacher uncovers a potential secret from his past that could change his life forever.",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchMovieData = async () => {
     try {
+      setIsLoading(true);
       const response = await GetMovieById(id);
       console.log(response);
 
@@ -32,7 +35,9 @@ const Movie = () => {
       } else {
         message.error(response.response.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error);
       console.log(error);
     }
@@ -42,6 +47,10 @@ const Movie = () => {
     window.scrollTo(0, 0);
     fetchMovieData();
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="container-fluid movie">

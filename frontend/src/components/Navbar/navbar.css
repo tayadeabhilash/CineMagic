@@ -14,6 +14,10 @@
   border-color: #353535;
 }
 
+.main-nav {
+  width: 12.5rem !important;
+}
+
 .main-nav .nav-link {
   color: #b3b3b3;
   font-family: "Heebo", sans-serif;
@@ -35,10 +39,23 @@
   background-color: #19d3da;
 }
 
+.nav-item .username {
+  color: white;
+  margin: 0;
+}
+
 .navbar-nav {
   width: 12rem;
   display: flex;
   justify-content: space-between;
+}
+
+.navbar-nav2 {
+  width: 17.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
 }
 
 @media (max-width: 992px) {

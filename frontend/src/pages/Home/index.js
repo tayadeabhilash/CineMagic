@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "./home.css";
 import { GetAllMovies } from "../../apicalls/movies";
 import { GetAllTheaters } from "../../apicalls/theaters";
+import Loader from "../../components/Loader/loader";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([
     {
       id: 1,
@@ -90,7 +92,6 @@ const HomePage = () => {
   const locations = [
     {
       id: 1,
-      id: 1,
       title: "City Center",
       description: "Located in the heart of the city",
       image: "https://via.placeholder.com/150",
@@ -168,9 +169,10 @@ const HomePage = () => {
 
   const getMoviesData = async () => {
     try {
+      setIsLoading(true);
       const response = await GetAllMovies();
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const formattedMovies = response.data.map((movie) => ({
           ...movie,
           id: movie.movieId,
@@ -181,16 +183,19 @@ const HomePage = () => {
       } else {
         message.error(response.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error);
     }
   };
 
   const getTheatersData = async () => {
     try {
+      setIsLoading(true);
       const response = await GetAllTheaters();
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const formattedTheaters = response.data.map((theater) => ({
           ...theater,
           title: theater.name,
@@ -199,7 +204,9 @@ const HomePage = () => {
       } else {
         message.error(response.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error.message);
     }
   };
@@ -252,6 +259,10 @@ const HomePage = () => {
     getMoviesData();
     getTheatersData();
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="homepage-container">
