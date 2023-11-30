@@ -1,9 +1,11 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.annotation.LoginRequired;
+import com.scrumandcoke.movietheaterclub.annotation.UserTypesAllowed;
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.LoginRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserSessionDetail;
+import com.scrumandcoke.movietheaterclub.enums.UserType;
 import com.scrumandcoke.movietheaterclub.service.IAMService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

@@ -53,8 +53,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
         UserSessionDetail user = loadUser(sessionId);
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user, null,
-                        AuthorityUtils.createAuthorityList("ROLE_USER"));
+                new UsernamePasswordAuthenticationToken(user, null, null);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return true;
