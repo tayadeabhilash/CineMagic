@@ -6,6 +6,8 @@ import "./home.css";
 import { GetAllMovies } from "../../apicalls/movies";
 import { GetAllTheaters } from "../../apicalls/theaters";
 import Loader from "../../components/Loader/loader";
+import moviePlaceholder from "../../assets/movie-placeholder.png";
+import theaterPlaceholder from "../../assets/theater-placeholder.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -178,6 +180,7 @@ const HomePage = () => {
           id: movie.movieId,
           title: movie.movieName,
           description: movie.synopsis,
+          image: movie.posterUrl ? movie.posterUrl : moviePlaceholder,
         }));
         setMovies(formattedMovies);
       } else {
@@ -199,6 +202,7 @@ const HomePage = () => {
         const formattedTheaters = response.data.map((theater) => ({
           ...theater,
           title: theater.name,
+          image: theater.posterUrl ? theater.posterUrl : theaterPlaceholder,
         }));
         setTheaters(formattedTheaters);
       } else {
@@ -272,7 +276,7 @@ const HomePage = () => {
       <h2>Locations</h2>
       {renderCarousel(locations, "location")}
 
-      <h2>Current Movies</h2>
+      <h2>Currently Palying</h2>
       {renderCarousel(movies, "movie")}
 
       <h2>Upcoming Movies</h2>

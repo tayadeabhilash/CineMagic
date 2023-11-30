@@ -39,23 +39,43 @@ const Navbar = () => {
         aria-label="Toggle navigation"
       ></button>
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul className="navbar-nav main-nav">
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/">
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/buy-membership">
-              Buy Membership
-            </NavLink>
-          </li>
-        </ul>
+        {userInfo.userType === "THEATER_EMPLOYEE" ? (
+          <ul className="navbar-nav main-nav">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/admin">
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/analytics">
+                Analytics
+              </NavLink>
+            </li>
+          </ul>
+        ) : (
+          <ul className="navbar-nav main-nav">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/">
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/buy-membership">
+                Buy Membership
+              </NavLink>
+            </li>
+          </ul>
+        )}
 
+        {userInfo.memberType === "PREMIUM" && (
+          <div className="premium">Premium!!</div>
+        )}
         {userInfo ? (
           <ul className="navbar-nav2 ml-auto">
             <li className="nav-item">
-              <p className="username">Welcome {userInfo.data.firstName}!</p>
+              <NavLink to="/tickets">
+                <p className="username">Welcome {userInfo.data.firstName}!</p>
+              </NavLink>
             </li>
             <li className="nav-item">
               <NavLink>

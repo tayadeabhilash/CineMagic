@@ -28,6 +28,11 @@
   color: #ffffff;
 }
 
+.nav-item {
+  list-style-type: none;
+  text-decoration: none;
+}
+
 .nav-item .btn-outline-success {
   color: #19d3da;
   border-color: #19d3da;
@@ -56,6 +61,11 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0;
+}
+
+.premium {
+  color: gold;
+  margin: auto;
 }
 
 @media (max-width: 992px) {

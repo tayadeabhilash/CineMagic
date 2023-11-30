@@ -27,12 +27,17 @@ const Login = () => {
 
       if (res.data) {
         dispatch(setCredentials({ ...res }));
-        navigate("/");
+        if (res.data.userType === "THEATER_EMPLOYEE") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       } else {
         message.error(res?.error?.data?.errorMessage);
       }
     } catch (err) {
-      message.error({ error: err?.data?.message });
+      console.log(err);
+      message.error(err?.data?.errorMessage);
     }
   };
 

@@ -26,3 +26,12 @@ export const Logout = async () => {
     return error.response;
   }
 };
+
+// export const UpgradeMembership = async () => {
+//   try {
+//     const response = await axiosInstance.post("v0/users");
+//     return response;
+//   } catch (error) {
+//     return error.response;
+//   }
+// };
