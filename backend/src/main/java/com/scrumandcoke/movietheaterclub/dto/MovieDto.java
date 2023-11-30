@@ -20,7 +20,7 @@ public class MovieDto {
     private String movieName;
     private String synopsis;
     private Integer runningTime;
-    private String poster;
+    private String posterUrl;
     private String genre;
     private String language;
     private LocalDate releaseDate;
@@ -31,7 +31,7 @@ public class MovieDto {
         movieDto.setSynopsis(movieEntity.getSynopsis());
         movieDto.setRunningTime(movieEntity.getRunningTime());
 
-        movieDto.setPoster(movieEntity.getPoster());
+        movieDto.setPosterUrl(movieEntity.getPosterUrl());
         movieDto.setGenre(movieEntity.getGenre());
         movieDto.setLanguage(movieEntity.getLanguage());
         movieDto.setReleaseDate(movieEntity.getReleaseDate());
@@ -54,7 +54,7 @@ public class MovieDto {
         movieEntity.setSynopsis(movieDto.getSynopsis());
         movieEntity.setRunningTime(movieDto.getRunningTime());
 
-        movieEntity.setPoster(movieDto.getPoster());
+        movieEntity.setPosterUrl(movieDto.getPosterUrl());
         movieEntity.setGenre(movieDto.getGenre());
         movieEntity.setLanguage(movieDto.getLanguage());
         movieEntity.setReleaseDate(movieDto.getReleaseDate());

@@ -30,7 +30,7 @@ public class MovieEntity {
     private Integer runningTime;
 
     @Column(name="poster")
-    private String poster;
+    private String posterUrl;
 
     @Column(name="genre")
     private String genre;

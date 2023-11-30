@@ -70,7 +70,7 @@ public class MovieServiceImpl implements MovieService {
             movieEntity.setLanguage(movieDto.getLanguage());
             movieEntity.setReleaseDate(movieDto.getReleaseDate());
 
-            movieEntity.setPoster(movieDto.getPoster());
+            movieEntity.setPosterUrl(movieDto.getPosterUrl());
 
             movieRepository.save(movieEntity);
 
