@@ -3,12 +3,14 @@ import { Modal, Button, Select, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./booking.css";
 import {
+  GetAllTheaters,
   GetShowsByMovie,
+  GetShowsByTheater,
   GetShowsByTheaterAndMovie,
   GetTheaterById,
 } from "../../apicalls/theaters";
 import { message } from "antd";
-import { GetMovieById } from "../../apicalls/movies";
+import { GetAllMovies, GetMovieById } from "../../apicalls/movies";
 
 const TICKET_PRICE = 10;
 
@@ -23,46 +25,16 @@ const MovieSelectionPage = () => {
   const [selectedShow, setSelectedShow] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState(1);
-  const [movie, setMovie] = useState([
-    {
-      id: "1",
-      title: "Movie A",
-      duration: "120 mins",
-      releaseDate: "Jan 1st 2023",
-      genre: "Action",
-    },
-  ]);
-  const [theater, setTheater] = useState([
-    { id: "1", name: "Theater One", address: "123 Main St, Anytown" },
-  ]);
+  const [movie, setMovie] = useState(null);
+  const [theater, setTheater] = useState(null);
 
-  const [showtimes, setShowtimes] = useState([
-    { movieID: "1", theaterID: "1", time: "12:00 PM" },
-    { movieID: "1", theaterID: "1", time: "03:00 PM" },
-    { movieID: "1", theaterID: "1", time: "06:00 PM" },
-    { movieID: "1", theaterID: "3", time: "12:00 PM" },
-    { movieID: "1", theaterID: "3", time: "03:00 PM" },
-    { movieID: "1", theaterID: "3", time: "06:00 PM" },
-    { movieID: "2", theaterID: "1", time: "12:30 PM" },
-    { movieID: "2", theaterID: "1", time: "03:30 PM" },
-    { movieID: "2", theaterID: "1", time: "06:30 PM" },
-    { movieID: "2", theaterID: "2", time: "12:30 PM" },
-    { movieID: "2", theaterID: "2", time: "03:30 PM" },
-    { movieID: "2", theaterID: "2", time: "06:30 PM" },
-    { movieID: "1", theaterID: "1", time: "09:00 PM" },
-    { movieID: "1", theaterID: "2", time: "09:00 PM" },
-    { movieID: "2", theaterID: "1", time: "09:30 PM" },
-    { movieID: "2", theaterID: "2", time: "09:30 PM" },
-    { movieID: "1", theaterID: "1", time: "10:00 PM" },
-    { movieID: "1", theaterID: "2", time: "10:00 PM" },
-    { movieID: "2", theaterID: "1", time: "10:30 PM" },
-    { movieID: "2", theaterID: "2", time: "10:30 PM" },
-  ]);
+  const [showtimes, setShowtimes] = useState([]);
 
   const fetchTheaterData = async (id) => {
+    let response = null;
     try {
-      const response = await GetTheaterById(id);
-
+      if (id) response = await GetTheaterById(id);
+      else response = await GetAllTheaters();
       if (response.status == 200) {
         setTheater(response.data);
       } else {
@@ -74,19 +46,12 @@ const MovieSelectionPage = () => {
   };
 
   const fetchMovieData = async (id) => {
+    let response = null;
     try {
-      const response = await GetMovieById(id);
-
+      if (id) response = await GetMovieById(id);
+      else response = await GetAllMovies();
       if (response.status == 200) {
-        const formattedMovie = {
-          id: response.data.movieId,
-          title: response.data.movieName,
-          description: response.data.synopsis,
-          duration: response.data.runningTime,
-          releaseDate: formatDate(response.data.releaseDate),
-          genre: response.data.genre,
-        };
-        setMovie(formattedMovie);
+        setMovie(response.data);
       } else {
         message.error(response.data);
       }
@@ -97,7 +62,10 @@ const MovieSelectionPage = () => {
 
   const fetchShowtimes = async (theaterId, movieId) => {
     try {
-      const response = await GetShowsByTheaterAndMovie(theaterId, movieId);
+      let response = null;
+      if (movieId && !theaterId) response = await GetShowsByMovie(movieId);
+      else if (!movieId && theaterId) response = await GetShowsByTheater(theaterId);
+      else response = await GetShowsByTheaterAndMovie(theaterId, movieId);
 
       if (response.status == 200) {
         const formattedShowTimes = response.data.map((showtime) => ({
@@ -105,9 +73,15 @@ const MovieSelectionPage = () => {
           id: showtime.id,
           movieID: showtime.movieId,
           theaterID: showtime.theaterScreenId,
-          time: formatTime(showtime.time)
+          time: showtime.time,
         }));
-        setShowtimes(formattedShowTimes);
+        const showtimesByDate = formattedShowTimes.reduce((acc, showtime) => {
+          const date = formatDate(showtime.time);
+          acc[date] = acc[date] || [];
+          acc[date].push(showtime);
+          return acc;
+        }, {});
+        setShowtimes(showtimesByDate);
       } else {
         message.error(response.data);
       }
@@ -136,14 +110,12 @@ const MovieSelectionPage = () => {
   useEffect(() => {
     fetchMovieData(movieId);
     fetchTheaterData(theaterId);
-    fetchShowtimes(theaterId, movieId)
-
-    
+    fetchShowtimes(theaterId, movieId);
   }, []);
 
   useEffect(() => {
-    setSelectedMovie(movie);
-    setSelectedTheater(theater);
+    if (movieId) setSelectedMovie(movie);
+    if (theaterId) setSelectedTheater(theater);
     setFilteredShowtimes(showtimes);
   }, [movie, theater, showtimes]);
 
@@ -182,9 +154,9 @@ const MovieSelectionPage = () => {
       return (
         <>
           <div className="movie-details mb-3">
-            <h1>{selectedMovie.title}</h1>
-            <p>Duration: {selectedMovie.duration}</p>
-            <p>Release Date: {selectedMovie.releaseDate}</p>
+            <h1>{selectedMovie.movieName}</h1>
+            <p>Duration: {selectedMovie.runningTime}</p>
+            <p>Release Date: {formatDate(selectedMovie.releaseDate)}</p>
             <p>Genre: {selectedMovie.genre}</p>
           </div>
           <div className="theater-details mb-5">
@@ -197,9 +169,9 @@ const MovieSelectionPage = () => {
       // Show only movie details if only movie is known
       return (
         <div className="movie-details mb-5">
-          <h1>{selectedMovie.title}</h1>
-          <p>Duration: {selectedMovie.duration}</p>
-          <p>Release Date: {selectedMovie.releaseDate}</p>
+          <h1>{selectedMovie.movieName}</h1>
+          <p>Duration: {selectedMovie.runningTime}</p>
+          <p>Release Date: {formatDate(selectedMovie.releaseDate)}</p>
           <p>Genre: {selectedMovie.genre}</p>
         </div>
       );
@@ -218,80 +190,107 @@ const MovieSelectionPage = () => {
   const renderContent = () => {
     if (selectedTheater && !selectedMovie) {
       // Show movies and their showtimes if only theater is known
-      return () => {
-        const movieShowtimes = filteredShowtimes.filter(
-          (showtime) =>
-            showtime.movieID === movie.id &&
-            showtime.theaterID === selectedTheater.id
-        );
+      return movie?.map((movie, index) => {
+        const movieShowtimes = Object.entries(showtimes)
+          .filter(([date, times]) =>
+            times.some((showtime) => showtime.movieID === movie.movieId)
+          )
+          .reduce((acc, [date, times]) => {
+            acc[date] = times.filter(
+              (showtime) => showtime.movieID === movie.movieId
+            );
+            return acc;
+          }, {});
         if (movieShowtimes.length === 0) return null;
+        console.log(movieShowtimes);
 
         return (
-          <div key={1} className="movie mb-3 p-3 shadow-sm rounded">
-            <h3>{movie.title}</h3>
-            <Row gutter={8}>
-              {movieShowtimes.map((showtime, idx) => (
-                <Col key={idx} span={4}>
+          <div key={1} className="showtimes mb-3 p-3 shadow-sm rounded">
+            <h3>{movie.movieName}</h3>
+            {Object.entries(movieShowtimes).map(([date, times], idx) => (
+              <Row key={idx} gutter={8}>
+                <Col span={24}>
+                  <h6>{date}</h6>
+                </Col>
+                {times.map((showtime, timeIdx) => (
+                  <Col key={timeIdx} span={4}>
+                    <Button
+                      className="time-button"
+                      type="primary"
+                      onClick={() => selectShow(selectedTheater, showtime.time)}
+                    >
+                      {formatTime(showtime.time)}
+                    </Button>
+                  </Col>
+                ))}
+              </Row>
+            ))}
+          </div>
+        );
+      });
+    } else if (!selectedTheater && selectedMovie) {
+      // Show theaters and their showtimes if only movie is known
+      return theater?.map((theater, index) => {
+        const theaterShowtimes = Object.entries(showtimes)
+          .filter(([date, times]) =>
+            times.some((showtime) => showtime.theaterID === theater.id)
+          )
+          .reduce((acc, [date, times]) => {
+            acc[date] = times.filter(
+              (showtime) => showtime.theaterID === theater.id
+            );
+            return acc;
+          }, {});
+        if (theaterShowtimes.length === 0) return null;
+        console.log(theaterShowtimes);
+
+        return (
+          <div key={index} className="theater mb-3 p-3 shadow-sm rounded">
+            <h3>{theater.name}</h3>
+            <p>{theater.address}</p>
+            {Object.entries(theaterShowtimes).map(([date, times], idx) => (
+              <Row key={idx} gutter={8}>
+                <Col span={24}>
+                  <h6>{date}</h6>
+                </Col>
+                {times.map((showtime, timeIdx) => (
+                  <Col key={timeIdx} span={4}>
+                    <Button
+                      className="time-button"
+                      type="primary"
+                      onClick={() => selectShow(selectedTheater, showtime.time)}
+                    >
+                      {formatTime(showtime.time)}
+                    </Button>
+                  </Col>
+                ))}
+              </Row>
+            ))}
+          </div>
+        );
+      });
+    } else if (selectedTheater && selectedMovie) {
+      // Show only showtimes if both movie and theater are known
+      return (
+        <div className="showtimes mb-3 p-3 shadow-sm rounded">
+          {Object.entries(showtimes).map(([date, times], idx) => (
+            <Row key={idx} gutter={8}>
+              <Col span={24}>
+                <h6>{date}</h6>
+              </Col>
+              {times.map((showtime, timeIdx) => (
+                <Col key={timeIdx} span={4}>
                   <Button
                     className="time-button"
                     type="primary"
                     onClick={() => selectShow(selectedTheater, showtime.time)}
                   >
-                    {showtime.time}
+                    {formatTime(showtime.time)}
                   </Button>
                 </Col>
               ))}
             </Row>
-          </div>
-        );
-      };
-    } else if (!selectedTheater && selectedMovie) {
-      // Show theaters and their showtimes if only movie is known
-      return () => {
-        const theaterShowtimes = filteredShowtimes.filter(
-          (showtime) =>
-            showtime.theaterID === theater.id &&
-            showtime.movieID === selectedMovie.id
-        );
-        if (theaterShowtimes.length === 0) return null;
-
-        return (
-          <div key={1} className="theater mb-3 p-3 shadow-sm rounded">
-            <h3>{theater.name}</h3>
-            <p>{theater.address}</p>
-            <Row gutter={8}>
-              {theaterShowtimes.map((showtime, idx) => (
-                <Col key={idx} span={4}>
-                  <Button
-                    className="time-button"
-                    type="primary"
-                    onClick={() => selectShow(theater, showtime.time)}
-                  >
-                    {showtime.time}
-                  </Button>
-                </Col>
-              ))}
-            </Row>
-          </div>
-        );
-      };
-    } else if (selectedTheater && selectedMovie) {
-      // Show only showtimes if both movie and theater are known
-      return (
-        <div className="showtimes mb-3 p-3 shadow-sm rounded">
-          <Row gutter={8}>
-            {filteredShowtimes.map((showtime, idx) => (
-              <Col key={idx} span={4}>
-                <Button
-                  className="time-button"
-                  type="primary"
-                  onClick={() => selectShow(selectedTheater, showtime.time)}
-                >
-                  {showtime.time}
-                </Button>
-              </Col>
-            ))}
-          </Row>
+          ))}
         </div>
       );
     }
@@ -326,7 +325,7 @@ const MovieSelectionPage = () => {
           <strong>Theater:</strong> {selectedShow?.name}
         </p>
         <p>
-          <strong>Movie:</strong> {selectedMovie?.title}
+          <strong>Movie:</strong> {selectedMovie?.movieName}
         </p>
         <p>
           <strong>Seats:</strong>
