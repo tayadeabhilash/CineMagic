@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface MultiplexRepository extends JpaRepository<MultiplexEntity, Integer> {
     List<MultiplexEntity> findByLocation(Location location);
+    boolean existsByName(String name);
+    boolean existsByNameAndIdNot(String name, Integer id);
+
 }

@@ -14,4 +14,8 @@ public class TheaterScreenDto {
     private String name;
     private Integer multiplexId;
     private int seatingCapacity;
+    private String address;
+    private String phone;
+    private String email;
+
 }

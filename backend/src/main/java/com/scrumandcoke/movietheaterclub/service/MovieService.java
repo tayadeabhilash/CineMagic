@@ -11,4 +11,7 @@ public interface MovieService {
     List<MovieDto> getMovies() throws GlobalException;
     void updateMovie(MovieDto movieDto) throws GlobalException;
     void deleteMovie(Integer id) throws GlobalException;
+
+    List<MovieDto> getUpcomingMovies() throws GlobalException;
+    List<MovieDto> getCurrentMovies() throws GlobalException;
 }

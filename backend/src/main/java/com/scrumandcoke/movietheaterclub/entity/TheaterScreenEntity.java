@@ -30,5 +30,13 @@ public class TheaterScreenEntity {
     @Column(name = "seating_capacity")
     private int seatingCapacity;
 
+    @Column(name="address")
+    private String address;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name="email")
+    private String email;
 
 }
