@@ -38,9 +38,6 @@ public class MovieEntity {
     @Column(name="language")
     private String language;
 
-//    @Column(name="release_date")
-//    private LocalDate releaseDate;
-
     @Column(name="release_date")
     private Date releaseDate;
 }

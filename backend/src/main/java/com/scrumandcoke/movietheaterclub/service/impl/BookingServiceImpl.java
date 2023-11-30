@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -53,6 +55,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public void createBooking(BookingDto booking) throws GlobalException {
         try {
+            validateBookingDetails(booking); //validation call
+            verifySeatAllocation(booking.getShowtimeId(), booking.getSeatsBooked()); //validation call
             BookingEntity bookingEntity = bookingMapper.toEntity(booking);
             validateShowtime(booking.getShowtimeId());
             reduceAvailableSeats(booking.getShowtimeId(), booking.getSeatsBooked());
@@ -72,6 +76,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public void cancelBooking(Integer id) throws GlobalException {
+        validateCancellationRequest(id); // New validation call
         BookingEntity bookingEntity = bookingRepository.findById(id).get();
         checkCancelEligibility(bookingEntity.getShowtime(), bookingEntity.getBookingStatus());
         bookingEntity.setBookingStatus(BookingStatus.CANCELLED);
@@ -160,4 +165,72 @@ public class BookingServiceImpl implements BookingService {
         // Save the updated Showtime entity
         showTimeService.updateShowTime(showtime);
     }
+
+    //Validations
+    private void validateBookingDetails(BookingDto booking) throws GlobalException {
+        if (booking == null) {
+            throw new GlobalException("Booking details cannot be null");
+        }
+
+        if (booking.getUserId() == null) {
+            throw new GlobalException("Invalid User ID");
+        }
+
+        int seatsBooked = booking.getSeatsBooked();
+        if (seatsBooked < 1 || seatsBooked > 8) {
+            throw new GlobalException("Number of seats should be between 1 to 8");
+        }
+
+        PaymentMethod paymentMethod = booking.getPaymentMethod();
+        if (paymentMethod == null) {
+            throw new GlobalException("Payment method cannot be null");
+        }
+    }
+
+    private void validateCancellationRequest(Integer bookingId) throws GlobalException {
+        if (bookingId == null || bookingId < 1) {
+            throw new GlobalException("Invalid booking ID");
+        }
+
+        Optional<BookingEntity> bookingEntityOptional = bookingRepository.findById(bookingId);
+        if (!bookingEntityOptional.isPresent()) {
+            throw new GlobalException("Booking with the specified ID does not exist");
+        }
+
+        BookingEntity bookingEntity = bookingEntityOptional.get();
+
+        // Check if the booking is already cancelled
+        if (bookingEntity.getBookingStatus().equals(BookingStatus.CANCELLED)) {
+            throw new GlobalException("Booking is already cancelled");
+        }
+
+        // Check if the cancellation is requested within the permissible time frame
+        if (!isCancellationRequestInPermissibleTimeFrame(bookingEntity.getShowtime())) {
+            throw new GlobalException("Cancellation request is outside the permissible time frame");
+        }
+    }
+
+    private boolean isCancellationRequestInPermissibleTimeFrame(ShowTimeEntity showTime) {
+        // Implement the logic to check if the cancellation request is within the permissible time frame
+        Date now = Date.from(Instant.now());
+        long timeDifference = showTime.getTime().getTime() - now.getTime();
+        return timeDifference > TimeUnit.HOURS.toMillis(2); // replace '2' with your specific time frame
+    }
+
+    private void verifySeatAllocation(Integer showtimeId, int seatsToBook) throws GlobalException {
+        if (showtimeId == null) {
+            throw new GlobalException("Invalid showtime ID");
+        }
+
+        ShowTimeDto showtime = showTimeService.getShowTime(showtimeId);
+        if (showtime == null) {
+            throw new GlobalException("Showtime does not exist");
+        }
+
+        int availableSeats = showtime.getAvailableSeats();
+        if (seatsToBook > availableSeats) {
+            throw new GlobalException("Not enough available seats for the booking");
+        }
+    }
+
 }

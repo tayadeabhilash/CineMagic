@@ -1,8 +1,8 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.MovieDto;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
+import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.repository.MovieRepository;
 import com.scrumandcoke.movietheaterclub.service.MovieService;
 import org.slf4j.Logger;
@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +26,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void addMovie(MovieDto movieDto) throws GlobalException {
         try {
+            validateMovieDto(movieDto); //new validation call
+            ensureUniqueMovieTitle(movieDto.getMovieName()); //new validation call
             movieRepository.save(MovieDto.toEntity(movieDto));
         } catch (Exception exception) {
             logger.error("Error saving movie: {}", movieDto.getMovieName());
@@ -61,6 +60,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void updateMovie(MovieDto movieDto) throws GlobalException {
         try {
+            validateMovieDto(movieDto); //new call
+            MovieEntity movie = getValidatedMovieEntity(movieDto.getMovieId()); //new call
             MovieEntity movieEntity = movieRepository.findById(movieDto.getMovieId()).get();
             movieEntity.setMovieName(movieDto.getMovieName());
             movieEntity.setSynopsis(movieDto.getSynopsis());
@@ -83,6 +84,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void deleteMovie(Integer id) throws GlobalException {
         try {
+            getValidatedMovieEntity(id); // Check if movie exists + new call
             movieRepository.deleteById(id);
         } catch (Exception exception) {
             logger.error("Error deleting movie: {}", id);
@@ -112,20 +114,6 @@ public class MovieServiceImpl implements MovieService {
             throw new GlobalException(exception.getMessage(), exception);
         }
     }
-
-//    @Override
-//    public List<MovieDto> getCurrentMovies()  {
-//        try {
-//            LocalDate today = LocalDate.now();
-//            LocalDate weekAgo = today.minusWeeks(1); // Example range: last week to today
-//            List<MovieEntity> currentMovies = movieRepository.findByReleaseDateBetween(weekAgo, today);
-//            return MovieDto.fromEntityList(currentMovies);
-//        } catch (Exception exception) {
-//            logger.error("Error getting current movies");
-//            throw new GlobalException(exception.getMessage(), exception);
-//        }
-//        return null;
-//    }
 
     @Override
     public List<MovieDto> getCurrentMovies() throws GlobalException {
@@ -158,8 +146,22 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
+    private void validateMovieDto(MovieDto movieDto) throws GlobalException {
+        if (movieDto == null) {
+            throw new GlobalException("Movie details cannot be null");
+        }
+    }
 
+    private void ensureUniqueMovieTitle(String movieTitle) throws GlobalException {
+        if (movieRepository.findByMovieName(movieTitle).isPresent()) {
+            throw new GlobalException("Movie title already exists");
+        }
+    }
 
+    private MovieEntity getValidatedMovieEntity(Integer movieId) throws GlobalException {
+        return movieRepository.findById(movieId).orElseThrow(() ->
+                new GlobalException("Movie with the specified ID does not exist"));
+    }
 
 }
 

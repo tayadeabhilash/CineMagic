@@ -22,7 +22,6 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    @Override
     public SessionDto createSession(@NonNull CreateSessionRequest createSessionRequest) {
         SessionEntity sessionEntity = new SessionEntity();
 

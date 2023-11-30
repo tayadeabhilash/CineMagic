@@ -39,6 +39,12 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Override
     public void addShowTime(ShowTimeDto showTimeDto) throws GlobalException {
+        if (showTimeDto == null) {
+            throw new GlobalException("Showtime data cannot be null");
+        }
+        if (showTimeDto.getTime() != null && showTimeDto.getTime().before(new Date())) {
+            throw new GlobalException("Showtime must be set for a future date and time");
+        }
         try {
             showTimeDto.setAvailableSeats(theaterScreenService.getTheaterScreenById(
                     showTimeDto.getTheaterScreenId()).getSeatingCapacity());
@@ -53,9 +59,12 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Override
     public ShowTimeDto getShowTime(Integer id) throws GlobalException {
+        if (id == null) {
+            throw new GlobalException("Showtime ID cannot be null");
+        }
         try {
-            return showTimeMapper.toDto(showTimeRepository.findById(id).get());
-        } catch (Exception exception) {
+            return showTimeMapper.toDto(showTimeRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Showtime not found with ID: " + id)));        } catch (Exception exception) {
             logger.error("Error getting showtime: {}", id);
             throw new GlobalException(exception.getMessage(), exception);
         }
@@ -105,6 +114,12 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Override
     public void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException {
+        if (showTimeDto == null) {
+            throw new GlobalException("Showtime data cannot be null");
+        }
+        if (showTimeDto.getTime() != null && showTimeDto.getTime().before(new Date())) {
+            throw new GlobalException("Showtime must be set for a future date and time");
+        }
         try {
             ShowTimeEntity entity = showTimeRepository.findById(showTimeDto.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Showtime not found with id: " + showTimeDto.getId()));
@@ -118,7 +133,13 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Override
     public void deleteShowTime(Integer id) throws GlobalException {
+        if (id == null) {
+            throw new GlobalException("Showtime ID cannot be null");
+        }
         try {
+            if (!showTimeRepository.existsById(id)) {
+                throw new EntityNotFoundException("Showtime not found with ID: " + id);
+            }
             showTimeRepository.deleteById(id);
         } catch (Exception exception) {
             logger.error("Error deleting showtime: {}", id);
