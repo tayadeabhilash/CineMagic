@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Button, Row, Col } from "antd";
 import { Container } from "react-bootstrap";
 import "./membership.css";
+import { useNavigate } from "react-router-dom";
 
 const MembershipPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="membership-page">
       <Container className="mt-5">
@@ -29,7 +36,11 @@ const MembershipPage = () => {
               <p>Early access to special screenings and events</p>
               <p>Exclusive discounts on selected items</p>
               {/* Add more premium perks here */}
-              <Button type="primary" className="mt-3">
+              <Button
+                type="primary"
+                className="mt-3"
+                onClick={() => navigate("/buy-membership/checkout")}
+              >
                 Upgrade to Premium
               </Button>
             </Card>
