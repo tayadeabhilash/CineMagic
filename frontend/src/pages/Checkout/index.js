@@ -97,7 +97,6 @@ const Checkout = () => {
     } else {
       requestData = {
         showtimeId: showtimeDetails.id,
-        userId: "",
         seatsBooked: seats,
         paymentMethod: "CREDIT_CARD",
         totalAmount: totalPrice,
