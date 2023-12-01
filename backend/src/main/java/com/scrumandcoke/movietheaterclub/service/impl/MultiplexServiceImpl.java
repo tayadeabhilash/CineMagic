@@ -27,12 +27,28 @@ public class MultiplexServiceImpl implements MultiplexService {
 
 
     @Override
-    public void addMultiplex(LocationDto locationDto) throws GlobalException {
+    public void addMultiplex(LocationDto multiplexDto) throws GlobalException {
+        if (multiplexDto == null) {
+            throw new GlobalException("Multiplex data cannot be null");
+        }
+        if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
+            throw new GlobalException("Multiplex name cannot be null or empty");
+        }
+        if (multiplexDto.getLocation() == null) {
+            throw new GlobalException("Location cannot be null");
+        }
+        if (multiplexDto.getTheaterScreenCount() < 1) {
+            throw new GlobalException("Theater screen count must be at least 1");
+        }
+        if (multiplexRepository.existsByName(multiplexDto.getName())) {
+            throw new GlobalException("A multiplex with the same name already exists");
+        }
+
         try {
             LocationEntity locationEntity = new LocationEntity();
-            locationEntity.setName(locationDto.getName());
-            locationEntity.setLocation(locationDto.getLocation());
-            locationEntity.setTheaterScreenCount(locationDto.getTheaterScreenCount());
+            locationEntity.setName(multiplexDto.getName());
+            locationEntity.setLocation(multiplexDto.getLocation());
+            locationEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
             multiplexRepository.save(locationEntity);
         } catch (Exception exception) {
             logger.error("Error adding multiplex");
@@ -74,17 +90,39 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public void updateMultiplex(LocationDto locationDto) throws GlobalException {
+    public void updateMultiplex(LocationDto multiplexDto) throws GlobalException {
+
+        if (multiplexDto == null) {
+            throw new GlobalException("Multiplex data cannot be null");
+        }
+        if (multiplexDto.getId() == 0) {
+            throw new GlobalException("Invalid multiplex ID");
+        }
+        if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
+            throw new GlobalException("Multiplex name cannot be null or empty");
+        }
+        if (multiplexDto.getLocation() == null) {
+            throw new GlobalException("Location cannot be null");
+        }
+        if (multiplexDto.getTheaterScreenCount() < 1) {
+            throw new GlobalException("Theater screen count must be at least 1");
+        }
+        // Check for duplicate name, excluding the current multiplex
+        boolean nameExists = multiplexRepository.existsByNameAndIdNot(multiplexDto.getName(), multiplexDto.getId());
+        if (nameExists) {
+            throw new GlobalException("Another multiplex with this name already exists");
+        }
+
         try {
-            Integer multiplexId = locationDto.getId();
+            Integer multiplexId = multiplexDto.getId();
             LocationEntity locationEntity = multiplexRepository.findById(multiplexId)
                     .orElseThrow(() -> new EntityNotFoundException("Multiplex not found with id: " + multiplexId));
-            locationEntity.setName(locationDto.getName());
-            locationEntity.setLocation(locationDto.getLocation());
-            locationEntity.setTheaterScreenCount(locationDto.getTheaterScreenCount());
+            locationEntity.setName(multiplexDto.getName());
+            locationEntity.setLocation(multiplexDto.getLocation());
+            locationEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
             multiplexRepository.save(locationEntity);
         } catch (Exception e) {
-            logger.error("Error updating multiplex with id: " + locationDto.getId(), e);
+            logger.error("Error updating multiplex with id: " + multiplexDto.getId(), e);
             throw new GlobalException("Error updating multiplex: " + e.getMessage(), e);
         }
     }

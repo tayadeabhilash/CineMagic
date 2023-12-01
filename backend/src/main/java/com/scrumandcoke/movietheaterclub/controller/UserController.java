@@ -9,7 +9,6 @@ import com.scrumandcoke.movietheaterclub.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +35,6 @@ public class UserController {
     @LoginRequired
     public UserDto downgradeMembership(@AuthenticationPrincipal UserSessionDetail userSessionDetail) {
         return userService.updateMemberType(userSessionDetail.getUserId(), MemberType.REGULAR);
-    }
-
-    @PostMapping("{userId}/downgradeMembership")
-    public UserDto downgradeMembership(@PathVariable("userId") String userId) {
-        return null;
     }
 
     @GetMapping("/{email}")

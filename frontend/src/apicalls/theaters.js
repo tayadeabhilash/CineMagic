@@ -110,10 +110,28 @@ export const GetShowsByTheater = async (id) => {
   }
 };
 
+export const GetShowsByTheaterAndMovie = async (theaterId, movieId) => {
+  try {
+    const response = await axiosInstance.get(`showtime/screen/${theaterId}/movie/${movieId}`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 //user
 export const GetShowsByLocation = async (name) => {
   try {
     const response = await axiosInstance.get(`showtime/location/${name}`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const GetMoviesByTheater = async (id) => {
+  try {
+    const response = await axiosInstance.get(`showtime/screen/${id}/movies`);
     return response;
   } catch (error) {
     return error.response;

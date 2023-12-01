@@ -10,8 +10,8 @@ const Footer = () => {
           <NavLink className="nav-link" to="/">
             Home
           </NavLink>
-          <NavLink className="nav-link" to="/search-movie">
-            Search Movies
+          <NavLink className="nav-link" to="/buy-membership">
+            Become a Member
           </NavLink>
           {/* NavLink for About page can be uncommented if needed */}
           {/* <NavLink className="nav-link" to="/about">

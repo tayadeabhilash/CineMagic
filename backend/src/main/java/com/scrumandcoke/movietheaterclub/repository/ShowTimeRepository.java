@@ -13,4 +13,5 @@ public interface ShowTimeRepository extends JpaRepository<ShowTimeEntity, Intege
     List<ShowTimeEntity> findByTheaterScreen_Id(Integer id);
     List<ShowTimeEntity> findByTheaterScreen_IdAndTheaterScreen_LocationEntity_Id(int theaterScreen_id, int multiplex_id);
     List<ShowTimeEntity> findByTheaterScreen_LocationEntity_Location(Location location);
+    List<ShowTimeEntity> findByTheaterScreen_IdAndMovie_MovieId(Integer theaterScreenId, Integer movieId);
 }

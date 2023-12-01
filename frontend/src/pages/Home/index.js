@@ -3,12 +3,20 @@ import { Carousel, message } from "antd";
 import CardGrid from "../../components/CardGrid";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
-import { GetAllMovies } from "../../apicalls/movies";
+import {
+  GetAllMovies,
+  GetCurrentlyPlaying,
+  GetUpcomingShows,
+} from "../../apicalls/movies";
 import { GetAllTheaters } from "../../apicalls/theaters";
+import Loader from "../../components/Loader/loader";
+import moviePlaceholder from "../../assets/movie-placeholder.png";
+import theaterPlaceholder from "../../assets/theater-placeholder.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([
     {
       id: 1,
@@ -90,7 +98,6 @@ const HomePage = () => {
   const locations = [
     {
       id: 1,
-      id: 1,
       title: "City Center",
       description: "Located in the heart of the city",
       image: "https://via.placeholder.com/150",
@@ -127,7 +134,7 @@ const HomePage = () => {
     },
   ];
 
-  const upcomingMovies = [
+  const [upcomingMovies, setUpcomingMovies] = useState([
     {
       id: 1,
       title: "Future World",
@@ -164,42 +171,75 @@ const HomePage = () => {
       description: "Laughs and more laughs",
       image: "https://via.placeholder.com/150",
     },
-  ];
+  ]);
 
   const getMoviesData = async () => {
     try {
-      const response = await GetAllMovies();
+      setIsLoading(true);
+      const response = await GetCurrentlyPlaying();
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const formattedMovies = response.data.map((movie) => ({
           ...movie,
           id: movie.movieId,
           title: movie.movieName,
           description: movie.synopsis,
+          image: movie.posterUrl ? movie.posterUrl : moviePlaceholder,
         }));
         setMovies(formattedMovies);
       } else {
         message.error(response.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+      message.error(error);
+    }
+  };
+
+  const getUpcomingShows = async () => {
+    try {
+      setIsLoading(true);
+      const response = await GetUpcomingShows();
+      console.log(response);
+
+      if (response.status === 200) {
+        const formattedMovies = response.data.map((movie) => ({
+          ...movie,
+          id: movie.movieId,
+          title: movie.movieName,
+          description: movie.synopsis,
+          image: movie.posterUrl ? movie.posterUrl : moviePlaceholder,
+        }));
+        setUpcomingMovies(formattedMovies);
+      } else {
+        message.error(response?.data);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
       message.error(error);
     }
   };
 
   const getTheatersData = async () => {
     try {
+      setIsLoading(true);
       const response = await GetAllTheaters();
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const formattedTheaters = response.data.map((theater) => ({
           ...theater,
           title: theater.name,
+          image: theater.posterUrl ? theater.posterUrl : theaterPlaceholder,
         }));
         setTheaters(formattedTheaters);
       } else {
         message.error(response.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error.message);
     }
   };
@@ -251,7 +291,12 @@ const HomePage = () => {
   useEffect(() => {
     getMoviesData();
     getTheatersData();
+    getUpcomingShows();
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="homepage-container">
@@ -261,7 +306,7 @@ const HomePage = () => {
       <h2>Locations</h2>
       {renderCarousel(locations, "location")}
 
-      <h2>Current Movies</h2>
+      <h2>Currently Playing</h2>
       {renderCarousel(movies, "movie")}
 
       <h2>Upcoming Movies</h2>
