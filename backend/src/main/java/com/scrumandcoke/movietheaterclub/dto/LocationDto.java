@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scrumandcoke.movietheaterclub.enums.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,6 @@ public class LocationDto {
 
     private String name;
 
-    @JsonIgnore
     private Location location;
 
     private int theaterScreenCount;

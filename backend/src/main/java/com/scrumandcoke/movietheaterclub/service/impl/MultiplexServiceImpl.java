@@ -96,21 +96,18 @@ public class MultiplexServiceImpl implements MultiplexService {
             throw new GlobalException("Multiplex data cannot be null");
         }
         if (id == 0) {
-            throw new GlobalException("Invalid multiplex ID");
+            throw new IllegalArgumentException("Invalid multiplex ID");
         }
         if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
-            throw new GlobalException("Multiplex name cannot be null or empty");
-        }
-        if (multiplexDto.getLocation() == null) {
-            throw new GlobalException("Location cannot be null");
+            throw new IllegalArgumentException("Multiplex name cannot be null or empty");
         }
         if (multiplexDto.getTheaterScreenCount() < 1) {
-            throw new GlobalException("Theater screen count must be at least 1");
+            throw new IllegalArgumentException("Theater screen count must be at least 1");
         }
         // Check for duplicate name, excluding the current multiplex
         boolean nameExists = multiplexRepository.existsByNameAndIdNot(multiplexDto.getName(), id);
         if (nameExists) {
-            throw new GlobalException("Another multiplex with this name already exists");
+            throw new IllegalArgumentException("Another multiplex with this name already exists");
         }
 
         try {
