@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class ShowTimeServiceImpl implements ShowTimeService {
@@ -46,9 +47,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             throw new GlobalException("Showtime must be set for a future date and time");
         }
         try {
+            validateDiscountedPrice(showTimeDto);
             showTimeDto.setAvailableSeats(theaterScreenService.getTheaterScreenById(
                     showTimeDto.getTheaterScreenId()).getSeatingCapacity());
-            showTimeDto.setPrice(this.getDiscountedPrice(showTimeDto.getPrice(), showTimeDto.getTime()));
             ShowTimeEntity showTimeEntity = showTimeMapper.toEntity(showTimeDto);
             showTimeRepository.save(showTimeEntity);
         } catch (Exception exception) {
@@ -121,6 +122,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             throw new GlobalException("Showtime must be set for a future date and time");
         }
         try {
+            validateDiscountedPrice(showTimeDto);
             ShowTimeEntity entity = showTimeRepository.findById(showTimeDto.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Showtime not found with id: " + showTimeDto.getId()));
             showTimeMapper.updateCustomerFromDto(showTimeDto, entity);
@@ -144,6 +146,27 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         } catch (Exception exception) {
             logger.error("Error deleting showtime: {}", id);
             throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
+    public  void validateDiscountedPrice(ShowTimeDto showTimeDto) {
+        if (showTimeDto.getTime() == null || showTimeDto.getPrice() == null) {
+            throw new IllegalArgumentException("Time and price must be set for validation.");
+        }
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(showTimeDto.getTime());
+
+        boolean isTuesday = calendar.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY;
+        boolean isBefore6PM = calendar.get(Calendar.HOUR_OF_DAY) < 18;
+
+        if (isTuesday && isBefore6PM) {
+            if (showTimeDto.getDiscountedPrice() != null && showTimeDto.getDiscountedPrice() < showTimeDto.getPrice()) {
+            } else {
+                throw new IllegalArgumentException("Discounted price is not valid for the given time or is higher than the regular price.");
+            }
+        } else if (showTimeDto.getDiscountedPrice() != null) {
+            throw new IllegalArgumentException("Discounted price can only be set for shows on Tuesday before 6 PM.");
         }
     }
 

@@ -22,12 +22,14 @@ public class ShowTimeEntity {
     @JoinColumn(name = "movie_id")
     private MovieEntity movie;
 
-
     @ManyToOne
     @JoinColumn(name = "theater_screen_id")
     private TheaterScreenEntity theaterScreen;
 
     private Double price;
+
+    @Column(name = "discounted_price")
+    private Double discountedPrice;
 
     @Column(name = "available_seats")
     private Integer availableSeats;

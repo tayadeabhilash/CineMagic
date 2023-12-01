@@ -1,0 +1,28 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Combined ChangeSet for adding all columns -->
+    <changeSet id="1701380685_add_fields_for_movies.xml" author="siddhant">
+        <addColumn tableName="movies">
+            <column name="poster" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="genre" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="language" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="release_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
