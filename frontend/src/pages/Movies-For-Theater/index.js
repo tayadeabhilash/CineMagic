@@ -88,7 +88,7 @@ const MoviesForTheater = () => {
             <CardGrid
               title={item.title}
               description={item.description}
-              image={item.image}
+              image={item.posterUrl}
             />
           </div>
         ))}
