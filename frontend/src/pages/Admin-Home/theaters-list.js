@@ -89,13 +89,13 @@ function TheatersList() {
       render: (text, record) => {
         return (
           <div className="theater-icons">
-            <i
+            {/* <i
               className="ri-delete-bin-line"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDelete(record.id); //id?
               }}
-            ></i>
+            ></i> */}
             <i
               className="ri-pencil-line"
               onClick={(e) => {
