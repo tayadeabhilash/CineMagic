@@ -92,9 +92,9 @@ public class TheaterScreenImpl implements TheaterScreenService {
 
             theaterScreenEntity.setName(theaterScreenDto.getName());
             theaterScreenEntity.setSeatingCapacity(theaterScreenDto.getSeatingCapacity());
-            theaterScreenEntity.setEmail(theaterScreenEntity.getEmail());
-            theaterScreenEntity.setAddress(theaterScreenEntity.getAddress());
-            theaterScreenEntity.setPhone(theaterScreenEntity.getPhone());
+            theaterScreenEntity.setEmail(theaterScreenDto.getEmail());
+            theaterScreenEntity.setAddress(theaterScreenDto.getAddress());
+            theaterScreenEntity.setPhone(theaterScreenDto.getPhone());
 
             if (theaterScreenDto.getMultiplexId() != null && theaterScreenDto.getMultiplexId() != 0) {
                 MultiplexEntity multiplexEntity = multiplexRepository.findById(theaterScreenDto.getMultiplexId())

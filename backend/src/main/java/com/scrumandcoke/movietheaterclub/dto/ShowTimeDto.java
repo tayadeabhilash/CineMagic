@@ -13,9 +13,16 @@ import java.util.Date;
 @AllArgsConstructor
 public class ShowTimeDto {
     private Integer id;
+
     private Date time;
+
     private Integer movieId;
+
     private Integer theaterScreenId;
+
     private Double price;
+
     private Integer availableSeats;
+
+    private Double discountedPrice;
 }
