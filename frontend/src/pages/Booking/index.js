@@ -64,7 +64,8 @@ const MovieSelectionPage = () => {
     try {
       let response = null;
       if (movieId && !theaterId) response = await GetShowsByMovie(movieId);
-      else if (!movieId && theaterId) response = await GetShowsByTheater(theaterId);
+      else if (!movieId && theaterId)
+        response = await GetShowsByTheater(theaterId);
       else response = await GetShowsByTheaterAndMovie(theaterId, movieId);
 
       if (response.status == 200) {
@@ -77,8 +78,11 @@ const MovieSelectionPage = () => {
         }));
         const showtimesByDate = formattedShowTimes.reduce((acc, showtime) => {
           const date = formatDate(showtime.time);
-          acc[date] = acc[date] || [];
-          acc[date].push(showtime);
+          const showtimeDate = new Date(showtime.time);
+          if (showtimeDate >= new Date()) {
+            acc[date] = acc[date] || [];
+            acc[date].push(showtime);
+          }
           return acc;
         }, {});
         setShowtimes(showtimesByDate);
