@@ -1,12 +1,14 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.scrumandcoke.movietheaterclub.dto.MovieDto;
+import com.scrumandcoke.movietheaterclub.dto.MovieWithShowtimesDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
-import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.mapper.ShowTimeMapper;
 import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
 import com.scrumandcoke.movietheaterclub.enums.Location;
+import com.scrumandcoke.movietheaterclub.exception.GlobalException;
+import com.scrumandcoke.movietheaterclub.mapper.ShowTimeMapper;
+import com.scrumandcoke.movietheaterclub.repository.MovieRepository;
 import com.scrumandcoke.movietheaterclub.repository.ShowTimeRepository;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import com.scrumandcoke.movietheaterclub.service.TheaterScreenService;
@@ -17,13 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.Set;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
+
 @Service
 public class ShowTimeServiceImpl implements ShowTimeService {
 
@@ -32,6 +33,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Autowired
     TheaterScreenService theaterScreenService;
+
+    @Autowired
+    MovieRepository movieRepository;
 
     @Value("${showtime.discount.percent:10}")
     private double discount;
@@ -52,9 +56,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         try {
             validateDiscountedPrice(showTimeDto);
-            showTimeDto.setAvailableSeats(theaterScreenService.getTheaterScreenById(
-                    showTimeDto.getTheaterScreenId()).getSeatingCapacity());
             ShowTimeEntity showTimeEntity = showTimeMapper.toEntity(showTimeDto);
+            showTimeEntity.setAvailableSeats(theaterScreenService.getTheaterScreenById(
+                    showTimeDto.getTheaterScreenId()).getSeatingCapacity());
             showTimeRepository.save(showTimeEntity);
         } catch (Exception exception) {
             logger.error("Error saving showtime: {}", showTimeDto.getId());
@@ -69,7 +73,8 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         try {
             return showTimeMapper.toDto(showTimeRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Showtime not found with ID: " + id)));        } catch (Exception exception) {
+                    .orElseThrow(() -> new EntityNotFoundException("Showtime not found with ID: " + id)));
+        } catch (Exception exception) {
             logger.error("Error getting showtime: {}", id);
             throw new GlobalException(exception.getMessage(), exception);
         }
@@ -122,7 +127,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public List<ShowTimeDto> getShowTimesByLocation(Location location) throws GlobalException {
         try {
-            return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_MultiplexEntity_Location(location));
+            return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_LocationEntity_Location(location));
         } catch (Exception exception) {
             logger.error("Error getting showtime with location: {}", location);
             throw new GlobalException(exception.getMessage(), exception);
@@ -133,7 +138,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     public List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMultiplexId(Integer theaterScreenId, Integer multiplexId) throws GlobalException {
         try {
             return showTimeMapper.toDto(showTimeRepository
-                    .findByTheaterScreen_IdAndTheaterScreen_MultiplexEntity_Id(theaterScreenId, multiplexId));
+                    .findByTheaterScreen_IdAndTheaterScreen_LocationEntity_Id(theaterScreenId, multiplexId));
         } catch (Exception exception) {
             logger.error("Error getting showtime with theaterScreenId: {} and multiplexId: {}", theaterScreenId,
                     multiplexId);
@@ -142,7 +147,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException {
+    public void updateShowTime(Integer id, ShowTimeDto showTimeDto) throws GlobalException {
         if (showTimeDto == null) {
             throw new GlobalException("Showtime data cannot be null");
         }
@@ -151,7 +156,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         try {
             validateDiscountedPrice(showTimeDto);
-            ShowTimeEntity entity = showTimeRepository.findById(showTimeDto.getId())
+            ShowTimeEntity entity = showTimeRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Showtime not found with id: " + showTimeDto.getId()));
             showTimeMapper.updateCustomerFromDto(showTimeDto, entity);
             showTimeRepository.save(entity);
@@ -177,7 +182,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
     }
 
-    public  void validateDiscountedPrice(ShowTimeDto showTimeDto) {
+    public void validateDiscountedPrice(ShowTimeDto showTimeDto) {
         if (showTimeDto.getTime() == null || showTimeDto.getPrice() == null) {
             throw new IllegalArgumentException("Time and price must be set for validation.");
         }
@@ -212,4 +217,50 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         return price;
     }
+
+    @Override
+    public List<MovieWithShowtimesDto> getMoviesWithUpcomingShowtimes(int daysAhead) {
+        Date today = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(today);
+        c.add(Calendar.DATE, daysAhead);
+        Date endDate = c.getTime();
+
+        List<ShowTimeEntity> showTimeEntities = showTimeRepository.findByTimeBetween(today, endDate);
+        List<ShowTimeDto> showTimeDtos = showTimeMapper.toDto(showTimeEntities);
+
+        // Grouping showtimes by movieId
+        Map<Integer, List<ShowTimeDto>> groupedShowTimes = showTimeDtos.stream()
+                .collect(Collectors.groupingBy(ShowTimeDto::getMovieId));
+
+        // Creating a list of MovieWithShowtimesDto
+        List<MovieWithShowtimesDto> moviesWithShowtimes = new ArrayList<>();
+        for (Map.Entry<Integer, List<ShowTimeDto>> entry : groupedShowTimes.entrySet()) {
+            Integer movieId = entry.getKey();
+            List<ShowTimeDto> showTimes = entry.getValue();
+
+            MovieWithShowtimesDto movieWithShowtimesDto = new MovieWithShowtimesDto();
+            movieWithShowtimesDto.setMovieId(movieId);
+//            movieWithShowtimesDto.setUpcomingShowtimes(showTimes);
+
+            // Assuming you have a method to fetch movie details by movieId
+            MovieEntity movie = movieRepository.findById(movieId).orElse(null);
+            if (movie == null || Objects.isNull(movie.getReleaseDate())) {
+                continue;
+            }
+
+            Date releaseDate = movie.getReleaseDate();  // This is your Date object
+            LocalDate localReleaseDate = releaseDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            movieWithShowtimesDto.setMovieName(movie.getMovieName());
+            movieWithShowtimesDto.setSynopsis(movie.getSynopsis());
+            movieWithShowtimesDto.setPosterUrl(movie.getPosterUrl());
+                // Set other movie details as needed
+
+            moviesWithShowtimes.add(movieWithShowtimesDto);
+        }
+
+        return moviesWithShowtimes;
+    }
+
 }

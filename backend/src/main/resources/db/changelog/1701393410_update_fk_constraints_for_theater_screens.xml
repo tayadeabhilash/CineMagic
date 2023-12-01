@@ -1,0 +1,16 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet for dropping the existing foreign key constraint -->
+    <changeSet id="1701393410" author="siddhant">
+        <dropForeignKeyConstraint baseTableName="theater_screens" constraintName="fk_multiplex_id"/>
+
+        <addForeignKeyConstraint constraintName="fk_location_id"
+                                 baseTableName="theater_screens"
+                                 baseColumnNames="multiplex_id"
+                                 referencedTableName="locations"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

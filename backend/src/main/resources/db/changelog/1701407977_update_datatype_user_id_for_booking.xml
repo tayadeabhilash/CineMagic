@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1701407977_update_datatype_user_id_for_booking.xml" author="atayade">
+
+
+        <dropForeignKeyConstraint baseTableName="bookings" constraintName="fk_user_id"/>
+        <modifyDataType
+                columnName="user_id"
+                newDataType="VARCHAR(255)"
+                tableName="bookings"/>
+        <addForeignKeyConstraint constraintName="fk_user_id"
+                                 baseTableName="bookings"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="external_id"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Combined ChangeSet for adding all columns -->
+    <changeSet id="1701403896_add_fields_cash_amount_for_booking.xml" author="atayade">
+        <addColumn tableName="bookings">
+            <column name="cash_amount" type="DOUBLE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="points_amount" type="DOUBLE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

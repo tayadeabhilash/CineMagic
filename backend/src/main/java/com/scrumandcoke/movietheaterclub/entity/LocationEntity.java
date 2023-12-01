@@ -14,9 +14,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "multiplex")
+@Table(name = "locations")
 @Data
-public class MultiplexEntity {
+public class LocationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

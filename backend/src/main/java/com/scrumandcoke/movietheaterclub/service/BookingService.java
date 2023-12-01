@@ -12,4 +12,7 @@ public interface BookingService {
     void createBooking(BookingDto booking) throws GlobalException;
     void cancelBooking(Integer id) throws GlobalException;
     List<BookingDto> getAllBookingsByUserId(String id);
+    List<BookingDto> getAllUpcomingBookingsByUserId(String id);
+    List<BookingDto> getAllPastBookingsByUserId(String id);
+    List<BookingDto> getAllCancelledByUserId(String id);
 }

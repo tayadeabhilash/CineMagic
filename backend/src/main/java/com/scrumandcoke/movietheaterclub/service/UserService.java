@@ -3,6 +3,7 @@ package com.scrumandcoke.movietheaterclub.service;
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.TransactionType;
 import com.scrumandcoke.movietheaterclub.enums.UserType;
 import lombok.NonNull;
 
@@ -15,8 +16,9 @@ public interface UserService {
 
     UserDto validateLoginCredentials(@NonNull String email, @NonNull String password);
 
-
     UserDto updateMemberType(@NonNull String userId, @NonNull MemberType newMemberType);
+
+    UserDto updatePoints(@NonNull String userId, @NonNull Double points, @NonNull TransactionType transactionType);
 
     UserDto getUserByEmail(@NonNull String email);
 

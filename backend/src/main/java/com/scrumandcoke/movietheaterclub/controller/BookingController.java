@@ -25,6 +25,21 @@ public class BookingController {
         return bookingService.getAllBookingsByUserId(id);
     }
 
+    @GetMapping("/user/{id}/upcoming")
+    public List<BookingDto> getAllUpcomingBookingsByUserId(@PathVariable String id) {
+        return bookingService.getAllUpcomingBookingsByUserId(id);
+    }
+
+    @GetMapping("/user/{id}/past")
+    public List<BookingDto> getAllPastBookingsByUserId(@PathVariable String id) {
+        return bookingService.getAllPastBookingsByUserId(id);
+    }
+
+    @GetMapping("/user/{id}/cancelled")
+    public List<BookingDto> getAllCancelledBookingsByUserId(@PathVariable String id) {
+        return bookingService.getAllCancelledByUserId(id);
+    }
+
     @GetMapping("/{id}")
     public BookingDto getBookingById(@PathVariable Integer id) {
         return bookingService.getBookingById(id);
