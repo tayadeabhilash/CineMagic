@@ -197,4 +197,6 @@ public class TheaterScreenImpl implements TheaterScreenService {
         return theater.getSeatingCapacity();
     }
 
+
+
 }
