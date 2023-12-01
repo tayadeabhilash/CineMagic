@@ -29,7 +29,7 @@ public class IAMController {
         cookie.setHttpOnly(false);
         cookie.setPath("/");
         cookie.setSecure(false);
-        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=None", userSessionDetail.getSessionId());
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=Lax", userSessionDetail.getSessionId());
         response.addHeader("Set-Cookie", cookieHeader);
 
         return userSessionDetail;
@@ -43,7 +43,7 @@ public class IAMController {
         cookie.setHttpOnly(false);
         cookie.setPath("/");
         cookie.setSecure(false);
-        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=None", userSessionDetail.getSessionId());
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=Lax", userSessionDetail.getSessionId());
         response.addHeader("Set-Cookie", cookieHeader);
 
         return userSessionDetail;
