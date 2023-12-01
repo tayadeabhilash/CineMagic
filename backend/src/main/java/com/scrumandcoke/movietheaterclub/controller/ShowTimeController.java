@@ -123,15 +123,9 @@ public class ShowTimeController {
     }
 
     @GetMapping("/movies/upcoming")
-    public ResponseEntity<List<MovieWithShowtimesDto>> getMoviesWithUpcomingShowtimes(
+    public List<MovieWithShowtimesDto> getMoviesWithUpcomingShowtimes(
             @RequestParam(defaultValue = "7") int daysAhead) {
-        try {
-            List<MovieWithShowtimesDto> moviesWithShowtimes = showTimeService.getMoviesWithUpcomingShowtimes(daysAhead);
-            return ResponseEntity.ok(moviesWithShowtimes);
-        } catch (Exception e) { // Catch a more general exception or specific exceptions that are actually thrown
-            // Handle the exception as per your application's error handling strategy
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return showTimeService.getMoviesWithUpcomingShowtimes(daysAhead);
     }
 
 }

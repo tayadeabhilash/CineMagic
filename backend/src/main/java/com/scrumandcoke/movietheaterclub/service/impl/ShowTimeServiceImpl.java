@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -238,13 +241,23 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
             MovieWithShowtimesDto movieWithShowtimesDto = new MovieWithShowtimesDto();
             movieWithShowtimesDto.setMovieId(movieId);
-            movieWithShowtimesDto.setUpcomingShowtimes(showTimes);
+//            movieWithShowtimesDto.setUpcomingShowtimes(showTimes);
 
             // Assuming you have a method to fetch movie details by movieId
             MovieEntity movie = movieRepository.findById(movieId).orElse(null);
-            if (movie != null) {
-                movieWithShowtimesDto.setMovieTitle(movie.getMovieName());
+            if (movie == null || Objects.isNull(movie.getReleaseDate())) {
+                continue;
+            }
+
+            Date releaseDate = movie.getReleaseDate();  // This is your Date object
+            LocalDate localReleaseDate = releaseDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            if (localReleaseDate.toEpochDay() < LocalDate.now().toEpochDay()) {
+                movieWithShowtimesDto.setMovieName(movie.getMovieName());
+                movieWithShowtimesDto.setSynopsis(movie.getSynopsis());
+                movieWithShowtimesDto.setPosterUrl(movie.getPosterUrl());
                 // Set other movie details as needed
+
             }
             moviesWithShowtimes.add(movieWithShowtimesDto);
         }
