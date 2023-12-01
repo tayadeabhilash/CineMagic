@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Existing ChangeSet for adding columns -->
+    <changeSet id="1701380685_add_fields_for_movies.xml" author="siddhant">
+        <!-- ... your existing changes ... -->
+    </changeSet>
+
+    <!-- New ChangeSet for modifying the poster column type to LONGTEXT -->
+    <changeSet id="1701424940" author="siddhant">
+        <modifyDataType tableName="movies"
+                        columnName="poster"
+                        newDataType="LONGTEXT"/>
+    </changeSet>
+
+</databaseChangeLog>

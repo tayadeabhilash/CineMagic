@@ -11,7 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class MovieWithShowtimesDto {
     private Integer movieId;
-    private String movieTitle;
+    private String movieName;
+    private String synopsis;
+
+    private String posterUrl;
+
+
     private List<ShowTimeDto> upcomingShowtimes;
 
 }
