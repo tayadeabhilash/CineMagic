@@ -47,7 +47,7 @@ const Shows = () => {
   const getUpcomingBookings = async () => {
     try {
       setIsLoading(true);
-      const response = await GetUpcomingBookings(userInfo.userId);
+      const response = await GetUpcomingBookings(userInfo?.userId);
 
       if (response.status === 200) {
         setUpcomingShows(response.data);
@@ -64,7 +64,7 @@ const Shows = () => {
   const getPastBookings = async () => {
     try {
       setIsLoading(true);
-      const response = await GetPastBookings(userInfo.userId);
+      const response = await GetPastBookings(userInfo?.userId);
 
       if (response.status === 200) {
         setPastShows(response.data);
@@ -81,20 +81,20 @@ const Shows = () => {
   const Sidebar = () => {
     return (
       <div className="sidebar">
-        <h3>User Points: {userInfo.points ? userInfo.points : 0}</h3>
+        <h3>User Points: {userInfo?.points ? userInfo?.points : 0}</h3>
         <p>
           Status:{" "}
           <strong>
-            {userInfo.memberType === "PREMIUM" ? "Premium" : "Regular"} Member
+            {userInfo?.memberType === "PREMIUM" ? "Premium" : "Regular"} Member
           </strong>
         </p>
         <p>
           Equivalent Cash:{" "}
           <strong>
             $
-            {!userInfo.points || userInfo.points === 0
+            {!userInfo?.points || userInfo?.points === 0
               ? 0
-              : userInfo.points / 10}
+              : userInfo?.points / 10}
           </strong>
         </p>
       </div>

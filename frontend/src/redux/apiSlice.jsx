@@ -34,9 +34,9 @@ const baseQuery = fetchBaseQuery({
     const state = getState();
     const userInfo = state.auth.userInfo; // Adjust this according to your Redux state structure
 
-    if (userInfo && userInfo.sessionId) {
+    if (userInfo && userInfo?.sessionId) {
       // Set the Cookie header with the session ID
-      headers.set("x-session-id", `${userInfo.sessionId}`);
+      headers.set("x-session-id", `${userInfo?.sessionId}`);
     }
     return headers;
   },

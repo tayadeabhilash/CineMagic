@@ -5,13 +5,18 @@ import "./checkout.css";
 import moment from "moment";
 import { GetShowById, GetTheaterById } from "../../apicalls/theaters";
 import { CreateBooking } from "../../apicalls/user";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { message } from "antd";
 import { GetMovieById } from "../../apicalls/movies";
 import Loader from "../../components/Loader/loader";
+import { setCredentials } from "../../redux/authSlice";
+import { useNavigate } from "react-router-dom";
+import { GetUserById } from "../../apicalls/user";
 
 const Checkout = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
   const params = new URLSearchParams(location.search);
 
@@ -21,7 +26,7 @@ const Checkout = () => {
 
   const [useRewards, setUseRewards] = useState(false);
   const [rewardPoints, setRewardPoints] = useState(
-    userInfo?.points ? userInfo.points : 0
+    userInfo?.points ? userInfo?.points : 0
   );
   const [discount, setDiscount] = useState(0);
   const [price, setPrice] = useState(0);
@@ -76,7 +81,7 @@ const Checkout = () => {
     if (userInfo) {
       requestData = {
         showtimeId: showtimeDetails.id,
-        userId: userInfo.userId,
+        userId: userInfo?.userId,
         seatsBooked: seats,
         paymentMethod: "CREDIT_CARD",
         totalAmount: totalPrice,
@@ -109,10 +114,15 @@ const Checkout = () => {
 
     try {
       const response = await CreateBooking(requestData);
-      console.log(response);
+      console.log({ check: response });
 
       if (response.status == 200) {
         message.success("Tickets Booked!");
+
+        const res = await GetUserById();
+        dispatch(setCredentials({ ...res }));
+
+        navigate("/");
       } else {
         message.error();
       }

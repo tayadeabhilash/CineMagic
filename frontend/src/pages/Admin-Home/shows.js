@@ -171,6 +171,13 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
     setEditingShow(null);
   };
 
+  const handlePriceInput = (e) => {
+    let value = e.target.value;
+    if (value < 0) {
+      e.target.value = 0;
+    }
+  };
+
   const onFinish = (values) => {
     if (editingShow) {
       onEdit(values);
@@ -311,41 +318,53 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
               </Form.Item>
             </Col>
 
-            <Col span={8}>
-              {/* <div className="ticket-price-buttons">
-                <label>Ticket Price</label>
-                <button
-                  type="button"
-                  className={`price-button original-price ${
-                    !isDiscounted ? "selected-price" : ""
-                  }`}
-                  onClick={() => handlePriceSet(false)}
-                >
-                  Original Price (${priceOptions.originalPrice})
-                </button>
-                <button
-                  type="button"
-                  className={`price-button discounted-price ${
-                    isDiscounted ? "selected-price" : ""
-                  }`}
-                  onClick={() => handlePriceSet(true)}
-                >
-                  Discounted Price (${priceOptions.discountedPrice})
-                </button>
-              </div> */}
-              <Form.Item
-                label="Price"
-                name="price"
-                rules={[{ required: true }]}
-              >
-                <input type="number" />
-              </Form.Item>
-            </Col>
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[
+                { required: true, message: "Please input a valid price!" },
+                () => ({
+                  validator(_, value) {
+                    if (value >= 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Price cannot be negative")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <input type="number" step="0.01" onChange={handlePriceInput} />
+            </Form.Item>
 
             {showDiscountedPrice && (
               <Col span={8}>
-                <Form.Item label="Discounted Price" name="discountedPrice">
-                  <input type="number" />
+                <Form.Item
+                  label="Discounted Price"
+                  name="discountedPrice"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input a valid discounted price!",
+                    },
+                    () => ({
+                      validator(_, value) {
+                        if (value >= 0) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("Discounted Price cannot be negative")
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <input
+                    type="number"
+                    step="0.01"
+                    onChange={handlePriceInput}
+                  />
                 </Form.Item>
               </Col>
             )}
