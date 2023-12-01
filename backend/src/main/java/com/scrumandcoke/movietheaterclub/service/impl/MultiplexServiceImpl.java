@@ -1,12 +1,16 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.scrumandcoke.movietheaterclub.enums.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.scrumandcoke.movietheaterclub.dto.LocationDto;
@@ -143,6 +147,25 @@ public class MultiplexServiceImpl implements MultiplexService {
             logger.error("Error retrieving multiplex {}", id);
             throw new GlobalException("Error retrieving multiplex data: " + exception.getMessage(), exception);
         }
+    }
+
+    @Override
+    public List<LocationDto> getTheatersByLocationId(int locationId) throws GlobalException {
+        try {
+            Optional<LocationEntity> locationEntityOptional = multiplexRepository.findById(locationId);
+            if (locationEntityOptional.isPresent()) {
+                LocationEntity locationEntity = locationEntityOptional.get();
+                return Collections.singletonList(convertToDto(locationEntity));
+            } else {
+                return Collections.emptyList();
+            }
+        } catch (Exception e) {
+            throw new GlobalException("Error retrieving data: " + e.getMessage(), e);
+        }
+    }
+
+    private LocationDto convertToDto(LocationEntity entity) {
+        return new LocationDto(entity.getId(), entity.getName(), entity.getLocation(), entity.getTheaterScreenCount());
     }
 
 }

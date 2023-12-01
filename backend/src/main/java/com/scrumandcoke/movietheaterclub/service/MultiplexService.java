@@ -13,4 +13,7 @@ public interface MultiplexService {
 	void updateMultiplex(Integer id, LocationDto locationDto) throws GlobalException;
 	void deleteMultiplex(Integer id) throws GlobalException;
     LocationDto getMultiplex(Integer id) throws GlobalException;
+	List<LocationDto> getTheatersByLocationId(int locationId) throws GlobalException;
+
 }
+
