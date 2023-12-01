@@ -48,4 +48,7 @@ public class UserEntity {
     @Column(name = "last_updated_at")
     @UpdateTimestamp
     private Date lastUpdatedAt;
+
+    @Column(name = "points")
+    private Double points;
 }

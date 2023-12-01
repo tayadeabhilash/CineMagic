@@ -30,4 +30,6 @@ public class UserDto {
     private Date lastUpdatedAt;
 
     private UserType userType;
+
+    private Double points;
 }

@@ -52,9 +52,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         try {
             validateDiscountedPrice(showTimeDto);
-            showTimeDto.setAvailableSeats(theaterScreenService.getTheaterScreenById(
-                    showTimeDto.getTheaterScreenId()).getSeatingCapacity());
             ShowTimeEntity showTimeEntity = showTimeMapper.toEntity(showTimeDto);
+            showTimeEntity.setAvailableSeats(theaterScreenService.getTheaterScreenById(
+                    showTimeDto.getTheaterScreenId()).getSeatingCapacity());
             showTimeRepository.save(showTimeEntity);
         } catch (Exception exception) {
             logger.error("Error saving showtime: {}", showTimeDto.getId());
@@ -142,7 +142,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException {
+    public void updateShowTime(Integer id, ShowTimeDto showTimeDto) throws GlobalException {
         if (showTimeDto == null) {
             throw new GlobalException("Showtime data cannot be null");
         }
@@ -151,7 +151,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
         try {
             validateDiscountedPrice(showTimeDto);
-            ShowTimeEntity entity = showTimeRepository.findById(showTimeDto.getId())
+            ShowTimeEntity entity = showTimeRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Showtime not found with id: " + showTimeDto.getId()));
             showTimeMapper.updateCustomerFromDto(showTimeDto, entity);
             showTimeRepository.save(entity);

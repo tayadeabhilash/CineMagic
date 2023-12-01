@@ -6,23 +6,29 @@ import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.entity.BookingEntity;
 import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
 import com.scrumandcoke.movietheaterclub.enums.BookingStatus;
+import com.scrumandcoke.movietheaterclub.enums.MemberType;
 import com.scrumandcoke.movietheaterclub.enums.PaymentMethod;
+import com.scrumandcoke.movietheaterclub.enums.TransactionType;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.mapper.BookingMapper;
 import com.scrumandcoke.movietheaterclub.repository.BookingRepository;
 import com.scrumandcoke.movietheaterclub.service.BookingService;
+import com.scrumandcoke.movietheaterclub.service.MovieService;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
+import com.scrumandcoke.movietheaterclub.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,6 +42,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     ShowTimeService showTimeService;
+
+    @Autowired
+    MovieService movieService;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     EventBus eventBus;
@@ -61,17 +73,30 @@ public class BookingServiceImpl implements BookingService {
             verifySeatAllocation(booking.getShowtimeId(), booking.getSeatsBooked()); //validation call
             BookingEntity bookingEntity = bookingMapper.toEntity(booking);
             validateShowtime(booking.getShowtimeId());
+            validateMovieReleaseDate(booking.getShowtimeId());
             reduceAvailableSeats(booking.getShowtimeId(), booking.getSeatsBooked());
             bookingEntity.setOnlineServiceFee(calculateServiceFee(booking.getUserId()));
-            bookingEntity.setTotalAmount(calculateTotalPrice(booking.getSeatsBooked(), bookingEntity.getOnlineServiceFee(),
-                    booking.getShowtimeId()));
             bookingEntity.setBookingDate(Date.from(Instant.now()));
-            processPayment(booking.getPaymentMethod(), booking.getTotalAmount());
+            if (booking.getUserId() != null)
+                processPayment(booking.getUserId(), booking.getPaymentMethod(), booking.getPointsAmount(),
+                        booking.getCashAmount(), TransactionType.DEBIT);
             bookingEntity.setBookingStatus(BookingStatus.CONFIRMED);
             bookingRepository.save(bookingEntity);
         } catch (Exception exception) {
             log.error("Error saving booking");
             throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
+    private void validateMovieReleaseDate(Integer showtimeId) throws GlobalException {
+        Date releaseDate = movieService.getMovie(showTimeService.getShowTime(showtimeId).getMovieId()).getReleaseDate();
+        Instant releaseInstant = releaseDate.toInstant();
+        Instant currentInstant = Instant.now();
+
+        Duration duration = Duration.between(currentInstant, releaseInstant);
+
+        if (duration.toDays() > 7) {
+            throw new GlobalException("Booking cannot be created more than 7 days in advance");
         }
     }
 
@@ -82,8 +107,8 @@ public class BookingServiceImpl implements BookingService {
         BookingEntity bookingEntity = bookingRepository.findById(id).get();
         checkCancelEligibility(bookingEntity.getShowtime(), bookingEntity.getBookingStatus());
         bookingEntity.setBookingStatus(BookingStatus.CANCELLED);
-        processRefund(bookingEntity.getTotalAmount(), bookingEntity.getOnlineServiceFee(),
-                bookingEntity.getPaymentMethod());
+        processPayment(bookingEntity.getUserId(), bookingEntity.getPaymentMethod(), bookingEntity.getPointsAmount(),
+                bookingEntity.getCashAmount(), TransactionType.CREDIT);
         unblockSeats(bookingEntity.getShowtime().getId(), bookingEntity.getSeatsBooked());
         bookingRepository.save(bookingEntity);
     }
@@ -91,6 +116,24 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getAllBookingsByUserId(String userId) {
         return bookingMapper.toDto(bookingRepository.findByUserId(userId));
+    }
+
+    @Override
+    public List<BookingDto> getAllUpcomingBookingsByUserId(String id) {
+        return bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeAfterAndBookingStatus(
+                id, Date.from(Instant.now()), BookingStatus.CONFIRMED));
+    }
+
+    @Override
+    public List<BookingDto> getAllPastBookingsByUserId(String id) {
+        return bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeBeforeAndBookingStatus
+                (id, Date.from(Instant.now()), BookingStatus.CONFIRMED));
+    }
+
+    @Override
+    public List<BookingDto> getAllCancelledByUserId(String id) {
+        return bookingMapper.toDto(bookingRepository.findByUserIdAndBookingStatus
+                (id, BookingStatus.CANCELLED));
     }
 
     private void validateShowtime(Integer showTimeId) throws GlobalException {
@@ -119,27 +162,37 @@ public class BookingServiceImpl implements BookingService {
         showtime.setAvailableSeats(availableSeats - seatsBooked);
 
         // Save the updated Showtime entity
-        showTimeService.updateShowTime(showtime);
+        showTimeService.updateShowTime(showtimeId, showtime);
     }
 
     private Double calculateServiceFee(String userId) {
         if (userId == null)
             return serviceCharge;
 
-        // TODO: Add Logic to retrieve member type and return service charge accordingly
+        MemberType memberType = userService.getUserByUserId(userId).getMemberType();
+        if (memberType == MemberType.PREMIUM)
+            return 0.0;
         return serviceCharge;
     }
 
-    private Double calculateTotalPrice(Integer seatsBooked, Double serviceCharge, Integer showTimeId) throws GlobalException {
-        Double showPrice = showTimeService.getShowTime(showTimeId).getPrice();
-        return (showPrice * seatsBooked) + serviceCharge;
+    private void processPayment(String userId, PaymentMethod paymentMethod, Double pointsAmount,
+                                Double cashPoints, TransactionType transactionType) throws GlobalException {
+        if (paymentMethod.equals(PaymentMethod.POINTS)) {
+            if (transactionType == TransactionType.DEBIT) {
+                validatePointsBalance(userId, pointsAmount);
+            }
+            userService.updatePoints(userId, pointsAmount, transactionType);
+        }
+        if (transactionType == TransactionType.DEBIT)
+            userService.updatePoints(userId, Math.ceil(cashPoints / 10), TransactionType.CREDIT);
+        else
+            userService.updatePoints(userId, Math.ceil(cashPoints / 10), TransactionType.DEBIT);
     }
 
-    private void processPayment(PaymentMethod paymentMethod, Double totalAmount) {
-        if (paymentMethod.equals(PaymentMethod.POINTS)) {
-            // TODO: Add logic to check and reduce points
-        } else {
-            // TODO: Add points to users account
+    private void validatePointsBalance(String userId, Double pointsAmount) throws GlobalException {
+        Double balance = userService.getUserByUserId(userId).getPoints();
+        if (balance < pointsAmount) {
+            throw new GlobalException("Not enough balance");
         }
     }
 
@@ -152,12 +205,6 @@ public class BookingServiceImpl implements BookingService {
             throw new GlobalException("Booking not eligible for cancellation");
     }
 
-    private void processRefund(Double totalAmount, Double onlineServiceFee, PaymentMethod paymentMethod) {
-        if (paymentMethod.equals(PaymentMethod.POINTS)) {
-            // TODO: Add points back to user's account
-        }
-    }
-
     private void unblockSeats(Integer id, Integer seatsBooked) throws GlobalException {
         ShowTimeDto showtime = showTimeService.getShowTime(id);
 
@@ -165,17 +212,13 @@ public class BookingServiceImpl implements BookingService {
         showtime.setAvailableSeats(showtime.getAvailableSeats() + seatsBooked);
 
         // Save the updated Showtime entity
-        showTimeService.updateShowTime(showtime);
+        showTimeService.updateShowTime(id, showtime);
     }
 
     //Validations
     private void validateBookingDetails(BookingDto booking) throws GlobalException {
         if (booking == null) {
             throw new GlobalException("Booking details cannot be null");
-        }
-
-        if (booking.getUserId() == null) {
-            throw new GlobalException("Invalid User ID");
         }
 
         int seatsBooked = booking.getSeatsBooked();
@@ -186,6 +229,10 @@ public class BookingServiceImpl implements BookingService {
         PaymentMethod paymentMethod = booking.getPaymentMethod();
         if (paymentMethod == null) {
             throw new GlobalException("Payment method cannot be null");
+        }
+
+        if (paymentMethod == PaymentMethod.POINTS && booking.getUserId() == null) {
+            throw new GlobalException("Non-logged users cannot pay with points");
         }
     }
 

@@ -100,7 +100,7 @@ const MovieSelectionPage = () => {
       month: "long",
       day: "numeric",
       timeZone: "UTC", // Adjust the time zone as needed
-    }).format(date);
+    }).format(new Date(date));
   };
 
   const formatTime = (date) => {
@@ -108,7 +108,7 @@ const MovieSelectionPage = () => {
       hour: "numeric",
       minute: "numeric",
       timeZone: "UTC",
-    }).format(date);
+    }).format(new Date(date));
   };
 
   useEffect(() => {

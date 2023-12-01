@@ -58,11 +58,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void updateMovie(MovieDto movieDto) throws GlobalException {
+    public void updateMovie(Integer id, MovieDto movieDto) throws GlobalException {
         try {
             validateMovieDto(movieDto); //new call
-            MovieEntity movie = getValidatedMovieEntity(movieDto.getMovieId()); //new call
-            MovieEntity movieEntity = movieRepository.findById(movieDto.getMovieId()).get();
+            MovieEntity movie = getValidatedMovieEntity(id); //new call
+            MovieEntity movieEntity = movieRepository.findById(id).get();
             movieEntity.setMovieName(movieDto.getMovieName());
             movieEntity.setSynopsis(movieDto.getSynopsis());
             movieEntity.setRunningTime(movieDto.getRunningTime());

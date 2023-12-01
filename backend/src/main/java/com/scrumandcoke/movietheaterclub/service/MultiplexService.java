@@ -10,7 +10,7 @@ public interface MultiplexService {
 	void addMultiplex(LocationDto locationDto) throws GlobalException;
 	List<LocationDto> getAllMultiplex() throws GlobalException;
 	List<LocationDto> getAllMultiplexByLocation(Location location) throws GlobalException;
-	void updateMultiplex(LocationDto locationDto) throws GlobalException;
+	void updateMultiplex(Integer id, LocationDto locationDto) throws GlobalException;
 	void deleteMultiplex(Integer id) throws GlobalException;
     LocationDto getMultiplex(Integer id) throws GlobalException;
 }

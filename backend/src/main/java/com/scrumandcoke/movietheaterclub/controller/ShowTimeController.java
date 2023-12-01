@@ -113,9 +113,9 @@ public class ShowTimeController {
         }
     }
 
-    @PutMapping
-    public void updateshowTime(@RequestBody ShowTimeDto showTimeDto) throws GlobalException {
-        showTimeService.updateShowTime(showTimeDto);
+    @PutMapping("{id}")
+    public void updateshowTime(@PathVariable int id, @RequestBody ShowTimeDto showTimeDto) throws GlobalException {
+        showTimeService.updateShowTime(id, showTimeDto);
     }
 
     @DeleteMapping("/{id}")

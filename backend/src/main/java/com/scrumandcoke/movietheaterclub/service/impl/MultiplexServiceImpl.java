@@ -90,12 +90,12 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public void updateMultiplex(LocationDto multiplexDto) throws GlobalException {
+    public void updateMultiplex(Integer id, LocationDto multiplexDto) throws GlobalException {
 
         if (multiplexDto == null) {
             throw new GlobalException("Multiplex data cannot be null");
         }
-        if (multiplexDto.getId() == 0) {
+        if (id == 0) {
             throw new GlobalException("Invalid multiplex ID");
         }
         if (multiplexDto.getName() == null || multiplexDto.getName().trim().isEmpty()) {
@@ -108,21 +108,20 @@ public class MultiplexServiceImpl implements MultiplexService {
             throw new GlobalException("Theater screen count must be at least 1");
         }
         // Check for duplicate name, excluding the current multiplex
-        boolean nameExists = multiplexRepository.existsByNameAndIdNot(multiplexDto.getName(), multiplexDto.getId());
+        boolean nameExists = multiplexRepository.existsByNameAndIdNot(multiplexDto.getName(), id);
         if (nameExists) {
             throw new GlobalException("Another multiplex with this name already exists");
         }
 
         try {
-            Integer multiplexId = multiplexDto.getId();
-            LocationEntity locationEntity = multiplexRepository.findById(multiplexId)
-                    .orElseThrow(() -> new EntityNotFoundException("Multiplex not found with id: " + multiplexId));
+            LocationEntity locationEntity = multiplexRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Multiplex not found with id: " + id));
             locationEntity.setName(multiplexDto.getName());
             locationEntity.setLocation(multiplexDto.getLocation());
             locationEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
             multiplexRepository.save(locationEntity);
         } catch (Exception e) {
-            logger.error("Error updating multiplex with id: " + multiplexDto.getId(), e);
+            logger.error("Error updating multiplex with id: " + id, e);
             throw new GlobalException("Error updating multiplex: " + e.getMessage(), e);
         }
     }

@@ -22,6 +22,8 @@ public class BookingDto {
     @Nonnull
     private Integer seatsBooked;
     private Double totalAmount;
+    private Double cashAmount;
+    private Double pointsAmount;
     private Double onlineServiceFee;
     @Nonnull
     private PaymentMethod paymentMethod;
