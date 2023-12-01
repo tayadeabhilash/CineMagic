@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./movies.css";
 import { GetMoviesByTheater, GetTheaterById } from "../../apicalls/theaters";
 import { message } from "antd";
+import moviePlaceholder from "../../assets/movie-placeholder.png";
 
 const MoviesForTheater = () => {
   const navigate = useNavigate();
@@ -101,6 +102,7 @@ const MoviesForTheater = () => {
           id: movie.movieId,
           title: movie.movieName,
           description: movie.synopsis,
+          posterUrl: movie.posterUrl ? movie.posterUrl : moviePlaceholder
         }));
         setMovies(formattedMovies);
       } else {
@@ -138,7 +140,7 @@ const MoviesForTheater = () => {
             <CardGrid
               title={item.title}
               description={item.description}
-              image={item.image}
+              image={item.posterUrl}
             />
           </div>
         ))}
