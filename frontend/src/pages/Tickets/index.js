@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Card, Button } from "antd";
 import "./tickets.css";
+import { GetUpcomingBookings, GetPastBookings } from "../../apicalls/user";
+import { useSelector } from "react-redux";
+import { message } from "antd";
+
 const { TabPane } = Tabs;
 
 const ShowCard = ({ show, isUpcoming, cancelShow }) => (
@@ -21,21 +25,6 @@ const ShowCard = ({ show, isUpcoming, cancelShow }) => (
   </Card>
 );
 
-const Sidebar = ({ user }) => {
-  const ticketsAvailable = Math.floor(user.points / 50);
-  const pointsExpiring = user.pointsExpiring; // Assume this is calculated elsewhere
-
-  return (
-    <div className="sidebar">
-      <h3>User Points: {user.points}</h3>
-      <p>Status: {user.isPremium ? "Premium" : "Standard"} User</p>
-      <p>Tickets Available with Points: {ticketsAvailable}</p>
-      <p>Points Expiring Soon: {pointsExpiring}</p>
-      {/* Add more user-specific information here */}
-    </div>
-  );
-};
-
 const Shows = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [user, setUser] = useState({
@@ -43,6 +32,8 @@ const Shows = () => {
     isPremium: true,
     pointsExpiring: 200,
   });
+
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [pastShows, setPastShows] = useState([
     {
@@ -77,9 +68,65 @@ const Shows = () => {
     },
   ]);
 
+  const getUpcomingBookings = async () => {
+    try {
+      const response = await GetUpcomingBookings(userInfo.userId);
+
+      if (response.status === 200) {
+        setUpcomingShows(response.data);
+      } else {
+        message.error(response?.data);
+      }
+    } catch (error) {
+      message.error(error?.message);
+    }
+  };
+
+  const getPastBookings = async () => {
+    try {
+      const response = await GetPastBookings(userInfo.userId);
+
+      if (response.status === 200) {
+        setPastShows(response.data);
+      } else {
+        message.error(response?.data);
+      }
+    } catch (error) {
+      message.error(error?.message);
+    }
+  };
+
+  const Sidebar = () => {
+    return (
+      <div className="sidebar">
+        <h3>User Points: {userInfo.points ? userInfo.points : 0}</h3>
+        <p>
+          Status:{" "}
+          <strong>
+            {userInfo.memberType === "PREMIUM" ? "Premium" : "Regular"} Member
+          </strong>
+        </p>
+        <p>
+          Equivalent Cash:{" "}
+          <strong>
+            $
+            {!userInfo.points || userInfo.points === 0
+              ? 0
+              : userInfo.points / 10}
+          </strong>
+        </p>
+      </div>
+    );
+  };
+
   const cancelShow = (id) => {
     setUpcomingShows(upcomingShows.filter((show) => show.id !== id));
   };
+
+  useEffect(() => {
+    getPastBookings();
+    getUpcomingBookings();
+  }, []);
 
   return (
     <div className="page-container">

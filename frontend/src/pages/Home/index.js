@@ -8,10 +8,11 @@ import {
   GetCurrentlyPlaying,
   GetUpcomingShows,
 } from "../../apicalls/movies";
-import { GetAllTheaters } from "../../apicalls/theaters";
+import { GetAllLocations, GetAllTheaters } from "../../apicalls/theaters";
 import Loader from "../../components/Loader/loader";
 import moviePlaceholder from "../../assets/movie-placeholder.png";
 import theaterPlaceholder from "../../assets/theater-placeholder.png";
+import locationPlaceholder from "../../assets/place-placeholder.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ const HomePage = () => {
     },
   ]);
 
-  const locations = [
+  const [locations, setLocations] = useState([
     {
       id: 1,
       title: "City Center",
@@ -132,7 +133,7 @@ const HomePage = () => {
       description: "Scenic views and top-notch facilities",
       image: "https://via.placeholder.com/150",
     },
-  ];
+  ]);
 
   const [upcomingMovies, setUpcomingMovies] = useState([
     {
@@ -244,6 +245,28 @@ const HomePage = () => {
     }
   };
 
+  const getLocations = async () => {
+    try {
+      setIsLoading(true);
+      const response = await GetAllLocations();
+
+      if (response.status === 200) {
+        const formattedLocations = response.data.map((location) => ({
+          ...location,
+          title: location.name,
+          image: location.posterUrl ? location.posterUrl : locationPlaceholder,
+        }));
+        setLocations(formattedLocations);
+      } else {
+        message.error(response.data);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      message.error(error.message);
+    }
+  };
+
   const CustomNextArrow = ({ onClick }) => (
     <div className="custom-next-arrow" onClick={onClick}>
       →
@@ -292,6 +315,7 @@ const HomePage = () => {
     getMoviesData();
     getTheatersData();
     getUpcomingShows();
+    getLocations();
   }, []);
 
   if (isLoading) {

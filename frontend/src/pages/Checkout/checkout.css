@@ -150,3 +150,8 @@
     width: auto;
   }
 }
+
+.checkout-container .discount {
+  font-weight: 400 !important;
+  font-size: 12px;
+}

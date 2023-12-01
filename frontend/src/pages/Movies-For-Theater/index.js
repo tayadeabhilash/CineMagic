@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./movies.css";
 import { GetMoviesByTheater, GetTheaterById } from "../../apicalls/theaters";
 import { message } from "antd";
+import moviePlaceholder from "../../assets/movie-placeholder.png";
 
 const MoviesForTheater = () => {
   const navigate = useNavigate();
@@ -80,11 +81,12 @@ const MoviesForTheater = () => {
   const fetchTheaterData = async () => {
     try {
       const response = await GetTheaterById(id);
+      console.log(response);
 
       if (response.status == 200) {
         setTheater(response.data);
       } else {
-        message.error(response.data);
+        message.error(response?.data);
       }
     } catch (error) {
       message.error(error);
@@ -101,6 +103,7 @@ const MoviesForTheater = () => {
           id: movie.movieId,
           title: movie.movieName,
           description: movie.synopsis,
+          image: movie.posterUrl ? movie.posterUrl : moviePlaceholder,
         }));
         setMovies(formattedMovies);
       } else {

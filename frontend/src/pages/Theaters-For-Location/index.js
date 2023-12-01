@@ -1,92 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CardGrid from "../../components/CardGrid";
 import { useNavigate } from "react-router-dom";
 import "./theaters.css";
+import {
+  GetLocationById,
+  GetTheatersByLocation,
+} from "../../apicalls/theaters";
+import { useParams } from "react-router-dom";
+import theaterPlaceholder from "../../assets/theater-placeholder.png";
 
 const TheatersForLocation = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const [locationInfo, setLocationInfo] = useState({});
+  const [theaters, setTheaters] = useState([]);
 
-  const locationInfo = {
-    name: "Downtown",
+  const fetchLocationAndTheaters = async () => {
+    try {
+      const locationResponse = await GetLocationById(id);
+      setLocationInfo(locationResponse.data);
+
+      const theatersResponse = await GetTheatersByLocation(id);
+      const formattedTheaters = theatersResponse.data.map((theater) => ({
+        ...theater,
+        title: theater.name,
+        image: theater.posterUrl ? theater.posterUrl : theaterPlaceholder,
+      }));
+
+      setTheaters(formattedTheaters);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const theaters = [
-    {
-      id: 1,
-      title: "Grand Cinema",
-      description: "The best movie experience in town",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Starlight Theater",
-      description: "Enjoy movies under the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Grand Cinema",
-      description: "The best movie experience in town",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Starlight Theater",
-      description: "Enjoy movies under the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Downtown Cineplex",
-      description: "The heart of the city's movie scene",
-      image: "https://via.placeholder.com/150",
-    },
-  ];
+  useEffect(() => {
+    fetchLocationAndTheaters();
+    window.scrollTo(0, 0);
+  }, [id]);
 
   const handleCardClick = (theaterId) => {
     navigate(`/booking?theater=${theaterId}`);
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="homepage-container">
