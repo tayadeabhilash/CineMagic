@@ -24,6 +24,8 @@ public class MovieController {
     @Autowired
     MovieService movieService;
 
+
+
     @PostMapping
     public ResponseEntity<String> addMovie(@RequestBody MovieDto movieDto) throws GlobalException {
         try {

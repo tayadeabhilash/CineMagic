@@ -14,4 +14,5 @@ public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
     List<MovieEntity> findByReleaseDateAfter(Date date);
     List<MovieEntity> findByReleaseDateBetween(Date startDate, Date endDate);
 
+
 }
