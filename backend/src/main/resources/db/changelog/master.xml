@@ -19,4 +19,5 @@
     <include file="classpath:db/changelog/1701396586_add_fields_for_users.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701403896_add_fields_cash_amount_for_booking.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701407977_update_datatype_user_id_for_booking.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701424940_update_posters_field_type.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
