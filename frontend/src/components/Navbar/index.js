@@ -77,7 +77,7 @@ const Navbar = () => {
           <ul className="navbar-nav2 ml-auto">
             <li className="nav-item">
               <NavLink to="/tickets">
-                <p className="username">Welcome {userInfo.firstName}!</p>
+                <p className="username">Welcome {userInfo?.firstName}!</p>
               </NavLink>
             </li>
             <li className="nav-item">

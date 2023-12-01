@@ -28,9 +28,9 @@ axiosInstance.interceptors.request.use(
     const state = store.getState();
     const userInfo = state.auth.userInfo; // Adjust this according to your Redux state structure
 
-    if (userInfo && userInfo.sessionId) {
+    if (userInfo && userInfo?.sessionId) {
       // Set the session ID in headers
-      config.headers["x-session-id"] = userInfo.sessionId;
+      config.headers["x-session-id"] = userInfo?.sessionId;
     }
 
     return config;

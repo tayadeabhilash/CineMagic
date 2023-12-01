@@ -1,8 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./footer.css";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+
   return (
     <footer className="footer">
       <div className="footer-content">
@@ -10,9 +13,11 @@ const Footer = () => {
           <NavLink className="nav-link" to="/">
             Home
           </NavLink>
-          <NavLink className="nav-link" to="/buy-membership">
-            Become a Member
-          </NavLink>
+          {userInfo?.userType != "THEATER_EMPLOYEE" && (
+            <NavLink className="nav-link" to="/buy-membership">
+              Become a Member
+            </NavLink>
+          )}
           {/* NavLink for About page can be uncommented if needed */}
           {/* <NavLink className="nav-link" to="/about">
             About

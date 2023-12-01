@@ -393,7 +393,7 @@ const MovieSelectionPage = () => {
           style={{ width: 120 }}
           onChange={handleSeatChange}
         >
-          {[...Array(10).keys()].map((num) => (
+          {[...Array(8).keys()].map((num) => (
             <Select.Option key={num} value={num + 1}>
               {num + 1}
             </Select.Option>
