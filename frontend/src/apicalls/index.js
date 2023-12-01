@@ -1,10 +1,10 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/",
-  credentials: "include",
+  baseURL:
+    "https://bee5-2601-646-a100-cbf0-e164-ed22-95cd-68aa.ngrok-free.app/",
   headers: {
     "Content-Type": "application/json",
-    //    authorization: `Bearer ${localStorage.getItem("token")}`,
   },
+  withCredentials: true,
 });

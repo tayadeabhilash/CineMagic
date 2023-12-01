@@ -2,16 +2,26 @@ import React, { useState } from "react";
 import { Card, Button, message } from "antd";
 import "./checkout.css";
 import { UpgradeMembership } from "../../apicalls/user";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setCredentials } from "../../redux/authSlice";
 
 const MembershipCheckout = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const membershipPrice = 15;
 
   const handleUpgrade = async () => {
     try {
-      const response = await UpgradeMembership();
-      console.log(response);
+      const res = await UpgradeMembership();
+      dispatch(setCredentials({ ...res }));
+
+      if (res.status === 200) {
+        message.success("You are upgraded to premium membership!");
+        navigate("/");
+      }
     } catch (error) {
-      message.error(error);
+      message.error(error?.message);
     }
   };
 

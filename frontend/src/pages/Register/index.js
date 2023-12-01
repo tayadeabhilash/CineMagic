@@ -27,15 +27,15 @@ const Register = () => {
       const res = await register({ firstName, lastName, email, password });
       console.log(res);
 
-      if (res.data) {
+      if (res?.data) {
         dispatch(setCredentials({ ...res }));
         navigate("/");
         message.success("User Registered Succesfully!");
       } else {
-        message.error(res?.errorMessage);
+        message.error(res?.error?.data?.errorMessage);
       }
     } catch (err) {
-      message.error({ error: err?.data?.message });
+      message.error(err?.message);
     }
   };
 

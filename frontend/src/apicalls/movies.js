@@ -39,3 +39,23 @@ export const GetMovieById = async (id) => {
     return error;
   }
 };
+
+//user
+export const GetCurrentlyPlaying = async () => {
+  try {
+    const response = await axiosInstance.get("movie/current");
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+//user
+export const GetUpcomingShows = async () => {
+  try {
+    const response = await axiosInstance.get("movie/upcoming");
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

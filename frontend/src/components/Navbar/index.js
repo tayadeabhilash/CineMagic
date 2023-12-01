@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,6 +23,8 @@ const Navbar = () => {
       console.error(err);
     }
   };
+
+  useEffect(() => {}, [userInfo]);
 
   return (
     <nav className="navbar navbar-expand-lg">
@@ -67,14 +69,15 @@ const Navbar = () => {
           </ul>
         )}
 
-        {userInfo?.memberType === "PREMIUM" && (
+        {userInfo?.memberType == "PREMIUM" && (
           <div className="premium">Premium!!</div>
         )}
+
         {userInfo ? (
           <ul className="navbar-nav2 ml-auto">
             <li className="nav-item">
               <NavLink to="/tickets">
-                <p className="username">Welcome {userInfo.data.firstName}!</p>
+                <p className="username">Welcome {userInfo.firstName}!</p>
               </NavLink>
             </li>
             <li className="nav-item">

@@ -3,7 +3,8 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 import { logout } from "./authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8080/v0/",
+  baseUrl:
+    "https://bee5-2601-646-a100-cbf0-e164-ed22-95cd-68aa.ngrok-free.app/v0/",
   credentials: "include",
 });
 

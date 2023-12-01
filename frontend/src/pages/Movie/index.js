@@ -6,6 +6,7 @@ import { GetMovieById } from "../../apicalls/movies";
 import { message } from "antd";
 import moment from "moment";
 import Loader from "../../components/Loader/loader";
+import moviePlaceholder from "../../assets/movie-placeholder.png";
 
 const Movie = () => {
   var navigate = useNavigate();
@@ -16,8 +17,8 @@ const Movie = () => {
     poster:
       "https://m.media-amazon.com/images/M/MV5BMTM1NjUxMDI3OV5BMl5BanBnXkFtZTcwNjg1ODM3OA@@._V1_.jpg",
     movieName: "Jack Reacher: Never Go Back",
-    contentRating: "4.19",
-    genres: ["Thriller", "Action"],
+    language: "English",
+    genre: "Action",
     runningTime: 143,
     synopsis:
       "Jack Reacher must uncover the truth behind a major government conspiracy in order to clear his name. On the run as a fugitive from the law, Reacher uncovers a potential secret from his past that could change his life forever.",
@@ -58,7 +59,7 @@ const Movie = () => {
         <div className="col movie-poster-col">
           <div className="movie-det-section">
             <img
-              src="https://m.media-amazon.com/images/M/MV5BMTM1NjUxMDI3OV5BMl5BanBnXkFtZTcwNjg1ODM3OA@@._V1_.jpg"
+              src={movieData.posterUrl ? movieData.posterUrl : moviePlaceholder}
               alt="Movie not found"
               className="movie-poster"
             />
@@ -68,7 +69,7 @@ const Movie = () => {
       <div className="row movie-det-row">
         <div className="col-lg-4">
           <img
-            src="https://m.media-amazon.com/images/M/MV5BMTM1NjUxMDI3OV5BMl5BanBnXkFtZTcwNjg1ODM3OA@@._V1_.jpg"
+            src={movieData.posterUrl ? movieData.posterUrl : moviePlaceholder}
             alt="Movie not found"
             className="movie-img"
           />
@@ -76,8 +77,8 @@ const Movie = () => {
         <div className="col-lg movie-det-col">
           <div className="movie-title">{movieData?.movieName}</div>
           <div className="general-info">
-            <span className="content-rating">{movieData?.contentRating}</span>
-            <span className="movie-genres">{movieData?.genres}</span>
+            <span className="content-rating">{movieData?.language}</span>
+            <span className="movie-genres">{movieData?.genre}</span>
             <span className="runtime ">
               {movieData?.runningTime &&
                 `${moment.duration(movieData.runningTime, "minutes").hours()}h 
