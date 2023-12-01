@@ -93,10 +93,12 @@ public class BookingServiceImpl implements BookingService {
         Instant releaseInstant = releaseDate.toInstant();
         Instant currentInstant = Instant.now();
 
-        Duration duration = Duration.between(currentInstant, releaseInstant);
+        if (releaseInstant.isAfter(currentInstant)) {
+            Duration duration = Duration.between(currentInstant, releaseInstant);
 
-        if (duration.toDays() > 7) {
-            throw new GlobalException("Booking cannot be created more than 7 days in advance");
+            if (duration.toDays() > 7) {
+                throw new GlobalException("Booking cannot be created more than 7 days in advance");
+            }
         }
     }
 
