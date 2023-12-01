@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.scrumandcoke.movietheaterclub.dto.TheaterScreenDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.entity.MultiplexEntity;
+import com.scrumandcoke.movietheaterclub.entity.LocationEntity;
 import com.scrumandcoke.movietheaterclub.entity.TheaterScreenEntity;
 import com.scrumandcoke.movietheaterclub.repository.MultiplexRepository;
 import com.scrumandcoke.movietheaterclub.repository.TheaterScreenRepository;
@@ -42,9 +42,9 @@ public class TheaterScreenImpl implements TheaterScreenService {
             theaterScreenEntity.setPhone(theaterScreenDto.getPhone());
             theaterScreenEntity.setEmail(theaterScreenDto.getEmail());
 
-            MultiplexEntity multiplexEntity = multiplexRepository.findById(theaterScreenDto.getMultiplexId())
+            LocationEntity locationEntity = multiplexRepository.findById(theaterScreenDto.getMultiplexId())
                     .orElseThrow(() -> new GlobalException("Multiplex not found"));
-            theaterScreenEntity.setMultiplexEntity(multiplexEntity);
+            theaterScreenEntity.setLocationEntity(locationEntity);
 
             theaterScreenRepository.save(theaterScreenEntity);
         } catch (Exception exception) {
@@ -68,7 +68,7 @@ public class TheaterScreenImpl implements TheaterScreenService {
             theaterScreenDto.setEmail(theaterScreenEntity.getEmail());
 
             theaterScreenDto.setSeatingCapacity(theaterScreenEntity.getSeatingCapacity());
-            theaterScreenDto.setMultiplexId(theaterScreenEntity.getMultiplexEntity().getId());
+            theaterScreenDto.setMultiplexId(theaterScreenEntity.getLocationEntity().getId());
 
             return theaterScreenDto;
         } catch (Exception e) {
@@ -97,9 +97,9 @@ public class TheaterScreenImpl implements TheaterScreenService {
             theaterScreenEntity.setPhone(theaterScreenDto.getPhone());
 
             if (theaterScreenDto.getMultiplexId() != null && theaterScreenDto.getMultiplexId() != 0) {
-                MultiplexEntity multiplexEntity = multiplexRepository.findById(theaterScreenDto.getMultiplexId())
+                LocationEntity locationEntity = multiplexRepository.findById(theaterScreenDto.getMultiplexId())
                         .orElseThrow(() -> new GlobalException("Multiplex not found"));
-                theaterScreenEntity.setMultiplexEntity(multiplexEntity);
+                theaterScreenEntity.setLocationEntity(locationEntity);
             }
 
             TheaterScreenEntity updatedTheaterScreenEntity = theaterScreenRepository.save(theaterScreenEntity);
@@ -113,7 +113,7 @@ public class TheaterScreenImpl implements TheaterScreenService {
             updatedDto.setPhone(updatedTheaterScreenEntity.getPhone());
 
             updatedDto.setSeatingCapacity(updatedTheaterScreenEntity.getSeatingCapacity());
-            updatedDto.setMultiplexId(updatedTheaterScreenEntity.getMultiplexEntity().getId());
+            updatedDto.setMultiplexId(updatedTheaterScreenEntity.getLocationEntity().getId());
 
             return updatedDto;
         } catch (Exception e) {
@@ -159,12 +159,12 @@ public class TheaterScreenImpl implements TheaterScreenService {
             dto.setId(theaterScreenEntity.getId());
             dto.setName(theaterScreenEntity.getName());
             dto.setSeatingCapacity(theaterScreenEntity.getSeatingCapacity());
+            dto.setMultiplexId(theaterScreenEntity.getLocationEntity().getId());
 
             dto.setPhone(theaterScreenEntity.getPhone());
             dto.setAddress(theaterScreenEntity.getAddress());
             dto.setEmail(theaterScreenEntity.getEmail());
 
-            dto.setMultiplexId(theaterScreenEntity.getMultiplexEntity().getId());
             theaterScreenDtos.add(dto);
         }
         return theaterScreenDtos;

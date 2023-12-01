@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.scrumandcoke.movietheaterclub.dto.MultiplexDto;
+import com.scrumandcoke.movietheaterclub.dto.LocationDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
-import com.scrumandcoke.movietheaterclub.entity.MultiplexEntity;
+import com.scrumandcoke.movietheaterclub.entity.LocationEntity;
 import com.scrumandcoke.movietheaterclub.repository.MultiplexRepository;
 import com.scrumandcoke.movietheaterclub.service.MultiplexService;
 
@@ -27,7 +27,7 @@ public class MultiplexServiceImpl implements MultiplexService {
 
 
     @Override
-    public void addMultiplex(MultiplexDto multiplexDto) throws GlobalException {
+    public void addMultiplex(LocationDto multiplexDto) throws GlobalException {
         if (multiplexDto == null) {
             throw new GlobalException("Multiplex data cannot be null");
         }
@@ -45,11 +45,11 @@ public class MultiplexServiceImpl implements MultiplexService {
         }
 
         try {
-            MultiplexEntity multiplexEntity = new MultiplexEntity();
-            multiplexEntity.setName(multiplexDto.getName());
-            multiplexEntity.setLocation(multiplexDto.getLocation());
-            multiplexEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
-            multiplexRepository.save(multiplexEntity);
+            LocationEntity locationEntity = new LocationEntity();
+            locationEntity.setName(multiplexDto.getName());
+            locationEntity.setLocation(multiplexDto.getLocation());
+            locationEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
+            multiplexRepository.save(locationEntity);
         } catch (Exception exception) {
             logger.error("Error adding multiplex");
             throw new GlobalException(exception.getMessage(), exception);
@@ -57,12 +57,12 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public List<MultiplexDto> getAllMultiplex() throws GlobalException {
+    public List<LocationDto> getAllMultiplex() throws GlobalException {
         try {
-            List<MultiplexEntity> multiplexEntities = multiplexRepository.findAll();
-            List<MultiplexDto> allMultiplex = new ArrayList<>();
-            for (MultiplexEntity multiplexEntity : multiplexEntities) {
-                MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(), multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
+            List<LocationEntity> multiplexEntities = multiplexRepository.findAll();
+            List<LocationDto> allMultiplex = new ArrayList<>();
+            for (LocationEntity locationEntity : multiplexEntities) {
+                LocationDto dto = new LocationDto(locationEntity.getId(), locationEntity.getName(), locationEntity.getLocation(), locationEntity.getTheaterScreenCount());
                 allMultiplex.add(dto);
             }
             return allMultiplex;
@@ -73,13 +73,13 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public List<MultiplexDto> getAllMultiplexByLocation(Location location) throws GlobalException {
+    public List<LocationDto> getAllMultiplexByLocation(Location location) throws GlobalException {
         try {
-            List<MultiplexEntity> multiplexEntities = multiplexRepository.findByLocation(location);
-            List<MultiplexDto> allMultiplex = new ArrayList<>();
-            for (MultiplexEntity multiplexEntity : multiplexEntities) {
-                MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(),
-                        multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
+            List<LocationEntity> multiplexEntities = multiplexRepository.findByLocation(location);
+            List<LocationDto> allMultiplex = new ArrayList<>();
+            for (LocationEntity locationEntity : multiplexEntities) {
+                LocationDto dto = new LocationDto(locationEntity.getId(), locationEntity.getName(),
+                        locationEntity.getLocation(), locationEntity.getTheaterScreenCount());
                 allMultiplex.add(dto);
             }
             return allMultiplex;
@@ -90,7 +90,7 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public void updateMultiplex(MultiplexDto multiplexDto) throws GlobalException {
+    public void updateMultiplex(LocationDto multiplexDto) throws GlobalException {
 
         if (multiplexDto == null) {
             throw new GlobalException("Multiplex data cannot be null");
@@ -115,12 +115,12 @@ public class MultiplexServiceImpl implements MultiplexService {
 
         try {
             Integer multiplexId = multiplexDto.getId();
-            MultiplexEntity multiplexEntity = multiplexRepository.findById(multiplexId)
+            LocationEntity locationEntity = multiplexRepository.findById(multiplexId)
                     .orElseThrow(() -> new EntityNotFoundException("Multiplex not found with id: " + multiplexId));
-            multiplexEntity.setName(multiplexDto.getName());
-            multiplexEntity.setLocation(multiplexDto.getLocation());
-            multiplexEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
-            multiplexRepository.save(multiplexEntity);
+            locationEntity.setName(multiplexDto.getName());
+            locationEntity.setLocation(multiplexDto.getLocation());
+            locationEntity.setTheaterScreenCount(multiplexDto.getTheaterScreenCount());
+            multiplexRepository.save(locationEntity);
         } catch (Exception e) {
             logger.error("Error updating multiplex with id: " + multiplexDto.getId(), e);
             throw new GlobalException("Error updating multiplex: " + e.getMessage(), e);
@@ -138,10 +138,10 @@ public class MultiplexServiceImpl implements MultiplexService {
     }
 
     @Override
-    public MultiplexDto getMultiplex(Integer id) throws GlobalException {
+    public LocationDto getMultiplex(Integer id) throws GlobalException {
         try {
-            MultiplexEntity multiplexEntity = multiplexRepository.findById(id).get();
-            MultiplexDto dto = new MultiplexDto(multiplexEntity.getId(), multiplexEntity.getName(), multiplexEntity.getLocation(), multiplexEntity.getTheaterScreenCount());
+            LocationEntity locationEntity = multiplexRepository.findById(id).get();
+            LocationDto dto = new LocationDto(locationEntity.getId(), locationEntity.getName(), locationEntity.getLocation(), locationEntity.getTheaterScreenCount());
             return dto;
         } catch (Exception exception) {
             logger.error("Error retrieving multiplex {}", id);

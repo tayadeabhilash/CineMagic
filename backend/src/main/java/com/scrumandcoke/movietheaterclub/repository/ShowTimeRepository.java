@@ -11,7 +11,7 @@ import java.util.List;
 public interface ShowTimeRepository extends JpaRepository<ShowTimeEntity, Integer> {
     List<ShowTimeEntity> findByMovie_MovieId(Integer id);
     List<ShowTimeEntity> findByTheaterScreen_Id(Integer id);
-    List<ShowTimeEntity> findByTheaterScreen_IdAndTheaterScreen_MultiplexEntity_Id(int theaterScreen_id, int multiplex_id);
+    List<ShowTimeEntity> findByTheaterScreen_IdAndTheaterScreen_LocationEntity_Id(int theaterScreen_id, int multiplex_id);
+    List<ShowTimeEntity> findByTheaterScreen_LocationEntity_Location(Location location);
     List<ShowTimeEntity> findByTheaterScreen_IdAndMovie_MovieId(Integer theaterScreenId, Integer movieId);
-    List<ShowTimeEntity> findByTheaterScreen_MultiplexEntity_Location(Location location);
 }

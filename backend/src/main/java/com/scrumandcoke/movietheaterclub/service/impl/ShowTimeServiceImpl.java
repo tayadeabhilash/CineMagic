@@ -122,7 +122,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public List<ShowTimeDto> getShowTimesByLocation(Location location) throws GlobalException {
         try {
-            return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_MultiplexEntity_Location(location));
+            return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_LocationEntity_Location(location));
         } catch (Exception exception) {
             logger.error("Error getting showtime with location: {}", location);
             throw new GlobalException(exception.getMessage(), exception);
@@ -133,7 +133,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     public List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMultiplexId(Integer theaterScreenId, Integer multiplexId) throws GlobalException {
         try {
             return showTimeMapper.toDto(showTimeRepository
-                    .findByTheaterScreen_IdAndTheaterScreen_MultiplexEntity_Id(theaterScreenId, multiplexId));
+                    .findByTheaterScreen_IdAndTheaterScreen_LocationEntity_Id(theaterScreenId, multiplexId));
         } catch (Exception exception) {
             logger.error("Error getting showtime with theaterScreenId: {} and multiplexId: {}", theaterScreenId,
                     multiplexId);
