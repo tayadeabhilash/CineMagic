@@ -1,11 +1,9 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.annotation.LoginRequired;
-import com.scrumandcoke.movietheaterclub.annotation.UserTypesAllowed;
 import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.LoginRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserSessionDetail;
-import com.scrumandcoke.movietheaterclub.enums.UserType;
 import com.scrumandcoke.movietheaterclub.service.IAMService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,21 +26,27 @@ public class IAMController {
         UserSessionDetail userSessionDetail = iamService.signUp(createUserRequest);
 
         Cookie cookie = new Cookie("sid", userSessionDetail.getSessionId());
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         cookie.setPath("/");
-        response.addCookie(cookie);
+        cookie.setSecure(true);
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; Secure; SameSite=None", userSessionDetail.getSessionId());
+        response.addHeader("Set-Cookie", cookieHeader);
 
         return userSessionDetail;
     }
+
 
     @PostMapping("/login")
     public UserSessionDetail signIn(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         UserSessionDetail userSessionDetail = iamService.signIn(loginRequest.getEmail(), loginRequest.getPassword());
 
         Cookie cookie = new Cookie("sid", userSessionDetail.getSessionId());
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         cookie.setPath("/");
-        response.addCookie(cookie);
+        cookie.setSecure(true);
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; Secure; SameSite=None", userSessionDetail.getSessionId());
+        response.addHeader("Set-Cookie", cookieHeader);
+
 
         return userSessionDetail;
     }
