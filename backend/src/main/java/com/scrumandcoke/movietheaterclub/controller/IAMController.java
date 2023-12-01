@@ -50,10 +50,10 @@ public class IAMController {
     }
 
 
-
-    @GetMapping("/isAuthenticated")
-    public UserSessionDetail isAuthenticated(@CookieValue("sid") String sessionId) {
-        return iamService.isAuthenticated(sessionId);
+    @GetMapping("/me")
+    @LoginRequired
+    public UserSessionDetail isAuthenticated(@AuthenticationPrincipal UserSessionDetail userSessionDetail) {
+        return iamService.isAuthenticated(userSessionDetail.getSessionId());
     }
 
 
