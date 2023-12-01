@@ -46,6 +46,10 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
             }
         }
 
+        if (sessionId == null && Objects.nonNull(httpRequest.getHeader("x-session-id"))) {
+            sessionId = httpRequest.getHeader("x-session-id");
+        }
+
         if (sessionId == null) {
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
