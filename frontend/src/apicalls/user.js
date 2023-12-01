@@ -71,3 +71,15 @@ export const CreateBooking = async (payload) => {
     return error.response;
   }
 };
+
+//admin
+export const GetAnalytics1 = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `v0/analytics/theaterOccupanciesByMovie`
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

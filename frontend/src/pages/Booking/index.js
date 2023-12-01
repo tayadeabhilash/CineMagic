@@ -12,6 +12,7 @@ import {
 import { message } from "antd";
 import { GetAllMovies, GetMovieById } from "../../apicalls/movies";
 import moment from "moment";
+import Loader from "../../components/Loader/loader";
 
 const TICKET_PRICE = 10;
 
@@ -28,12 +29,14 @@ const MovieSelectionPage = () => {
   const [selectedSeats, setSelectedSeats] = useState(1);
   const [movie, setMovie] = useState(null);
   const [theater, setTheater] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [showtimes, setShowtimes] = useState([]);
 
   const fetchTheaterData = async (id) => {
     let response = null;
     try {
+      setIsLoading(true);
       if (id) response = await GetTheaterById(id);
       else response = await GetAllTheaters();
       if (response.status == 200) {
@@ -41,7 +44,9 @@ const MovieSelectionPage = () => {
       } else {
         message.error(response?.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error?.message);
     }
   };
@@ -49,6 +54,7 @@ const MovieSelectionPage = () => {
   const fetchMovieData = async (id) => {
     let response = null;
     try {
+      setIsLoading(true);
       if (id) response = await GetMovieById(id);
       else response = await GetAllMovies();
       if (response.status == 200) {
@@ -56,13 +62,16 @@ const MovieSelectionPage = () => {
       } else {
         message.error(response?.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error?.message);
     }
   };
 
   const fetchShowtimes = async (theaterId, movieId) => {
     try {
+      setIsLoading(true);
       let response = null;
       if (movieId && !theaterId) response = await GetShowsByMovie(movieId);
       else if (!movieId && theaterId)
@@ -90,7 +99,9 @@ const MovieSelectionPage = () => {
       } else {
         message.error(response?.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error?.message);
     }
   };
@@ -316,6 +327,10 @@ const MovieSelectionPage = () => {
     renderContent();
     renderDetails();
   }, [selectedTheater, selectedMovie, theaterId, movieId]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="container mt-5">

@@ -8,14 +8,17 @@ import {
 } from "../../apicalls/theaters";
 import { useParams } from "react-router-dom";
 import theaterPlaceholder from "../../assets/theater-placeholder.png";
+import Loader from "../../components/Loader/loader";
 
 const TheatersForLocation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [locationInfo, setLocationInfo] = useState({});
   const [theaters, setTheaters] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchLocationAndTheaters = async () => {
+    setIsLoading(true);
     try {
       const locationResponse = await GetLocationById(id);
       setLocationInfo(locationResponse.data);
@@ -31,6 +34,7 @@ const TheatersForLocation = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -41,6 +45,10 @@ const TheatersForLocation = () => {
   const handleCardClick = (theaterId) => {
     navigate(`/booking?theater=${theaterId}`);
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="homepage-container">

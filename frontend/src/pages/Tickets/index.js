@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Card, Button } from "antd";
 import "./tickets.css";
-import { GetUpcomingBookings, GetPastBookings } from "../../apicalls/user";
+import {
+  GetUpcomingBookings,
+  GetPastBookings,
+  CancelBooking,
+} from "../../apicalls/user";
 import { useSelector } from "react-redux";
 import { message } from "antd";
+import Loader from "../../components/Loader/loader";
 
 const { TabPane } = Tabs;
 
@@ -35,41 +40,13 @@ const Shows = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [pastShows, setPastShows] = useState([
-    {
-      id: "1",
-      movie: "The Shawshank Redemption",
-      date: "2021-12-01",
-      tickets: 2,
-      location: "Regal Cinema",
-    },
-    {
-      id: "2",
-      movie: "The Godfather",
-      date: "2021-11-15",
-      tickets: 3,
-      location: "AMC Theater",
-    },
-  ]);
-  const [upcomingShows, setUpcomingShows] = useState([
-    {
-      id: "3",
-      movie: "Inception",
-      date: "2023-12-10",
-      tickets: 2,
-      location: "Cinemark",
-    },
-    {
-      id: "4",
-      movie: "Interstellar",
-      date: "2023-12-20",
-      tickets: 4,
-      location: "IMAX",
-    },
-  ]);
+  const [pastShows, setPastShows] = useState([]);
+  const [upcomingShows, setUpcomingShows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getUpcomingBookings = async () => {
     try {
+      setIsLoading(true);
       const response = await GetUpcomingBookings(userInfo.userId);
 
       if (response.status === 200) {
@@ -77,13 +54,16 @@ const Shows = () => {
       } else {
         message.error(response?.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error?.message);
     }
   };
 
   const getPastBookings = async () => {
     try {
+      setIsLoading(true);
       const response = await GetPastBookings(userInfo.userId);
 
       if (response.status === 200) {
@@ -91,7 +71,9 @@ const Shows = () => {
       } else {
         message.error(response?.data);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       message.error(error?.message);
     }
   };
@@ -119,14 +101,31 @@ const Shows = () => {
     );
   };
 
-  const cancelShow = (id) => {
-    setUpcomingShows(upcomingShows.filter((show) => show.id !== id));
+  const cancelShow = async (id) => {
+    try {
+      const response = await CancelBooking(id);
+
+      if (response.status === 200) {
+        setUpcomingShows(upcomingShows.filter((show) => show.id !== id));
+        message.success("Booking cancelled successfully");
+      } else {
+        message.error("Failed to cancel the booking");
+      }
+    } catch (error) {
+      message.error(
+        error.message || "An error occurred while cancelling the booking"
+      );
+    }
   };
 
   useEffect(() => {
     getPastBookings();
     getUpcomingBookings();
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="page-container">

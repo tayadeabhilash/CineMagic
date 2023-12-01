@@ -7,6 +7,8 @@ import { GetShowById, GetTheaterById } from "../../apicalls/theaters";
 import { CreateBooking } from "../../apicalls/user";
 import { useSelector } from "react-redux";
 import { message } from "antd";
+import { GetMovieById } from "../../apicalls/movies";
+import Loader from "../../components/Loader/loader";
 
 const Checkout = () => {
   const location = useLocation();
@@ -15,22 +17,27 @@ const Checkout = () => {
 
   const [theaterDetails, setTheaterDetails] = useState({});
   const [showtimeDetails, setShowtimeDetails] = useState({});
+  const [movieDetails, setMovieDetails] = useState({});
 
   const [useRewards, setUseRewards] = useState(false);
-  const [rewardPoints, setRewardPoints] = useState(100);
+  const [rewardPoints, setRewardPoints] = useState(
+    userInfo?.points ? userInfo.points : 0
+  );
   const [discount, setDiscount] = useState(0);
   const [price, setPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [finalDiscount, setFinalDiscount] = useState(0);
   const [minusDiscount, setMinusDiscount] = useState(0);
+  const [usedRewardPoints, setUsedRewardPoints] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const seats = parseInt(params.get("seats"), 10);
-  const moviePosterUrl = params.get("poster");
+  const seats = parseInt(params.get("seats"), 8);
 
   const taxPerTicket = 1.5;
   const totalTax = seats * taxPerTicket;
 
   const fetchTheaterAndShowtimeDetails = async () => {
+    setIsLoading(true);
     const theaterId = params.get("theaterId");
     const showtimeId = params.get("showtimeId");
 
@@ -47,8 +54,16 @@ const Checkout = () => {
       console.log(showtimeData);
       if (showtimeData.status == 200) {
         setShowtimeDetails(showtimeData.data);
+
+        const movieData = await GetMovieById(showtimeData.data.movieId);
+
+        if (movieData.status == 200) {
+          setMovieDetails(movieData.data);
+        }
       }
     }
+
+    setIsLoading(false);
   };
 
   const handleRewardsChange = (e) => {
@@ -56,16 +71,40 @@ const Checkout = () => {
   };
 
   const handleBooking = async () => {
-    const requestData = {
-      showtimeId: showtimeDetails.id,
-      userId: userInfo.userId,
-      seatsBooked: seats,
-      paymentMethod: "CREDIT_CARD",
-      totalAmount: totalPrice,
-      pointsAmount: 0,
-      cashAmount: totalPrice,
-      onlineServiceFee: totalTax,
-    };
+    let requestData;
+
+    if (userInfo) {
+      requestData = {
+        showtimeId: showtimeDetails.id,
+        userId: userInfo.userId,
+        seatsBooked: seats,
+        paymentMethod: "CREDIT_CARD",
+        totalAmount: totalPrice,
+        pointsAmount: 0,
+        cashAmount: totalPrice,
+        onlineServiceFee: totalTax,
+      };
+
+      if (useRewards) {
+        requestData.paymentMethod = "POINTS";
+        requestData.cashAmount = totalPrice - discount;
+        requestData.pointsAmount = usedRewardPoints;
+      }
+
+      if (userInfo.memberType === "PREMIUM") {
+        requestData.onlineServiceFee = 0;
+      }
+    } else {
+      requestData = {
+        showtimeId: showtimeDetails.id,
+        userId: "",
+        seatsBooked: seats,
+        paymentMethod: "CREDIT_CARD",
+        totalAmount: totalPrice,
+        cashAmount: totalPrice,
+        onlineServiceFee: totalTax,
+      };
+    }
 
     console.log(requestData);
 
@@ -84,35 +123,49 @@ const Checkout = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchTheaterAndShowtimeDetails();
   }, []);
 
   useEffect(() => {
     setPrice(seats * showtimeDetails.price);
 
+    const priceIncludingTax = userInfo.memberType === "PREMIUM" ? 0 : totalTax;
+
     if (showtimeDetails?.discountedPrice) {
-      setTotalPrice(showtimeDetails.discountedPrice * seats + totalTax);
+      setTotalPrice(
+        showtimeDetails.discountedPrice * seats + priceIncludingTax
+      );
     } else {
-      setTotalPrice(price + totalTax);
-      console.log(totalPrice);
+      setTotalPrice(price + priceIncludingTax);
     }
 
     if (showtimeDetails?.discountedPrice) {
-      setFinalDiscount(showtimeDetails.discountedPrice * seats);
-      setMinusDiscount(price - finalDiscount);
+      const discount = showtimeDetails.discountedPrice * seats;
+      setFinalDiscount(discount);
+      setMinusDiscount(price - discount);
     }
-  }, [showtimeDetails, theaterDetails, price]);
+
+    console.log(totalPrice);
+  }, [showtimeDetails, theaterDetails, price, userInfo]);
 
   useEffect(() => {
     if (useRewards) {
-      let ticketsFromPoints = Math.floor(rewardPoints / 10);
-      let discountValue =
-        Math.min(ticketsFromPoints, seats) * showtimeDetails.price;
+      let pointsToDollars = rewardPoints / 10; // Convert points to dollar value
+      let discountValue = Math.min(pointsToDollars, price); // Ensure discount doesn't exceed price
       setDiscount(discountValue);
+
+      let usedPoints = discountValue * 10; // Convert discount value back to points
+      setUsedRewardPoints(usedPoints); // Set used reward points
     } else {
       setDiscount(0);
+      setUsedRewardPoints(0); // Reset used reward points if not using rewards
     }
-  }, [showtimeDetails, useRewards, rewardPoints, seats]);
+  }, [showtimeDetails, useRewards, rewardPoints, price]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="checkout-page-container">
@@ -121,7 +174,7 @@ const Checkout = () => {
         <div className="row">
           <div className="col-md-6">
             <img
-              src={moviePosterUrl}
+              src={movieDetails?.posterUrl}
               alt="Movie Poster"
               className="img-fluid"
             />
@@ -178,35 +231,49 @@ const Checkout = () => {
                   </div>
                 )}
 
-                <div className="summary-item">
-                  <p>
-                    <strong>Service Fee:</strong>
-                  </p>
-                  <p>${totalTax.toFixed(2)}</p>
-                </div>
+                {userInfo && userInfo.memberType != "PREMIUM" && (
+                  <div className="summary-item">
+                    <p>
+                      <strong>Service Fee:</strong>
+                    </p>
+                    <p>${totalTax.toFixed(2)}</p>
+                  </div>
+                )}
                 <div className="summary-total">
                   <p>
                     <strong>Total Price:</strong>
                   </p>
                   <p>${totalPrice.toFixed(2)}</p>
                 </div>
-                <div className="summary-item">
-                  <p>
-                    <strong>Your Reward Points:</strong>
-                  </p>
-                  <p>{rewardPoints}</p>
-                </div>
-                <div className="reward-points">
-                  <Checkbox onChange={handleRewardsChange}>
-                    Use Reward Points
-                  </Checkbox>
-                </div>
+                {userInfo && (
+                  <div className="summary-item">
+                    <p>
+                      <strong>Your Reward Points:</strong>
+                    </p>
+                    <p>{rewardPoints}</p>
+                  </div>
+                )}
+                {userInfo && (
+                  <div className="reward-points">
+                    <Checkbox onChange={handleRewardsChange}>
+                      Use Reward Points
+                    </Checkbox>
+                  </div>
+                )}
                 {useRewards && (
                   <div className="summary-item">
                     <p>
                       <strong>Discount:</strong>
                     </p>
                     <p>-${discount.toFixed(2)}</p>
+                  </div>
+                )}
+                {useRewards && (
+                  <div className="summary-item">
+                    <p>
+                      <strong>Used Reward Points:</strong>
+                    </p>
+                    <p>{usedRewardPoints}</p>
                   </div>
                 )}
               </div>
