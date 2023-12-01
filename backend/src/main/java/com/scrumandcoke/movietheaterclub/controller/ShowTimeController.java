@@ -1,5 +1,6 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
+import com.scrumandcoke.movietheaterclub.dto.MovieDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.enums.Location;
@@ -52,6 +53,28 @@ public class ShowTimeController {
         try {
             List<ShowTimeDto> showTimes = showTimeService.getShowTimesByTheaterScreenId(screenId);
             return ResponseEntity.ok(showTimes);
+        } catch (GlobalException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting showTimes: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("screen/{screenId}/movie/{movieId}")
+    public ResponseEntity<?> getshowTimesByScreenIdAndMovieId(@PathVariable int screenId, @PathVariable int movieId) {
+        try {
+            List<ShowTimeDto> showTimes = showTimeService.getShowTimesByTheaterScreenIdAndMovieId(screenId, movieId);
+            return ResponseEntity.ok(showTimes);
+        } catch (GlobalException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting showTimes: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("screen/{screenId}/movies")
+    public ResponseEntity<?> getMoviesByScreenId(@PathVariable int screenId) {
+        try {
+            List<MovieDto> movies = showTimeService.getAllMoviesByTheaterScreenId(screenId);
+            return ResponseEntity.ok(movies);
         } catch (GlobalException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error getting showTimes: " + e.getMessage());

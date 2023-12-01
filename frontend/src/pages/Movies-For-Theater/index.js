@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CardGrid from "../../components/CardGrid";
 import { useNavigate, useParams } from "react-router-dom";
 import "./movies.css";
-import { GetTheaterById } from "../../apicalls/theaters";
+import { GetMoviesByTheater, GetTheaterById } from "../../apicalls/theaters";
 import { message } from "antd";
 
 const MoviesForTheater = () => {
@@ -12,6 +12,70 @@ const MoviesForTheater = () => {
     name: "Cinema Central",
     location: "Downtown",
   });
+
+  const [movies, setMovies] = useState([
+    {
+      id: 1,
+      title: "Space Adventure",
+      description: "A journey to the stars",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "The Mystery House",
+      description: "A thrilling mystery",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "Space Adventure",
+      description: "A journey to the stars",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 1,
+      title: "The Mystery House",
+      description: "A thrilling mystery",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+
+    {
+      id: 2,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      title: "Romance in Rome",
+      description: "A romantic tale",
+      image: "https://via.placeholder.com/150",
+    },
+  ]);
 
   const fetchTheaterData = async () => {
     try {
@@ -27,69 +91,25 @@ const MoviesForTheater = () => {
     }
   };
 
-  const movies = [
-    {
-      id: 1,
-      title: "Space Adventure",
-      description: "A journey to the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "The Mystery House",
-      description: "A thrilling mystery",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Space Adventure",
-      description: "A journey to the stars",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "The Mystery House",
-      description: "A thrilling mystery",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
+  const fetchMovies = async () => {
+    try {
+      const response = await GetMoviesByTheater(id);
 
-    {
-      id: 2,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Romance in Rome",
-      description: "A romantic tale",
-      image: "https://via.placeholder.com/150",
-    },
-  ];
+      if (response.status == 200) {
+        const formattedMovies = response.data.map((movie) => ({
+          ...movie,
+          id: movie.movieId,
+          title: movie.movieName,
+          description: movie.synopsis,
+        }));
+        setMovies(formattedMovies);
+      } else {
+        message.error(response.data);
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  };
 
   const handleCardClick = (theaterId, movieId) => {
     navigate(`/booking?theater=${theaterId}&movie=${movieId}`);
@@ -98,6 +118,7 @@ const MoviesForTheater = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchTheaterData();
+    fetchMovies();
   }, []);
 
   return (
@@ -111,7 +132,7 @@ const MoviesForTheater = () => {
       <div className="card-grid-container">
         {movies.map((item, index) => (
           <div
-            onClick={() => handleCardClick(1, item.id)} // Assuming theater ID is 1 for now
+            onClick={() => handleCardClick(id, item.id)} // Assuming theater ID is 1 for now
             key={index}
           >
             <CardGrid

@@ -1,6 +1,8 @@
 package com.scrumandcoke.movietheaterclub.service.impl;
 
+import com.scrumandcoke.movietheaterclub.dto.MovieDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
+import com.scrumandcoke.movietheaterclub.entity.MovieEntity;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.mapper.ShowTimeMapper;
 import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
@@ -17,9 +19,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.TimeZone;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 @Service
 public class ShowTimeServiceImpl implements ShowTimeService {
 
@@ -82,11 +86,35 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
+    public List<MovieDto> getAllMoviesByTheaterScreenId(Integer id) throws GlobalException {
+        try {
+            List<ShowTimeEntity> showTimeEntities = showTimeRepository.findByTheaterScreen_Id(id);
+            Set<MovieEntity> uniqueMovies = showTimeEntities.stream()
+                    .map(ShowTimeEntity::getMovie)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            return MovieDto.fromEntityList(uniqueMovies);
+        } catch (Exception exception) {
+            logger.error("Error getting showtime with movieId: {}", id);
+            throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
+    @Override
     public List<ShowTimeDto> getShowTimesByTheaterScreenId(Integer id) throws GlobalException {
         try {
             return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_Id(id));
         } catch (Exception exception) {
             logger.error("Error getting showtime with theaterScreenId: {}", id);
+            throw new GlobalException(exception.getMessage(), exception);
+        }
+    }
+
+    @Override
+    public List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMovieId(Integer theaterId, Integer movieId) throws GlobalException {
+        try {
+            return showTimeMapper.toDto(showTimeRepository.findByTheaterScreen_IdAndMovie_MovieId(theaterId, movieId));
+        } catch (Exception exception) {
+            logger.error("Error getting showtime with theaterScreenId and movieId: {} {}", theaterId, movieId);
             throw new GlobalException(exception.getMessage(), exception);
         }
     }
