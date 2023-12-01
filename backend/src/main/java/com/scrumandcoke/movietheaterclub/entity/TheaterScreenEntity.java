@@ -25,7 +25,7 @@ public class TheaterScreenEntity {
 
     @ManyToOne
     @JoinColumn(name = "multiplex_id")
-    private MultiplexEntity multiplexEntity;
+    private LocationEntity locationEntity;
 
     @Column(name = "seating_capacity")
     private int seatingCapacity;
