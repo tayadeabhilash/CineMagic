@@ -28,13 +28,12 @@ public class IAMController {
         Cookie cookie = new Cookie("sid", userSessionDetail.getSessionId());
         cookie.setHttpOnly(false);
         cookie.setPath("/");
-        cookie.setSecure(true);
-        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; Secure; SameSite=None", userSessionDetail.getSessionId());
+        cookie.setSecure(false);
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=None", userSessionDetail.getSessionId());
         response.addHeader("Set-Cookie", cookieHeader);
 
         return userSessionDetail;
     }
-
 
     @PostMapping("/login")
     public UserSessionDetail signIn(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
@@ -43,13 +42,13 @@ public class IAMController {
         Cookie cookie = new Cookie("sid", userSessionDetail.getSessionId());
         cookie.setHttpOnly(false);
         cookie.setPath("/");
-        cookie.setSecure(true);
-        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; Secure; SameSite=None", userSessionDetail.getSessionId());
+        cookie.setSecure(false);
+        String cookieHeader = String.format("sid=%s; HttpOnly; Path=/; SameSite=None", userSessionDetail.getSessionId());
         response.addHeader("Set-Cookie", cookieHeader);
-
 
         return userSessionDetail;
     }
+
 
 
     @GetMapping("/isAuthenticated")
