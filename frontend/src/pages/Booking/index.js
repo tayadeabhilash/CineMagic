@@ -14,8 +14,6 @@ import { GetAllMovies, GetMovieById } from "../../apicalls/movies";
 import moment from "moment";
 import Loader from "../../components/Loader/loader";
 
-const TICKET_PRICE = 10;
-
 const MovieSelectionPage = () => {
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
@@ -170,7 +168,7 @@ const MovieSelectionPage = () => {
   };
 
   const calculateTotal = () => {
-    return selectedSeats * TICKET_PRICE;
+    return selectedSeats * selectedShow?.showtime?.price;
   };
 
   const renderDetails = () => {
