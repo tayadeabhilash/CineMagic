@@ -27,6 +27,10 @@ public class BookingEntity {
     private Integer seatsBooked;
     @Column(name = "total_amount")
     private Double totalAmount;
+    @Column(name = "cash_amount")
+    private Double cashAmount;
+    @Column(name = "points_amount")
+    private Double pointsAmount;
     @Column(name = "online_service_fee")
     private Double onlineServiceFee;
     @Enumerated(EnumType.STRING)

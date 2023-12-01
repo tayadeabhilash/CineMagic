@@ -43,9 +43,9 @@ public class MultiplexController {
         multiplexService.addMultiplex(locationDto);
     }
 
-    @PutMapping
-    public void updateMultiplex(@RequestBody LocationDto locationDto) throws GlobalException {
-        multiplexService.updateMultiplex(locationDto);
+    @PutMapping("{id}")
+    public void updateMultiplex(@PathVariable int id, @RequestBody LocationDto locationDto) throws GlobalException {
+        multiplexService.updateMultiplex(id, locationDto);
     }
 
     @DeleteMapping("/{id}")

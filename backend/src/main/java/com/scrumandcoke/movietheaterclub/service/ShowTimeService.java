@@ -25,7 +25,7 @@ public interface ShowTimeService {
 
     List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMultiplexId(Integer theaterScreenId, Integer multiplexId) throws GlobalException;
 
-    void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException;
+    void updateShowTime(Integer id, ShowTimeDto showTimeDto) throws GlobalException;
 
     void deleteShowTime(Integer id) throws GlobalException;
 
