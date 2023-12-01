@@ -91,7 +91,7 @@ const Checkout = () => {
         requestData.pointsAmount = usedRewardPoints;
       }
 
-      if (userInfo.memberType === "PREMIUM") {
+      if (userInfo?.memberType === "PREMIUM") {
         requestData.onlineServiceFee = 0;
       }
     } else {
@@ -130,7 +130,7 @@ const Checkout = () => {
   useEffect(() => {
     setPrice(seats * showtimeDetails.price);
 
-    const priceIncludingTax = userInfo.memberType === "PREMIUM" ? 0 : totalTax;
+    const priceIncludingTax = userInfo?.memberType === "PREMIUM" ? 0 : totalTax;
 
     if (showtimeDetails?.discountedPrice) {
       setTotalPrice(
@@ -198,8 +198,12 @@ const Checkout = () => {
                   <p>
                     <strong>Show Time:</strong>
                   </p>
-                  <p>
+                  {/* <p>
                     {moment(showtimeDetails.time).format("h:mm a") ||
+                      "Show Time"}
+                  </p> */}
+                  <p>
+                    {moment.utc(showtimeDetails.time).format("h:mm a") ||
                       "Show Time"}
                   </p>
                 </div>
@@ -231,7 +235,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {userInfo && userInfo.memberType != "PREMIUM" && (
+                {userInfo?.memberType != "PREMIUM" && (
                   <div className="summary-item">
                     <p>
                       <strong>Service Fee:</strong>
@@ -239,6 +243,7 @@ const Checkout = () => {
                     <p>${totalTax.toFixed(2)}</p>
                   </div>
                 )}
+                <hr />
                 <div className="summary-total">
                   <p>
                     <strong>Total Price:</strong>
@@ -253,7 +258,7 @@ const Checkout = () => {
                     <p>{rewardPoints}</p>
                   </div>
                 )}
-                {userInfo && (
+                {userInfo?.points > 0 && (
                   <div className="reward-points">
                     <Checkbox onChange={handleRewardsChange}>
                       Use Reward Points

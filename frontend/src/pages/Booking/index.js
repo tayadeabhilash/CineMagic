@@ -123,6 +123,14 @@ const MovieSelectionPage = () => {
     }).format(new Date(date));
   };
 
+  const formatDateUTC = (date) => {
+    return moment.utc(date).format("MMMM Do YYYY");
+  };
+
+  const formatTimeUTC = (date) => {
+    return moment.utc(date).format("HH:mm");
+  };
+
   useEffect(() => {
     fetchMovieData(movieId);
     fetchTheaterData(theaterId);
@@ -172,13 +180,23 @@ const MovieSelectionPage = () => {
         <>
           <div className="movie-details mb-3">
             <h1>{selectedMovie.movieName}</h1>
-            <p>Duration: {selectedMovie.runningTime}</p>
-            <p>Release Date: {formatDate(selectedMovie.releaseDate)}</p>
-            <p>Genre: {selectedMovie.genre}</p>
+            <p>
+              <strong>Duration:</strong> {selectedMovie.runningTime}
+            </p>
+            <p>
+              <strong>Release Date:</strong>{" "}
+              {formatDate(selectedMovie.releaseDate)}
+            </p>
+            <p>
+              <strong>Genre:</strong> {selectedMovie.genre}
+            </p>
           </div>
           <div className="theater-details mb-5">
             <h1>{selectedTheater?.name}</h1>
-            <p>Address: {selectedTheater.address}</p>
+            <p>
+              <strong>Address: </strong>
+              {selectedTheater.address}
+            </p>
           </div>
         </>
       );
@@ -232,7 +250,7 @@ const MovieSelectionPage = () => {
               {Object.entries(movieShowtimes).map(([date, times], idx) => (
                 <Row key={idx} gutter={8}>
                   <Col span={24}>
-                    <h6>{date}</h6>
+                    <h6 className="booking-dates">{date}</h6>
                   </Col>
                   {times.map((showtime, timeIdx) => (
                     <Col key={timeIdx} span={4}>
@@ -276,7 +294,7 @@ const MovieSelectionPage = () => {
               {Object.entries(theaterShowtimes).map(([date, times], idx) => (
                 <Row key={idx} gutter={8}>
                   <Col span={24}>
-                    <h6>{date}</h6>
+                    <h6 className="booking-dates">{date}</h6>
                   </Col>
                   {times.map((showtime, timeIdx) => (
                     <Col key={timeIdx} span={4}>
@@ -302,7 +320,7 @@ const MovieSelectionPage = () => {
           {Object.entries(showtimes).map(([date, times], idx) => (
             <Row key={idx} gutter={8}>
               <Col span={24}>
-                <h6>{date}</h6>
+                <h6 className="booking-dates">{date}</h6>
               </Col>
               {times.map((showtime, timeIdx) => (
                 <Col key={timeIdx} span={4}>
@@ -353,11 +371,15 @@ const MovieSelectionPage = () => {
           </Button>,
         ]}
       >
-        <p>
+        {/* <p>
           <strong>Show Time:</strong>{" "}
           {moment(selectedShow?.showtime?.selectedTime).format(
             "h:mm a, YYYY-MM-DD"
           )}
+        </p> */}
+        <p>
+          <strong>Show Time:</strong>{" "}
+          {formatTimeUTC(selectedShow?.showtime?.time)}{" "}
         </p>
         <p>
           <strong>Theater:</strong> {selectedShow?.theater?.name}
