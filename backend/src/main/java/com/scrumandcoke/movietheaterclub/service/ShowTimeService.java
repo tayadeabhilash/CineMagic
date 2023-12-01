@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.service;
 
 import com.scrumandcoke.movietheaterclub.dto.MovieWithShowtimesDto;
+import com.scrumandcoke.movietheaterclub.dto.MovieDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.enums.Location;
@@ -15,12 +16,17 @@ public interface ShowTimeService {
 
     List<ShowTimeDto> getShowTimesByMovie(Integer movieId) throws GlobalException;
 
+    List<MovieDto> getAllMoviesByTheaterScreenId(Integer id) throws GlobalException;
+
     List<ShowTimeDto> getShowTimesByTheaterScreenId(Integer theaterScreenId) throws GlobalException;
+
+    List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMovieId(Integer theaterId, Integer movieId) throws GlobalException;
+
     List<ShowTimeDto> getShowTimesByLocation(Location location) throws GlobalException;
 
     List<ShowTimeDto> getShowTimesByTheaterScreenIdAndMultiplexId(Integer theaterScreenId, Integer multiplexId) throws GlobalException;
 
-    void updateShowTime(ShowTimeDto showTimeDto) throws GlobalException;
+    void updateShowTime(Integer id, ShowTimeDto showTimeDto) throws GlobalException;
 
     void deleteShowTime(Integer id) throws GlobalException;
 

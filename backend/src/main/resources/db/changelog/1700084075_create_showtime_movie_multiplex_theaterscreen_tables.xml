@@ -19,6 +19,8 @@
             <column name="location" type="VARCHAR(255)"/>
             <column name="theater_screen_count" type="INT"/>
         </createTable>
+
+
         <createTable tableName="theater_screens">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -29,6 +31,8 @@
                 <constraints references="multiplex(id)" foreignKeyName="fk_multiplex_id"/>
             </column>
         </createTable>
+
+
         <createTable tableName="showtimes">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

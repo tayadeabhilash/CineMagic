@@ -4,6 +4,7 @@ import com.scrumandcoke.movietheaterclub.dto.CreateUserRequest;
 import com.scrumandcoke.movietheaterclub.dto.UserDto;
 import com.scrumandcoke.movietheaterclub.entity.UserEntity;
 import com.scrumandcoke.movietheaterclub.enums.MemberType;
+import com.scrumandcoke.movietheaterclub.enums.TransactionType;
 import com.scrumandcoke.movietheaterclub.enums.UserType;
 import com.scrumandcoke.movietheaterclub.mapper.UserMapper;
 import com.scrumandcoke.movietheaterclub.repository.UserRepository;
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         userEntity.setMemberType(MemberType.REGULAR);
         userEntity.setUserType(userType);
-
+        userEntity.setPoints(0.0);
         userRepository.save(userEntity);
 
         return UserMapper.INSTANCE.userEntityToUserDto(userEntity);
@@ -79,6 +80,23 @@ public class UserServiceImpl implements UserService {
         }
 
         userEntity.get().setMemberType(newMemberType);
+        userRepository.save(userEntity.get());
+
+        return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());
+    }
+
+    @Override
+    public UserDto updatePoints(@NonNull String userId, @NonNull Double points, TransactionType transactionType) {
+        Optional<UserEntity> userEntity = userRepository.findByExternalId(userId);
+        if (userEntity.isEmpty()) {
+            throw new NoSuchElementException("No user found with the userId " + userId);
+        }
+        Double newPoints = userEntity.get().getPoints();
+        if(transactionType == TransactionType.DEBIT)
+            newPoints = newPoints - points;
+        else
+            newPoints = newPoints + points;
+        userEntity.get().setPoints(newPoints);
         userRepository.save(userEntity.get());
 
         return UserMapper.INSTANCE.userEntityToUserDto(userEntity.get());

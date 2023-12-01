@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class MovieDto {
     private String posterUrl;
     private String genre;
     private String language;
-//    private LocalDate releaseDate;
     private Date releaseDate;
 
     public static MovieDto fromEntity(MovieEntity movieEntity) {
@@ -43,7 +43,7 @@ public class MovieDto {
         return movieDto;
     }
 
-    public static List<MovieDto> fromEntityList(List<MovieEntity> showTimeEntities) {
+    public static List<MovieDto> fromEntityList(Collection<MovieEntity> showTimeEntities) {
         List<MovieDto> movieDtoList = new ArrayList<>();
         for (MovieEntity showTime : showTimeEntities) {
             movieDtoList.add(fromEntity(showTime));

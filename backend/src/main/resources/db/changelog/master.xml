@@ -12,5 +12,11 @@
     <include file="classpath:db/changelog/1701136572_update_user_id_field_type_in_sessions.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701217868_add_user_type_column.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/1701314537_add_fields_for_theater_screen.xml" relativeToChangelogFile="false"/>
-
+    <include file="classpath:db/changelog/1701380685_add_fields_for_movies.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701387956_add_discounted_price_to_showtimes.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701392871_update_multiplexes_table_name.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701393410_update_fk_constraints_for_theater_screens.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701396586_add_fields_for_users.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701403896_add_fields_cash_amount_for_booking.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/1701407977_update_datatype_user_id_for_booking.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

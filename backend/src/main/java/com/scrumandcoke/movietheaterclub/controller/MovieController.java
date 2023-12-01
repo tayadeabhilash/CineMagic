@@ -58,9 +58,9 @@ public class MovieController {
         }
     }
 
-    @PutMapping
-    public void updateMovie(@RequestBody MovieDto movieDto) throws GlobalException {
-            movieService.updateMovie(movieDto);
+    @PutMapping("{id}")
+    public void updateMovie(@PathVariable int id, @RequestBody MovieDto movieDto) throws GlobalException {
+            movieService.updateMovie(id, movieDto);
     }
 
     @DeleteMapping("/{id}")
