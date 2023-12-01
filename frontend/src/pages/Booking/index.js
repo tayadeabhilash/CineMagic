@@ -118,10 +118,11 @@ const MovieSelectionPage = () => {
   }, []);
 
   useEffect(() => {
+    
     if (movieId) setSelectedMovie(movie);
     if (theaterId) setSelectedTheater(theater);
     setFilteredShowtimes(showtimes);
-  }, [movie, theater, showtimes]);
+  }, [showtimes]);
 
   const selectShow = (theater, time) => {
     setSelectedShow({ ...theater, selectedTime: time });
@@ -192,7 +193,7 @@ const MovieSelectionPage = () => {
   };
 
   const renderContent = () => {
-    if (selectedTheater && !selectedMovie) {
+    if (theaterId && !movieId) {
       // Show movies and their showtimes if only theater is known
       return movie?.map((movie, index) => {
         const movieShowtimes = Object.entries(showtimes)
@@ -209,6 +210,7 @@ const MovieSelectionPage = () => {
         console.log(movieShowtimes);
 
         return (
+          Object.keys(movieShowtimes).length > 0 && (
           <div key={1} className="showtimes mb-3 p-3 shadow-sm rounded">
             <h3>{movie.movieName}</h3>
             {Object.entries(movieShowtimes).map(([date, times], idx) => (
@@ -230,10 +232,11 @@ const MovieSelectionPage = () => {
               </Row>
             ))}
           </div>
-        );
+        ));
       });
-    } else if (!selectedTheater && selectedMovie) {
+    } else if (!theaterId && movieId) {
       // Show theaters and their showtimes if only movie is known
+      console.log(theater);
       return theater?.map((theater, index) => {
         const theaterShowtimes = Object.entries(showtimes)
           .filter(([date, times]) =>
@@ -249,6 +252,7 @@ const MovieSelectionPage = () => {
         console.log(theaterShowtimes);
 
         return (
+          Object.keys(theaterShowtimes).length > 0 && (
           <div key={index} className="theater mb-3 p-3 shadow-sm rounded">
             <h3>{theater.name}</h3>
             <p>{theater.address}</p>
@@ -271,9 +275,9 @@ const MovieSelectionPage = () => {
               </Row>
             ))}
           </div>
-        );
+        ));
       });
-    } else if (selectedTheater && selectedMovie) {
+    } else if (theaterId && movieId) {
       // Show only showtimes if both movie and theater are known
       return (
         <div className="showtimes mb-3 p-3 shadow-sm rounded">
