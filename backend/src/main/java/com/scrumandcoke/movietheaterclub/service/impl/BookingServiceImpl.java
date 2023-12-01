@@ -2,6 +2,8 @@ package com.scrumandcoke.movietheaterclub.service.impl;
 
 import com.google.common.eventbus.EventBus;
 import com.scrumandcoke.movietheaterclub.dto.BookingDto;
+import com.scrumandcoke.movietheaterclub.dto.GetBookingResponse;
+import com.scrumandcoke.movietheaterclub.dto.MovieDto;
 import com.scrumandcoke.movietheaterclub.dto.ShowTimeDto;
 import com.scrumandcoke.movietheaterclub.entity.BookingEntity;
 import com.scrumandcoke.movietheaterclub.entity.ShowTimeEntity;
@@ -14,6 +16,7 @@ import com.scrumandcoke.movietheaterclub.mapper.BookingMapper;
 import com.scrumandcoke.movietheaterclub.repository.BookingRepository;
 import com.scrumandcoke.movietheaterclub.service.BookingService;
 import com.scrumandcoke.movietheaterclub.service.MovieService;
+import com.scrumandcoke.movietheaterclub.service.MultiplexService;
 import com.scrumandcoke.movietheaterclub.service.ShowTimeService;
 import com.scrumandcoke.movietheaterclub.service.UserService;
 import jakarta.transaction.Transactional;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -121,21 +125,39 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllUpcomingBookingsByUserId(String id) {
-        return bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeAfterAndBookingStatus(
+    public List<GetBookingResponse> getAllUpcomingBookingsByUserId(String id) throws GlobalException {
+        List<BookingDto> bookingDtos =  bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeAfterAndBookingStatus(
                 id, Date.from(Instant.now()), BookingStatus.CONFIRMED));
+        return getGetBookingResponses(bookingDtos);
+    }
+
+    private List<GetBookingResponse> getGetBookingResponses(List<BookingDto> bookingDtos) throws GlobalException {
+        List<GetBookingResponse> getBookingResponses = new ArrayList<>();
+        for (BookingDto bookingDto: bookingDtos) {
+            GetBookingResponse getBookingResponse = new GetBookingResponse();
+            ShowTimeDto showTimeDto = showTimeService.getShowTime(bookingDto.getShowtimeId());
+            MovieDto movieDto = movieService.getMovie(showTimeDto.getMovieId());
+            getBookingResponse.setBookingDto(bookingDto);
+            getBookingResponse.setShowTimeDate(showTimeDto.getTime());
+            getBookingResponse.setMovieName(movieDto.getMovieName());
+            getBookingResponses.add(getBookingResponse);
+        }
+
+        return getBookingResponses;
     }
 
     @Override
-    public List<BookingDto> getAllPastBookingsByUserId(String id) {
-        return bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeBeforeAndBookingStatus
+    public List<GetBookingResponse> getAllPastBookingsByUserId(String id) throws GlobalException {
+        List<BookingDto> bookingDtos =  bookingMapper.toDto(bookingRepository.findByUserIdAndShowtime_TimeBeforeAndBookingStatus
                 (id, Date.from(Instant.now()), BookingStatus.CONFIRMED));
+        return getGetBookingResponses(bookingDtos);
     }
 
     @Override
-    public List<BookingDto> getAllCancelledByUserId(String id) {
-        return bookingMapper.toDto(bookingRepository.findByUserIdAndBookingStatus
+    public List<GetBookingResponse> getAllCancelledByUserId(String id) throws GlobalException {
+        List<BookingDto> bookingDtos =  bookingMapper.toDto(bookingRepository.findByUserIdAndBookingStatus
                 (id, BookingStatus.CANCELLED));
+        return getGetBookingResponses(bookingDtos);
     }
 
     private void validateShowtime(Integer showTimeId) throws GlobalException {

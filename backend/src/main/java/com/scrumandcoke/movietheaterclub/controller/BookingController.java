@@ -1,6 +1,7 @@
 package com.scrumandcoke.movietheaterclub.controller;
 
 import com.scrumandcoke.movietheaterclub.dto.BookingDto;
+import com.scrumandcoke.movietheaterclub.dto.GetBookingResponse;
 import com.scrumandcoke.movietheaterclub.exception.GlobalException;
 import com.scrumandcoke.movietheaterclub.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,17 @@ public class BookingController {
     }
 
     @GetMapping("/user/{id}/upcoming")
-    public List<BookingDto> getAllUpcomingBookingsByUserId(@PathVariable String id) {
+    public List<GetBookingResponse> getAllUpcomingBookingsByUserId(@PathVariable String id) throws GlobalException {
         return bookingService.getAllUpcomingBookingsByUserId(id);
     }
 
     @GetMapping("/user/{id}/past")
-    public List<BookingDto> getAllPastBookingsByUserId(@PathVariable String id) {
+    public List<GetBookingResponse> getAllPastBookingsByUserId(@PathVariable String id) throws GlobalException {
         return bookingService.getAllPastBookingsByUserId(id);
     }
 
     @GetMapping("/user/{id}/cancelled")
-    public List<BookingDto> getAllCancelledBookingsByUserId(@PathVariable String id) {
+    public List<GetBookingResponse> getAllCancelledBookingsByUserId(@PathVariable String id) throws GlobalException {
         return bookingService.getAllCancelledByUserId(id);
     }
 

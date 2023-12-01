@@ -36,4 +36,6 @@ public class UserSessionDetail {
     private Date sessionExpireAt;
 
     private UserType userType;
+
+    private Double points;
 }
