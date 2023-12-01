@@ -5,30 +5,46 @@ import {
   GetUpcomingBookings,
   GetPastBookings,
   CancelBooking,
+  GetCancelledBookings,
 } from "../../apicalls/user";
 import { useSelector } from "react-redux";
 import { message } from "antd";
 import Loader from "../../components/Loader/loader";
+import moment from "moment";
 
 const { TabPane } = Tabs;
 
 const ShowCard = ({ show, isUpcoming, cancelShow }) => (
   <Card className="show-card">
     <div className="card-content">
-      <h3>{show.movie}</h3>
-      <p>Date: {show.date}</p>
-      <p>Tickets: {show.tickets}</p>
-      <p>Location: {show.location}</p>
+      <h3>{show.movieName}</h3>
+      <p>Show Time: {formatTimeUTC(show.showTimeDate)}</p>
+      <p>Date: {formatDateUTC(show.showTimeDate)}</p>
+      <p>Tickets: {show.bookingDto.seatsBooked}</p>
     </div>
     {isUpcoming && (
       <div className="card-action">
-        <Button type="primary" onClick={() => cancelShow(show.id)}>
+        <Button type="primary" onClick={() => cancelShow(show.bookingDto.bookingId)}>
           Cancel
         </Button>
       </div>
     )}
+
+    { show.bookingDto.bookingStatus==='CANCELLED' && (
+      <Button type="primary" disabled>
+          Cancelled
+        </Button>
+    )}
   </Card>
 );
+
+const formatDateUTC = (date) => {
+  return moment.utc(date).format("MMMM Do YYYY");
+};
+
+const formatTimeUTC = (date) => {
+  return moment.utc(date).format("HH:mm");
+};
 
 const Shows = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -43,6 +59,7 @@ const Shows = () => {
   const [pastShows, setPastShows] = useState([]);
   const [upcomingShows, setUpcomingShows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [cancelled, setCancelled] = useState(0);
 
   const getUpcomingBookings = async () => {
     try {
@@ -67,6 +84,24 @@ const Shows = () => {
       const response = await GetPastBookings(userInfo.userId);
 
       if (response.status === 200) {
+        setPastShows(response.data);
+      } else {
+        message.error(response?.data);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      message.error(error?.message);
+    }
+  };
+
+  const getCancelledBookings = async () => {
+    try {
+      setIsLoading(true);
+      const response = await GetCancelledBookings(userInfo.userId);
+
+      if (response.status === 200) {
+        pastShows.concat(response.data)
         setPastShows(response.data);
       } else {
         message.error(response?.data);
@@ -108,6 +143,7 @@ const Shows = () => {
       if (response.status === 200) {
         setUpcomingShows(upcomingShows.filter((show) => show.id !== id));
         message.success("Booking cancelled successfully");
+        setCancelled(cancelled+1);
       } else {
         message.error("Failed to cancel the booking");
       }
@@ -121,7 +157,8 @@ const Shows = () => {
   useEffect(() => {
     getPastBookings();
     getUpcomingBookings();
-  }, []);
+    getCancelledBookings();
+  }, [cancelled]);
 
   if (isLoading) {
     return <Loader />;

@@ -54,9 +54,18 @@ export const GetPastBookings = async (id) => {
   }
 };
 
+export const GetCancelledBookings = async (id) => {
+  try {
+    const response = await axiosInstance.get(`booking/user/${id}/cancelled`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const CancelBooking = async (id) => {
   try {
-    const response = await axiosInstance.post(`booking/${id}`);
+    const response = await axiosInstance.delete(`booking/${id}`);
     return response;
   } catch (error) {
     return error.response;
