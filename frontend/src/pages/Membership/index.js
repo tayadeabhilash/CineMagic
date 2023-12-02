@@ -33,7 +33,7 @@ const MembershipPage = () => {
           <Col xs={24} md={12}>
             <Card title="Premium Membership - Only $15/Year" bordered={false}>
               <p>All the benefits of a normal membership</p>
-              <p>Earn 2 points for every dollar spent</p>
+              <p>No Service Fee</p>
               <p>Ability to book more tickets per transaction</p>
               <p>Priority customer support</p>
               <p>Early access to special screenings and events</p>

@@ -147,7 +147,6 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
       formValues.date + "T" + formValues.time + ".000+00:00";
 
     const updatedData = {
-      id: editingShow.id,
       movieId: Number(formValues.movieId),
       theaterScreenId: theater.id,
       price: Number(formValues.price),
@@ -155,7 +154,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
     };
 
     try {
-      const response = await UpdateShow(updatedData);
+      const response = await UpdateShow(editingShow?.id, updatedData);
 
       if (response.status == 200) {
         message.success("Show Updated Successfully!");
