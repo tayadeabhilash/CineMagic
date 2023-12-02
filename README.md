@@ -26,7 +26,18 @@ https://docs.google.com/document/d/1jyDVsNKu3KOSlWnhsmGDcxdcgfirm6aOnr48qjVGOo4/
 
 
 ## Project Board
+
 https://docs.google.com/spreadsheets/d/1T8QXka73NOndBJtUbxvMrBagtgWpx79l08CMXAXkeLQ/edit#gid=576886113
+
+
+## Other Documents
+1. [Component Diagrams](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/component-diagram.png)
+2. [Deployment diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/deployment-diagram.png)
+3. [ER Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/er-diagram.jpeg)
+4. [Feature List](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/feature-list.md)
+5. [Identity and Access-Management Design](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
+6. [Use-Case Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
+7. [XP Values Applied](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
 
 ## Technology Stack
 
