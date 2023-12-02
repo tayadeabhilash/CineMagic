@@ -13,25 +13,12 @@ import moment from "moment";
 
 function Shows({ openShowsModal, setOpenShowsModal, theater }) {
   const [view, setView] = useState("table");
-  const [shows, setShows] = useState([
-    {
-      name: "3D",
-      date: "19-05-2000",
-      time: "1:00 pm",
-      movie: "Riders of Justice",
-      ticketPrice: "$10",
-      totalSeats: 100,
-      availableSeats: 30,
-    },
-  ]);
+  const [shows, setShows] = useState([]);
   const [movies, setMovies] = useState([]);
   const [editingShow, setEditingShow] = useState(null);
-  const [isDiscounted, setIsDiscounted] = useState(false);
-  const [ticketPrice, setTicketPrice] = useState(20);
-  const [priceOptions, setPriceOptions] = useState({
-    originalPrice: 10,
-    discountedPrice: 7.5,
-  });
+  const [showDiscountedPrice, setShowDiscountedPrice] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const fetchMovieNameById = async (movieId) => {
     try {
@@ -54,6 +41,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
       }
 
       const showsResponse = await GetShowsByTheater(theater.id);
+      //console.log(showsResponse);
       if (showsResponse.status == 200) {
         const showsWithMoviesAndDateTime = await Promise.all(
           showsResponse.data.map(async (show) => {
@@ -70,6 +58,8 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
               date,
               time,
               movieId: show.movieId,
+              discountedPrice: show.discountedPrice,
+              availableSeats: show.availableSeats,
             };
           })
         );
@@ -84,18 +74,33 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
     }
   };
 
+  const handleDateTimeChange = (date, time) => {
+    if (!date || !time) {
+      setShowDiscountedPrice(false);
+      return;
+    }
+
+    const selectedDateTime = moment.utc(`${date} ${time}`, "YYYY-MM-DD HH:mm");
+
+    if (selectedDateTime.day() === 2 && selectedDateTime.hour() < 18) {
+      setShowDiscountedPrice(true);
+    } else {
+      setShowDiscountedPrice(false);
+    }
+  };
+
   const handleAddShow = async (data) => {
     const dateTime = `${data.date} ${data.time}`;
-    const formattedDateTime = moment(
-      dateTime,
-      "YYYY-MM-DD HH:mm"
-    ).toISOString();
+    const formattedDateTime = moment
+      .utc(dateTime, "YYYY-MM-DD HH:mm")
+      .toISOString();
 
     const finalData = {
       movieId: data.movieId,
       theaterScreenId: theater.id,
       price: data.price,
       time: formattedDateTime,
+      discountedPrice: data.discountedPrice,
     };
 
     try {
@@ -106,10 +111,10 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
         getData();
         setView("table");
       } else {
-        message.error(response?.message);
+        message.error(response?.data);
       }
     } catch (error) {
-      message.error(error.message);
+      message.error(error?.message);
     }
   };
 
@@ -131,12 +136,13 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
   const editShow = (record) => {
     setEditingShow(record);
     console.log(record);
+    setSelectedDate(record.date);
+    setSelectedTime(record.time);
+
     setView("form");
   };
 
   const onEdit = async (formValues) => {
-    // Format the date and time to the required format
-    const dateTime = `${formValues.date} ${formValues.time}`;
     const formattedDateTime =
       formValues.date + "T" + formValues.time + ".000+00:00";
 
@@ -165,34 +171,12 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
     setEditingShow(null);
   };
 
-  const handlePriceSet = (isDiscounted) => {
-    const price = isDiscounted
-      ? priceOptions.discountedPrice
-      : priceOptions.originalPrice;
-    setTicketPrice(price);
-    setIsDiscounted(isDiscounted);
-  };
-
-  const handleSave = (formValues) => {
-    if (editingShow) {
-      setShows(
-        shows.map((show) =>
-          show.name === editingShow.name
-            ? { ...editingShow, ...formValues }
-            : show
-        )
-      );
-    } else {
-      setShows([...shows, formValues]);
+  const handlePriceInput = (e) => {
+    let value = e.target.value;
+    if (value < 0) {
+      e.target.value = 0;
     }
-    setView("table");
-    setEditingShow(null);
   };
-
-  // const onFinish = (values) => {
-  //   handleSave(values);
-  //   handleAddShow(values);
-  // };
 
   const onFinish = (values) => {
     if (editingShow) {
@@ -226,14 +210,14 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
       title: "Ticket Price",
       dataIndex: "price",
     },
-    {
-      title: "Total Seats",
-      dataIndex: "totalSeats",
-    },
     // {
-    //   title: "Available Seats",
-    //   dataIndex: "availableSeats",
+    //   title: "Total Seats",
+    //   dataIndex: "totalSeats",
     // },
+    {
+      title: "Available Seats",
+      dataIndex: "availableSeats",
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -254,6 +238,10 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    handleDateTimeChange(selectedDate, selectedTime);
+  }, [selectedDate, selectedTime]);
 
   return (
     <Modal
@@ -290,16 +278,6 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <Form.Item
-                label="Show Name"
-                name="name"
-                rules={[{ message: "Please input show name!" }]}
-              >
-                <input />
-              </Form.Item>
-            </Col>
-
-            <Col span={8}>
-              <Form.Item
                 label="Date"
                 name="date"
                 rules={[{ required: true, message: "Please input show date!" }]}
@@ -307,6 +285,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
                 <input
                   type="date"
                   min={new Date().toISOString().split("T")[0]}
+                  onChange={(e) => setSelectedDate(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -317,7 +296,10 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
                 name="time"
                 rules={[{ required: true, message: "Please input show time!" }]}
               >
-                <input type="time" />
+                <input
+                  type="time"
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                />
               </Form.Item>
             </Col>
 
@@ -336,40 +318,58 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
               </Form.Item>
             </Col>
 
-            <Col span={8}>
-              {/* <div className="ticket-price-buttons">
-                <label>Ticket Price</label>
-                <button
-                  type="button"
-                  className={`price-button original-price ${
-                    !isDiscounted ? "selected-price" : ""
-                  }`}
-                  onClick={() => handlePriceSet(false)}
-                >
-                  Original Price (${priceOptions.originalPrice})
-                </button>
-                <button
-                  type="button"
-                  className={`price-button discounted-price ${
-                    isDiscounted ? "selected-price" : ""
-                  }`}
-                  onClick={() => handlePriceSet(true)}
-                >
-                  Discounted Price (${priceOptions.discountedPrice})
-                </button>
-              </div> */}
-              <Form.Item
-                label="Price"
-                name="price"
-                rules={[
-                  { required: true, message: "Please input total seats!" },
-                ]}
-              >
-                <input type="number" />
-              </Form.Item>
-            </Col>
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[
+                { required: true, message: "Please input a valid price!" },
+                () => ({
+                  validator(_, value) {
+                    if (value >= 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Price cannot be negative")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <input type="number" step="0.01" onChange={handlePriceInput} />
+            </Form.Item>
 
-            <Col span={8}>
+            {showDiscountedPrice && (
+              <Col span={8}>
+                <Form.Item
+                  label="Discounted Price"
+                  name="discountedPrice"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input a valid discounted price!",
+                    },
+                    () => ({
+                      validator(_, value) {
+                        if (value >= 0) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("Discounted Price cannot be negative")
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <input
+                    type="number"
+                    step="0.01"
+                    onChange={handlePriceInput}
+                  />
+                </Form.Item>
+              </Col>
+            )}
+
+            {/* <Col span={8}>
               <Form.Item
                 label="Total Seats"
                 name="totalSeats"
@@ -377,7 +377,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theater }) {
               >
                 <input type="number" />
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
           <div className="shows-button">
             <Button

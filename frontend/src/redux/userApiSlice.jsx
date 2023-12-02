@@ -24,13 +24,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-
-    // premium: builder.mutation({
-    //   query: () => ({
-    //     url: `users/me/upgradeMembership`,
-    //     method: "POST",
-    //   }),
-    // }),
   }),
 });
 

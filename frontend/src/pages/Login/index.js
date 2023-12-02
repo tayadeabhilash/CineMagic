@@ -23,17 +23,19 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login({ email, password });
-      console.log(res);
 
-      if (res.data) {
+      // if (res.status === 200) {
+      if (res?.data) {
         dispatch(setCredentials({ ...res }));
-        if (res.data.userType === "THEATER_EMPLOYEE") {
+
+        if (res?.data?.userType === "THEATER_EMPLOYEE") {
           navigate("/admin");
         } else {
           navigate("/");
         }
+        // }
       } else {
-        message.error(res?.error?.data?.errorMessage);
+        message.error(res?.data?.errorMessage);
       }
     } catch (err) {
       console.log(err);
@@ -42,7 +44,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo?.userType != "THEATER_EMPLOYEE") {
       navigate("/");
     }
   }, [userInfo]);
