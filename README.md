@@ -1,11 +1,32 @@
 # MovieTheaterClub
 
-## About the Project
+## About the Team
 
-The application is an end to end solution to manage a theater movie booking system.
+### Team Members:
+- Siddhant Nagpal
+- Samarth Ghulyani
+- Dhrithi
+- Abhilash Tayade
 
-The functional details and business logic for the application can be found inside the project report.
+### Areas of Contribution:
+- **Samarth Ghulyani**: Focused on frontend development with ReactJS, including UI design and implementation.
+- **Siddhant Nagpal**: Responsible for backend development, covering authentication, RBAC, membership features, user benefits, and deployment strategies.
+- **Abhilash Tayade**: Worked on backend APIs for booking processes, membership benefits, points systems, and refunds/cancellations.
+- **Dhrithi Vishwanath Gulannavar**: Handled integration of Movies and Theaters modules, managed Showtimes and Theaters tables, and implemented data validations.
 
+
+## UI Wireframes
+
+https://www.figma.com/file/DigU0IPhe6VL703f1tjSdt/UI-Wireframes?type=whiteboard&node-id=0-1&t=6j7TlY0gNn6xKUyK-0
+
+
+## Project Journal
+
+https://docs.google.com/document/d/1jyDVsNKu3KOSlWnhsmGDcxdcgfirm6aOnr48qjVGOo4/edit?usp=sharing
+
+
+## Project Board
+https://docs.google.com/spreadsheets/d/1T8QXka73NOndBJtUbxvMrBagtgWpx79l08CMXAXkeLQ/edit#gid=576886113
 
 ## Technology Stack
 
@@ -50,6 +71,3 @@ Start the react application
 ```shell
 npm start
 ```
-## UI Wireframes
-
-https://www.figma.com/file/DigU0IPhe6VL703f1tjSdt/UI-Wireframes?type=whiteboard&node-id=0-1&t=6j7TlY0gNn6xKUyK-0
