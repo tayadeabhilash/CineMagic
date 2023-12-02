@@ -5,7 +5,7 @@
 ### Team Members:
 - Siddhant Nagpal
 - Samarth Ghulyani
-- Dhrithi
+- Dhrithi Vishwanath Gulannavar
 - Abhilash Tayade
 
 ### Areas of Contribution:
