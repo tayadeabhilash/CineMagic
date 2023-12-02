@@ -192,11 +192,6 @@ public class TheaterScreenImpl implements TheaterScreenService {
         if (newSeatingCapacity <= 0) {
             throw new GlobalException("Invalid Seating Capacity: Seating capacity cannot be zero or negative.");
         }
-
-        int physicalCapacity = getPhysicalTheaterCapacity(theaterScreenId);
-        if (newSeatingCapacity > physicalCapacity) {
-            throw new GlobalException("Exceeding Physical Capacity: Configured capacity exceeds the theater's physical limits.");
-        }
     }
 
     private int getPhysicalTheaterCapacity(int theaterScreenId) throws GlobalException {
