@@ -50,3 +50,6 @@ Start the react application
 ```shell
 npm start
 ```
+## UI Wireframes
+
+https://www.figma.com/file/DigU0IPhe6VL703f1tjSdt/UI-Wireframes?type=whiteboard&node-id=0-1&t=6j7TlY0gNn6xKUyK-0
