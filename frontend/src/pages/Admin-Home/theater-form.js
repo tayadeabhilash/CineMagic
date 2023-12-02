@@ -1,7 +1,8 @@
 import { Form, Modal, message } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import { AddTheater, UpdateTheater } from "../../apicalls/theaters";
+import { GetAllLocations } from "../../apicalls/theaters";
 
 function TheaterForm({
   showTheaterFormModal,
@@ -11,20 +12,33 @@ function TheaterForm({
   setSelectedTheater,
   getData,
 }) {
+  const [locations, setLocations] = useState([]);
+
+  const getLocations = async () => {
+    try {
+      const res = await GetAllLocations();
+      console.log(res);
+
+      if (res.status == 200) {
+        setLocations(res.data);
+      } else {
+        console.error(res?.errorMessage);
+      }
+    } catch (error) {
+      console.error("Error Fetching Locations");
+    }
+  };
+
   const onFinish = async (data) => {
-    const finalData = {
-      name: data.name,
-      seatingCapacity: data.seatingCapacity,
-      multiplexId: 1,
-    };
     try {
       let response = null;
       if (formType === "add") {
-        response = await AddTheater(finalData);
+        response = await AddTheater(data);
       } else {
         response = await UpdateTheater(selectedTheater?.id, data);
       }
 
+      console.log(response);
       if (response.status == 200) {
         //message.success(response.data);  works on add but not on edit
         setShowTheaterFormModal(false);
@@ -37,6 +51,10 @@ function TheaterForm({
       message.error(error.message);
     }
   };
+
+  useEffect(() => {
+    getLocations();
+  }, []);
 
   return (
     <Modal
@@ -83,6 +101,19 @@ function TheaterForm({
           rules={[{ message: "Please input theater email!" }]}
         >
           <input type="text" />
+        </Form.Item>
+
+        <Form.Item
+          label="Location"
+          name="locationId"
+          rules={[{ required: true, message: "Please select location!" }]}
+        >
+          <select>
+            <option value="">Select Location</option>
+            {locations?.map((location) => (
+              <option value={location.id}>{location.name}</option>
+            ))}
+          </select>
         </Form.Item>
 
         <Form.Item

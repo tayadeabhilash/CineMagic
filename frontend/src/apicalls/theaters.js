@@ -61,9 +61,9 @@ export const AddShow = async (payload) => {
 };
 
 //admin
-export const UpdateShow = async (payload) => {
+export const UpdateShow = async (id, payload) => {
   try {
-    const response = await axiosInstance.put("showtime", payload);
+    const response = await axiosInstance.put(`showtime/${id}`, payload);
     return response;
   } catch (error) {
     return error.response;

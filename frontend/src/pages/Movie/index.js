@@ -74,6 +74,9 @@ const Movie = () => {
                 `${moment.duration(movieData.runningTime, "minutes").hours()}h 
      ${moment.duration(movieData.runningTime, "minutes").minutes()}m`}
             </span>
+            <span className="runtime ">
+              {moment(movieData.releaseDate).format("MMMM Do YYYY")}
+            </span>
           </div>
           {movieData?.synopsis != null ? (
             <div className="overview">
