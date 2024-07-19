@@ -1,43 +1,5 @@
-# MovieTheaterClub
-
-## About the Team
-
-### Team Members:
-- Siddhant Nagpal
-- Samarth Ghulyani
-- Dhrithi Vishwanath Gulannavar
-- Abhilash Tayade
-
-### Areas of Contribution:
-- **Samarth Ghulyani**: Focused on frontend development with ReactJS, including UI design and implementation.
-- **Siddhant Nagpal**: Responsible for backend development, covering authentication, RBAC, membership features, user benefits, and deployment strategies.
-- **Abhilash Tayade**: Worked on backend APIs for booking processes, membership benefits, points systems, and refunds/cancellations.
-- **Dhrithi Vishwanath Gulannavar**: Handled integration of Movies and Theaters modules, managed Showtimes and Theaters tables, and implemented data validations.
-
-
-## UI Wireframes
-
-https://www.figma.com/file/DigU0IPhe6VL703f1tjSdt/UI-Wireframes?type=whiteboard&node-id=0-1&t=6j7TlY0gNn6xKUyK-0
-
-
-## Project Journal
-
-https://docs.google.com/document/d/1jyDVsNKu3KOSlWnhsmGDcxdcgfirm6aOnr48qjVGOo4/edit?usp=sharing
-
-
-## Project Board
-
-https://docs.google.com/spreadsheets/d/1T8QXka73NOndBJtUbxvMrBagtgWpx79l08CMXAXkeLQ/edit#gid=576886113
-
-
-## Other Documents
-1. [Component Diagrams](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/component-diagram.png)
-2. [Deployment diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/deployment-diagram.png)
-3. [ER Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/er-diagram.jpeg)
-4. [Feature List](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/feature-list.md)
-5. [Identity and Access-Management Design](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
-6. [Use-Case Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
-7. [XP Values Applied](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
+# CineMagic
+A movie ticket booking application.
 
 ## Technology Stack
 
@@ -45,6 +7,15 @@ https://docs.google.com/spreadsheets/d/1T8QXka73NOndBJtUbxvMrBagtgWpx79l08CMXAXk
 - Backend: Springboot
 - Database: MySQL
 - Deployment: AWS
+
+## Documentation
+1. [Component Diagrams](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/component-diagram.png)
+2. [Deployment diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/deployment-diagram.png)
+3. [ER Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/er-diagram.jpeg)
+4. [Feature List](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/feature-list.md)
+5. [Identity and Access-Management Design](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
+6. [Use-Case Diagram](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
+7. [XP Values Applied](https://github.com/gopinathsjsu/teamproject-scrumandcoke/blob/main/docs/iam-documentation.md)
 
 ## Requirements
 
@@ -54,7 +25,7 @@ For building and running the application you need:
 - Maven 3
 - Node 10+
 
-## Running the application
+## Runbook
 
 ### Backend - Spring Boot
 
